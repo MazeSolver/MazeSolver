@@ -1,0 +1,27 @@
+Laberinto
+- Crearlo
+- Cargar
+- Acceder a cada celda (muros)
+
+2 Programas
+- Crea --> Guardarlos, configurar
+-- CreaLaberinto
+  --> Prim
+  --> Kruskal
+  --> Dijkstra
+  --> ...
+- Ejecuta --> Carga
+-- Laberintos (Set<Entorno>)
+
+Agente
+- sigMov(Laberinto)
+- hacerMov(Mov)
+
+Entorno (1 por ventana)
+- Agente/s
+- Laberinto
+- Entorno* add(Agente) (Crea uno nuevo [si es simple y se añade el segundo]. "return this" e.o.c)
+
+Menús:
+- Maze --> Clonar, Borrar, Cargar
+- Agent --> Añadir, Borrar (pregunta en la lista de agentes del entorno), Cambiar (combobox para cada agente)
