@@ -6,6 +6,8 @@ package agent;
 
 import java.awt.Point;
 
+import javax.swing.JPanel;
+
 import maze.Direction;
 import maze.Maze;
 
@@ -44,5 +46,10 @@ public abstract class Agent {
    * @param dir Dirección hacia la que mover el agente.
    */
   public abstract void doMovement (Direction dir);
+
+  /**
+   * @return Un panel de configuración para el agente.
+   */
+  public abstract JPanel getConfigurationPanel ();
 
 }
