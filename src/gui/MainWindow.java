@@ -72,7 +72,7 @@ public class MainWindow extends JFrame {
   private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_remove;
   private JMenuItem m_itm_about;
 
-  // TODO EnvironmentSet m_environments;
+  EnvironmentSet m_environments;
 
   /**
    * Constructor de la clase. Crea la interfaz y configura su estado interno
@@ -81,6 +81,7 @@ public class MainWindow extends JFrame {
   private MainWindow () {
     super();
     createInterface();
+    m_environments = new EnvironmentSet();
   }
 
   /**
