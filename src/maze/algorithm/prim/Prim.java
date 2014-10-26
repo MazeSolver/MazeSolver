@@ -97,6 +97,7 @@ public class Prim extends MazeCreationAlgorithm {
     while ((i == 0 && random == neighbour.UP.val) || (j == 0 && random == neighbour.LEFT.val)
         || (i == (this.m_rows - 1) && random == neighbour.DOWN.val)
         || (j == (this.m_columns - 1) && random == neighbour.RIGHT.val));
+    neighbour.val = random;
     return neighbour;
   }
 
