@@ -70,6 +70,14 @@ public abstract class Environment extends JInternalFrame {
   public abstract Environment addAgent (Agent ag);
 
   /**
+   * @param ag Referencia al agente que se quiere eliminar.
+   * @return Una referencia al propio entorno tras la modificación. Si se
+   * elimina un agente de un entorno múltiple donde sólo hay 2 agentes, el
+   * entorno devuelto será un entorno simple.
+   */
+  public abstract Environment removeAgent (Agent ag);
+
+  /**
    * @return Agente seleccionado actualmente en el entorno o null si no hay
    * ninguno seleccionado.
    */

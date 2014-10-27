@@ -71,10 +71,21 @@ public class EnvironmentSet extends JDesktopPane {
    */
   public void addAgentToSelectedEnvironment (Agent ag) {
     Environment env = getSelectedEnvironment();
-    if (env != null)
-      env = env.addAgent(ag);
+    if (env != null) {
+      m_envs.remove(env);
+      m_envs.add(env.addAgent(ag));
+    }
     else
       throw new IllegalStateException("El usuario no ha seleccionado ningún entorno");
+  }
+
+  public void deleteAgentFromEnvironment (Agent ag, Environment env) {
+    if (m_envs.contains(env)) {
+      m_envs.remove(env);
+      m_envs.add(env.removeAgent(ag));
+    }
+    else
+      throw new IllegalArgumentException("El entorno no está guardado en el conjunto actual");
   }
 
 }

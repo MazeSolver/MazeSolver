@@ -92,6 +92,31 @@ public class MultipleEnvironment extends Environment {
   }
 
   /* (non-Javadoc)
+   * @see gui.Environment#removeAgent(agent.Agent)
+   */
+  public Environment removeAgent (Agent ag) {
+    // Si se encuentra el agente, se elimina de la lista de agentes y si estaba
+    // seleccionado se quita el estado de selección
+    if (m_agents.contains(ag)) {
+      if (getSelectedAgent() == ag)
+        m_selected = -1;
+
+      m_agents.remove(ag);
+    }
+
+    // Si tras el borrado de un elemento el entorno tiene un solo agente, éste
+    // pasa a ser un entorno simple
+    if (m_agents.size() == 1) {
+      Environment env = new SimpleEnvironment(m_maze);
+      env.addAgent(m_agents.get(0));
+      return env;
+    }
+
+    // En otro caso, devolvemos el mismo entorno
+    return this;
+  }
+
+  /* (non-Javadoc)
    * @see gui.Environment#getSelectedAgent()
    */
   @Override

@@ -46,6 +46,16 @@ public class SimpleEnvironment extends Environment {
   }
 
   /* (non-Javadoc)
+   * @see gui.Environment#removeAgent(agent.Agent)
+   */
+  public Environment removeAgent (Agent ag) {
+    if (m_agent == ag)
+      m_agent = null;
+
+    return this;
+  }
+
+  /* (non-Javadoc)
    * @see gui.Environment#getSelectedAgent()
    */
   @Override
