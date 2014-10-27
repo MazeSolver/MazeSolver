@@ -64,6 +64,11 @@ public abstract class Agent {
   }
 
   /**
+   * @return Una copia de sí mismo.
+   */
+  public abstract Agent duplicate ();
+
+  /**
    * @return La dirección en la que el agente quiere realizar el siguiente
    *         movimiento.
    */

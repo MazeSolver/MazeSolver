@@ -22,9 +22,9 @@ import agent.Agent;
  */
 public abstract class Environment extends JInternalFrame {
   private static final long serialVersionUID = 1L;
-  private static final int CELL_SIZE_PX = 5;
+  protected static final int CELL_SIZE_PX = 5;
 
-  private Maze m_maze;
+  protected Maze m_maze;
 
   /**
    * Constructor para las clases de tipo entorno.
