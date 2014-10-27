@@ -81,7 +81,6 @@ public class MainWindow extends JFrame {
   private MainWindow () {
     super();
     createInterface();
-    m_environments = new EnvironmentSet();
   }
 
   /**
@@ -95,7 +94,9 @@ public class MainWindow extends JFrame {
 
     m_global_panel = new JPanel(new BorderLayout());
     m_global_panel.add(m_toolbar, BorderLayout.NORTH);
+    m_environments = new EnvironmentSet();
 
+    m_global_panel.add(m_environments, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
     add(m_global_panel, BorderLayout.CENTER);
 
