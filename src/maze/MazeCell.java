@@ -15,11 +15,10 @@ public class MazeCell {
    * m_cell = 0x1111;
    */
   public MazeCell () {
-    Direction dir = null;
-    m_cell |= dir.UP.val;
-    m_cell |= dir.DOWN.val;
-    m_cell |= dir.RIGHT.val;
-    m_cell |= dir.LEFT.val;
+    m_cell |= Direction.UP.val;
+    m_cell |= Direction.DOWN.val;
+    m_cell |= Direction.RIGHT.val;
+    m_cell |= Direction.LEFT.val;
   }
 
   /**

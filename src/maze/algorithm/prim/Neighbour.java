@@ -4,15 +4,17 @@
  */
 package maze.algorithm.prim;
 
+import maze.Direction;
+
 /**
  *
  */
 public class Neighbour {
   public short i;
   public short j;
-  public DirectionPrimHelper dir;
+  public Direction dir;
 
-  public Neighbour (short i, short j, DirectionPrimHelper dir){
+  public Neighbour (short i, short j, Direction dir){
     this.i = i;
     this.j = j;
     this.dir = dir;
