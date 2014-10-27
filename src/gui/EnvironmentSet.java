@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import javax.swing.JDesktopPane;
 
+import agent.Agent;
+
 /**
  * Panel principal en el que se encuentran todos los laberintos cargados.
  * Proporciona la gestión de los laberintos.
@@ -62,6 +64,17 @@ public class EnvironmentSet extends JDesktopPane {
       m_envs.remove(env);
       remove(env);
     }
+  }
+
+  /**
+   * @param ag Agente que se quiere añadir al entorno actual.
+   */
+  public void addAgentToSelectedEnvironment (Agent ag) {
+    Environment env = getSelectedEnvironment();
+    if (env != null)
+      env = env.addAgent(ag);
+    else
+      throw new IllegalStateException("El usuario no ha seleccionado ningún entorno");
   }
 
 }
