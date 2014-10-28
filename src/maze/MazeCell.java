@@ -11,10 +11,14 @@ public class MazeCell {
   private short m_cell;
 
   /**
-   * Constructor por defecto. La celda creada no tiene muros.
+   * Constructor por defecto. La celda creada esta rodeada de muros
+   * m_cell = 0x1111;
    */
   public MazeCell () {
-    m_cell = 0;
+    m_cell |= Direction.UP.val;
+    m_cell |= Direction.DOWN.val;
+    m_cell |= Direction.RIGHT.val;
+    m_cell |= Direction.LEFT.val;
   }
 
   /**
