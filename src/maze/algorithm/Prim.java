@@ -11,43 +11,31 @@ import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
 
 /**
- *
+ * Implementación del algoritmo de Prim para la generación aleatoria de
+ * laberintos.
  */
 public class Prim extends MazeCreationAlgorithm {
 
-  private ArrayList <ArrayList <MazeCell>> borderCheck;
-  private ArrayList <ArrayList <Boolean>> IncludedCells;
+  private ArrayList <ArrayList <Boolean>> m_included_cells;
   private ArrayList <ArrayList <MazeCell>> m_maze;
   private short nCellVisited = 1;
 
   /**
-   *
-   * @param rows
-   * @param columns
+   * @param rows Filas en el laberinto resultado.
+   * @param columns Columnas en el laberinto resultado.
    */
   public Prim (int rows, int columns) {
     super(rows, columns);
-    IncludedCells = new ArrayList <ArrayList <Boolean>>(rows);
-    m_maze = new ArrayList <ArrayList <MazeCell>>(rows);
-    borderCheck = new ArrayList <ArrayList <MazeCell>>(rows);
-    for (int i = 0; i < IncludedCells.size(); i++) {
-      IncludedCells.add(new ArrayList <Boolean>(columns));
-      m_maze.add(new ArrayList <MazeCell>(columns));
-      borderCheck.add(new ArrayList <MazeCell>(columns));
-      for (int j = 0; j < IncludedCells.get(i).size(); j++) {
-        if (i == 0) {
-          borderCheck.get(i).get(j).unsetWall(Direction.UP);
-        }
-        if (j == 0) {
-          borderCheck.get(i).get(j).unsetWall(Direction.LEFT);
-        }
-        if (i == (this.m_rows - 1)) {
-          borderCheck.get(i).get(j).unsetWall(Direction.DOWN);
-        }
-        if (j == (this.m_columns - 1)) {
-          borderCheck.get(i).get(j).unsetWall(Direction.RIGHT);
-        }
-      }
+
+    m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
+    m_maze = initializeMaze();
+
+    // Creamos una matriz de visitados para saber en cada momento cuáles son
+    // las celdas que no se han visitado todavía.
+    for (int i = 0; i < rows; i++) {
+      m_included_cells.add(new ArrayList <Boolean>(columns));
+      for (int j = 0; j < columns; j++)
+        m_included_cells.get(i).add(false);
     }
   }
 
@@ -61,9 +49,9 @@ public class Prim extends MazeCreationAlgorithm {
     short i = 0;
     short j = 0;
     // Empezar el laberinto con todo lleno de paredes y selecionar una celda.
-    IncludedCells.get(i).set(j, true);
+    m_included_cells.get(i).set(j, true);
     // Mientras haya celdas sin visitar, seguir visitando.
-    while (nCellVisited < (this.m_columns - 1) * (this.m_rows - 1) - 1) {
+    while (nCellVisited < this.m_columns * this.m_rows) {
       // Seleccionar un vecino valido para explorar
       // Tirar el muro en una direccion y en la direccion de vuelta.
       throwWall(getNeighbour());
@@ -76,37 +64,30 @@ public class Prim extends MazeCreationAlgorithm {
    * @return Un vecino que sea válido (evita cruzar los bordes)
    */
   private short[] getNeighbour () {
-    short MAX_NEIGHBOUR = 4;
+    final short MAX_NEIGHBOUR = 4;
     Direction neighbour = null;
-    Boolean next = false;
     short i = 0;
     short j = 0;
-    while (i < IncludedCells.size() && !next) {
-      while (j < IncludedCells.get(i).size() && !next && IncludedCells.get(i).get(j)) {
-        if (!IncludedCells.get(i - 1).get(j) || !IncludedCells.get(i).get(j - 1)
-            || !IncludedCells.get(i + 1).get(j) || !IncludedCells.get(i).get(j + 1)) {
+    while (i < m_included_cells.size()) {
+      while (j < m_included_cells.get(i).size() && m_included_cells.get(i).get(j)) {
+        if ((i > 0 && !m_included_cells.get(i - 1).get(j)) ||
+            (j > 0 && !m_included_cells.get(i).get(j - 1)) ||
+            (i < m_rows-1 && !m_included_cells.get(i + 1).get(j)) ||
+            (j < m_columns-1 && !m_included_cells.get(i).get(j + 1))) {
           do {
-            neighbour = to_dir((short) (0 + (Math.random() * MAX_NEIGHBOUR)));
-          } // Si voy MOV entonces MOV tiene que haber una celda y
-            // la celda de MOV no esta visitada
-          while ((neighbour == Direction.UP &&
-                  !borderCheck.get(i).get(j).hasWall(Direction.UP) &&
-                  !IncludedCells.get(i - 1).get(j))
-              || (neighbour == Direction.LEFT &&
-                  !borderCheck.get(i).get(j).hasWall(Direction.LEFT) &&
-                  !IncludedCells.get(i).get(j - 1))
-              || (neighbour == Direction.DOWN &&
-                  !borderCheck.get(i).get(j).hasWall(Direction.DOWN) &&
-                  !IncludedCells.get(i + 1).get(j))
-              || (neighbour == Direction.RIGHT &&
-                  !borderCheck.get(i).get(j).hasWall(Direction.RIGHT) &&
-                  !IncludedCells.get(i).get(j + 1)));
-          next = true;
+            neighbour = toDir((short) Math.round(0 + (Math.random() * MAX_NEIGHBOUR)));
+          } // Si voy MOV entonces MOV tiene que haber una celda y la celda de
+            // MOV no está visitada.
+          while (!(neighbour == Direction.UP && i > 0 && !m_included_cells.get(i - 1).get(j))
+              && !(neighbour == Direction.LEFT && j > 0 && !m_included_cells.get(i).get(j-1))
+              && !(neighbour == Direction.DOWN && i < m_rows-1 && !m_included_cells.get(i+1).get(j))
+              && !(neighbour == Direction.RIGHT && j < m_columns-1 && !m_included_cells.get(i).get(j+1)));
+
           short[] aux = {i,j,neighbour.val};
           return aux;
         }
         j++;
-        if (j == IncludedCells.size()) {
+        if (j == m_included_cells.size()) {
           i++;
           j = 0;
         }
@@ -129,45 +110,38 @@ public class Prim extends MazeCreationAlgorithm {
   private void throwWall (final short[] neighbour) {
     short i = neighbour[0];
     short j = neighbour[1];
-    if (to_dir(neighbour[2]) == Direction.UP) {
-      // Marcando celda destino como visitada
-      IncludedCells.get(i - 1).set(j, true);
-      nCellVisited++;
-      // Tirando el muro hacia celda destino
-      m_maze.get(i).get(j).setWall(Direction.UP);
-      // Tirando el muro desde celda destino
-      m_maze.get(i - 1).get(j).setWall(Direction.DOWN);
+    Direction dir = Direction.fromValue(neighbour[2]);
+
+    // Dependiendo de la dirección eliminamos los 2 muros que separan las 2
+    // celdas que queremos unir y marcamos la celda de destino como visitada.
+    m_maze.get(i).get(j).unsetWall(dir);
+    switch (dir) {
+      case UP:
+        m_included_cells.get(i - 1).set(j, true);
+        m_maze.get(i - 1).get(j).unsetWall(Direction.DOWN);
+        break;
+      case DOWN:
+        m_included_cells.get(i + 1).set(j, true);
+        m_maze.get(i + 1).get(j).unsetWall(Direction.UP);
+        break;
+      case LEFT:
+        m_included_cells.get(i).set(j - 1, true);
+        m_maze.get(i).get(j - 1).unsetWall(Direction.RIGHT);
+        break;
+      case RIGHT:
+        m_included_cells.get(i).set(j + 1, true);
+        m_maze.get(i).get(j + 1).unsetWall(Direction.LEFT);
+        break;
     }
-    else if (to_dir(neighbour[2]) == Direction.LEFT) {
-      // Marcando celda destino como visitada
-      IncludedCells.get(i).set(j - 1, true);
-      nCellVisited++;
-      // Tirando el muro hacia celda destino
-      m_maze.get(i).get(j).setWall(Direction.LEFT);
-      // Tirando el muro desde celda destino
-      m_maze.get(i).get(j - 1).setWall(Direction.RIGHT);
-    }
-    else if (to_dir(neighbour[2]) == Direction.DOWN) {
-      // Marcando celda destino como visitada
-      IncludedCells.get(i + 1).set(j, true);
-      nCellVisited++;
-      // Tirando el muro hacia celda destino
-      m_maze.get(i).get(j).setWall(Direction.DOWN);
-      // Marcando muro hacia celda destino como tirado
-      m_maze.get(i + 1).get(j).setWall(Direction.UP);
-    }
-    else if (to_dir(neighbour[2]) == Direction.RIGHT) {
-      // Marcando celda destino como visitada
-      IncludedCells.get(i).set(j + 1, true);
-      nCellVisited++;
-      // Tirando el muro hacia celda destino
-      m_maze.get(i).get(j).setWall(Direction.RIGHT);
-      // Tirando el muro desde celda destino
-      m_maze.get(i).get(j + 1).setWall(Direction.LEFT);
-    }
+    nCellVisited++;
   }
 
-  private Direction to_dir (short number) {
+  /**
+   * Convierte un número entre 1 y 4 en una dirección.
+   * @param number Número a convertir.
+   * @return Dirección asociada al número.
+   */
+  private static Direction toDir (short number) {
     switch (number) {
       case 0:
         return Direction.UP;

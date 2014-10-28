@@ -16,9 +16,18 @@ public enum Direction {
   RIGHT ((short) 0x08);
 
   public short val;
+  private static Direction[] values = Direction.values();
 
   private Direction (short val) {
     this.val = val;
+  }
+
+  public static Direction fromValue (short value) {
+    for (Direction i: values)
+      if (i.val == value)
+        return i;
+
+    return null;
   }
 
 }

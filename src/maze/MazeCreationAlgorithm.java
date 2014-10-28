@@ -36,13 +36,16 @@ public abstract class MazeCreationAlgorithm {
    * Este método crea un laberinto vacío a partir del número de filas y columnas
    * especificado en el constructor. Hace más sencillo a las subclases
    * implementar el método "createMaze()".
-   * 
+   *
    * @return Un laberinto vacío del tamaño especificado.
    */
   protected ArrayList <ArrayList <MazeCell>> initializeMaze () {
     ArrayList <ArrayList <MazeCell>> maze = new ArrayList <ArrayList <MazeCell>>(m_rows);
-    for (int i = 0; i < maze.size(); i++)
-      maze.set(i, new ArrayList <MazeCell>(m_columns));
+    for (int i = 0; i < m_rows; i++) {
+      maze.add(new ArrayList <MazeCell>(m_columns));
+      for (int j = 0; j < m_columns; j++)
+        maze.get(i).add(new MazeCell());
+    }
 
     return maze;
   }
