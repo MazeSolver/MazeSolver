@@ -2,7 +2,7 @@
  * @file Prim.java
  * @date 26 Oct 2014
  */
-package maze.algorithm.prim;
+package maze.algorithm;
 
 import java.util.ArrayList;
 
@@ -60,15 +60,13 @@ public class Prim extends MazeCreationAlgorithm {
   public ArrayList <ArrayList <MazeCell>> createMaze () {
     short i = 0;
     short j = 0;
-    Neighbour neighbout = null;
     // Empezar el laberinto con todo lleno de paredes y selecionar una celda.
     IncludedCells.get(i).set(j, true);
     // Mientras haya celdas sin visitar, seguir visitando.
     while (nCellVisited < (this.m_columns - 1) * (this.m_rows - 1) - 1) {
       // Seleccionar un vecino valido para explorar
-      neighbout = getNeighbour();
       // Tirar el muro en una direccion y en la direccion de vuelta.
-      throwWall(neighbout.i, neighbout.j, neighbout.dir);
+      throwWall(getNeighbour());
     }
     return this.m_maze;
   }
@@ -77,7 +75,7 @@ public class Prim extends MazeCreationAlgorithm {
    *
    * @return Un vecino que sea válido (evita cruzar los bordes)
    */
-  private Neighbour getNeighbour () {
+  private short[] getNeighbour () {
     short MAX_NEIGHBOUR = 4;
     Direction neighbour = null;
     Boolean next = false;
@@ -104,7 +102,8 @@ public class Prim extends MazeCreationAlgorithm {
                   !borderCheck.get(i).get(j).hasWall(Direction.RIGHT) &&
                   !IncludedCells.get(i).get(j + 1)));
           next = true;
-          return new Neighbour(i, j, neighbour);
+          short[] aux = {i,j,neighbour.val};
+          return aux;
         }
         j++;
         if (j == IncludedCells.size()) {
@@ -127,8 +126,10 @@ public class Prim extends MazeCreationAlgorithm {
    *          tirados.
    *
    */
-  private void throwWall (final short i, final short j, final Direction neighbour) {
-    if (neighbour == Direction.UP) {
+  private void throwWall (final short[] neighbour) {
+    short i = neighbour[0];
+    short j = neighbour[1];
+    if (to_dir(neighbour[2]) == Direction.UP) {
       // Marcando celda destino como visitada
       IncludedCells.get(i - 1).set(j, true);
       nCellVisited++;
@@ -137,7 +138,7 @@ public class Prim extends MazeCreationAlgorithm {
       // Tirando el muro desde celda destino
       m_maze.get(i - 1).get(j).setWall(Direction.DOWN);
     }
-    else if (neighbour == Direction.LEFT) {
+    else if (to_dir(neighbour[2]) == Direction.LEFT) {
       // Marcando celda destino como visitada
       IncludedCells.get(i).set(j - 1, true);
       nCellVisited++;
@@ -146,7 +147,7 @@ public class Prim extends MazeCreationAlgorithm {
       // Tirando el muro desde celda destino
       m_maze.get(i).get(j - 1).setWall(Direction.RIGHT);
     }
-    else if (neighbour == Direction.DOWN) {
+    else if (to_dir(neighbour[2]) == Direction.DOWN) {
       // Marcando celda destino como visitada
       IncludedCells.get(i + 1).set(j, true);
       nCellVisited++;
@@ -155,7 +156,7 @@ public class Prim extends MazeCreationAlgorithm {
       // Marcando muro hacia celda destino como tirado
       m_maze.get(i + 1).get(j).setWall(Direction.UP);
     }
-    else if (neighbour == Direction.RIGHT) {
+    else if (to_dir(neighbour[2]) == Direction.RIGHT) {
       // Marcando celda destino como visitada
       IncludedCells.get(i).set(j + 1, true);
       nCellVisited++;
