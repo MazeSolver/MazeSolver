@@ -22,7 +22,9 @@ public abstract class Agent {
    * @param maze
    */
   protected Agent (Maze maze) {
-    m_maze = maze;
+    m_pos = new Point();
+    m_maze = null;
+    setMaze(maze);
   }
 
   /**
@@ -35,6 +37,38 @@ public abstract class Agent {
     m_pos.x = pos.x;
     m_pos.y = pos.y;
   }
+
+  /**
+   * @return Posición en el eje X del agente.
+   */
+  public int getX () {
+    return m_pos.x;
+  }
+
+  /**
+   * @return Posición en el eje Y de agente.
+   */
+  public int getY () {
+    return m_pos.y;
+  }
+
+  /**
+   * Este método debería sobrecargarse en las clases derivadas que contengan
+   * información acerca del camino a seguir por el agente (un plan) de forma que
+   * éste siga siendo coherente tras el cambio de laberinto.
+   * @param maze Laberinto donde colocar el agente.
+   */
+  public void setMaze (Maze maze) {
+    if (maze != null)
+      m_maze = maze;
+    else
+      throw new IllegalArgumentException("El laberinto debe ser válido");
+  }
+
+  /**
+   * @return Una copia de sí mismo.
+   */
+  public abstract Agent duplicate ();
 
   /**
    * @return La dirección en la que el agente quiere realizar el siguiente

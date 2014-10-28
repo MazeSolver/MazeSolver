@@ -21,7 +21,10 @@ public class Maze {
    * @param alg Algoritmo de creación de laberintos ya inicializado
    */
   public Maze (MazeCreationAlgorithm alg) {
-    m_maze = alg.createMaze();
+    if (alg != null)
+      m_maze = alg.createMaze();
+    else
+      throw new IllegalArgumentException("El algoritmo de creación del laberinto es inválido");
   }
 
   /**
@@ -50,6 +53,20 @@ public class Maze {
    */
   public void set (int row, int column, MazeCell cell) {
     m_maze.get(row).set(column, cell);
+  }
+
+  /**
+   * @return Anchura (en celdas) del laberinto.
+   */
+  public int getWidth () {
+    return m_maze.get(0).size();
+  }
+
+  /**
+   * @return Altura (en celdas) del laberinto.
+   */
+  public int getHeight () {
+    return m_maze.size();
   }
 
   /**
