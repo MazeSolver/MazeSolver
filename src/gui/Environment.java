@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 
 import maze.Direction;
@@ -24,6 +25,7 @@ public abstract class Environment extends JInternalFrame {
   private static final long serialVersionUID = 1L;
   protected static final int CELL_SIZE_PX = 5;
 
+  private static int s_instance = 0;
   protected Maze m_maze;
 
   /**
@@ -32,8 +34,11 @@ public abstract class Environment extends JInternalFrame {
    * entre varios entornos.
    */
   protected Environment (Maze maze) {
+    super("Environment " + (++s_instance), true, true, false, false);
     setMaze(maze);
+
     setVisible(true);
+    ((JComponent) getContentPane()).setOpaque(false);
     setSize(CELL_SIZE_PX * m_maze.getWidth(), CELL_SIZE_PX * m_maze.getHeight());
   }
 

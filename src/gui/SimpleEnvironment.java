@@ -113,9 +113,11 @@ public class SimpleEnvironment extends Environment {
   protected void paintComponent (Graphics g) {
     super.paintComponent(g);
 
-    g.setColor(Color.RED);
-    g.fillOval(m_agent.getX() * CELL_SIZE_PX, m_agent.getY() * CELL_SIZE_PX,
-               CELL_SIZE_PX-1, CELL_SIZE_PX-1);
+    if (m_agent != null) {
+      g.setColor(Color.RED);
+      g.fillOval(m_agent.getX() * CELL_SIZE_PX, m_agent.getY() * CELL_SIZE_PX,
+                 CELL_SIZE_PX-1, CELL_SIZE_PX-1);
+    }
   }
 
 }
