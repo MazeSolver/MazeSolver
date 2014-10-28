@@ -60,52 +60,44 @@ public class Prim extends MazeCreationAlgorithm {
   }
 
   /**
-   *
-   * @return Un vecino que sea válido (evita cruzar los bordes)
+   * Busca aleatoriamente una celda visitada para explorar sus vecinos.
+   * @return Un vecino que sea válido (evita cruzar los bordes).
    */
   private short[] getNeighbour () {
     final short MAX_NEIGHBOUR = 4;
     Direction neighbour = null;
-    short i = 0;
-    short j = 0;
-    while (i < m_included_cells.size()) {
-      while (j < m_included_cells.get(i).size() && m_included_cells.get(i).get(j)) {
-        if ((i > 0 && !m_included_cells.get(i - 1).get(j)) ||
-            (j > 0 && !m_included_cells.get(i).get(j - 1)) ||
-            (i < m_rows-1 && !m_included_cells.get(i + 1).get(j)) ||
-            (j < m_columns-1 && !m_included_cells.get(i).get(j + 1))) {
-          do {
-            neighbour = toDir((short) Math.round(0 + (Math.random() * MAX_NEIGHBOUR)));
-          } // Si voy MOV entonces MOV tiene que haber una celda y la celda de
-            // MOV no está visitada.
-          while (!(neighbour == Direction.UP && i > 0 && !m_included_cells.get(i - 1).get(j))
-              && !(neighbour == Direction.LEFT && j > 0 && !m_included_cells.get(i).get(j-1))
-              && !(neighbour == Direction.DOWN && i < m_rows-1 && !m_included_cells.get(i+1).get(j))
-              && !(neighbour == Direction.RIGHT && j < m_columns-1 && !m_included_cells.get(i).get(j+1)));
 
-          short[] aux = {i,j,neighbour.val};
-          return aux;
-        }
-        j++;
-        if (j == m_included_cells.size()) {
-          i++;
-          j = 0;
+    for (short i = 0; i < m_included_cells.size(); i++) {
+      for (short j = 0; j < m_included_cells.get(i).size(); j++) {
+        if (m_included_cells.get(i).get(j)) {
+          if ((i > 0 && !m_included_cells.get(i-1).get(j)) ||
+              (j > 0 && !m_included_cells.get(i).get(j-1)) ||
+              (i < m_rows-1 && !m_included_cells.get(i+1).get(j)) ||
+              (j < m_columns-1 && !m_included_cells.get(i).get(j+1))) {
+            do {
+              neighbour = toDir((short) Math.round(0 + (Math.random() * MAX_NEIGHBOUR)));
+            } // Si voy MOV entonces MOV tiene que haber una celda y la celda de
+              // MOV no está visitada.
+            while (!(neighbour == Direction.UP && i > 0 && !m_included_cells.get(i-1).get(j))
+                && !(neighbour == Direction.LEFT && j > 0 && !m_included_cells.get(i).get(j-1))
+                && !(neighbour == Direction.DOWN && i < m_rows-1 && !m_included_cells.get(i+1).get(j))
+                && !(neighbour == Direction.RIGHT && j < m_columns-1 && !m_included_cells.get(i).get(j+1)));
+
+            short[] aux = {i,j,neighbour.val};
+            return aux;
+          }
         }
       }
     }
     return null;
   }
 
+
   /**
-   *
-   * @param i
-   * @param j
-   * @param auxNeighbout
-   *
-   *          Abre el muro en una direccion en una posicion determinada, ademas
-   *          ayuda al getNeighbour a hacer su trabajo marcando los muros como
-   *          tirados.
-   *
+   * Elimina la pared colocada en la dirección [3] a partir de la
+   * celda ([1], [2]).
+   * @param neighbour Array de 3 posiciones: i, j y la dirección en la que
+   * eliminar la pared.
    */
   private void throwWall (final short[] neighbour) {
     short i = neighbour[0];
