@@ -2,19 +2,13 @@
  * @file Environment.java
  * @date 25/10/2014
  */
-package gui;
+package gui.environment;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
 import java.util.ArrayList;
 
-import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 
-import maze.Direction;
 import maze.Maze;
-import maze.MazeCell;
 import agent.Agent;
 
 /**
@@ -23,7 +17,8 @@ import agent.Agent;
  */
 public abstract class Environment extends JInternalFrame {
   private static final long serialVersionUID = 1L;
-  protected static final int CELL_SIZE_PX = 5;
+  private static final int WINDOW_BORDER_WIDTH = 11;
+  private static final int WINDOW_BORDER_HEIGHT = 34;
 
   private static int s_instance = 0;
   protected Maze m_maze;
@@ -38,8 +33,8 @@ public abstract class Environment extends JInternalFrame {
     setMaze(maze);
 
     setVisible(true);
-    ((JComponent) getContentPane()).setOpaque(false);
-    setSize(CELL_SIZE_PX * m_maze.getWidth(), CELL_SIZE_PX * m_maze.getHeight());
+    setContentPane(new EnvironmentPanel(this));
+    updateSize();
   }
 
   /**
@@ -61,6 +56,17 @@ public abstract class Environment extends JInternalFrame {
       m_maze = maze;
     else
       throw new IllegalArgumentException("El laberinto debe ser válido");
+  }
+
+  /**
+   * Actualiza el tamaño de la ventana con respecto al tamaño de su contenido,
+   * que es la representación del entorno.
+   */
+  public void updateSize () {
+    EnvironmentPanel panel = ((EnvironmentPanel) getContentPane());
+    panel.updateSize();
+    setSize(panel.getWidth() + WINDOW_BORDER_WIDTH,
+            panel.getHeight() + WINDOW_BORDER_HEIGHT);
   }
 
   /**
@@ -109,37 +115,5 @@ public abstract class Environment extends JInternalFrame {
    * @return true si algún agente ha salido del laberinto y false en otro caso.
    */
   public abstract boolean runStep ();
-
-  /* (non-Javadoc)
-   * @see javax.swing.JInternalFrame#paintComponent(java.awt.Graphics)
-   */
-  @Override
-  protected void paintComponent (Graphics g) {
-    super.paintComponent(g);
-
-    // Configuramos la paleta
-    g.setColor(Color.BLACK);
-
-    int width = m_maze.getWidth();
-    int height = m_maze.getHeight();
-
-    // Dibujamos sólo el laberinto. Los agentes se dibujan en las respectivas
-    // clases derivadas.
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        final MazeCell actual = m_maze.get(y, x);
-        Point pos = new Point(x * CELL_SIZE_PX, y * CELL_SIZE_PX);
-
-        if (actual.hasWall(Direction.UP))
-          g.drawLine(pos.x, pos.y, pos.x + CELL_SIZE_PX, pos.y);
-        if (actual.hasWall(Direction.DOWN))
-          g.drawLine(pos.x, pos.y + CELL_SIZE_PX, pos.x + CELL_SIZE_PX, pos.y + CELL_SIZE_PX);
-        if (actual.hasWall(Direction.LEFT))
-          g.drawLine(pos.x, pos.y, pos.x, pos.y + CELL_SIZE_PX);
-        if (actual.hasWall(Direction.RIGHT))
-          g.drawLine(pos.x + CELL_SIZE_PX, pos.y, pos.x + CELL_SIZE_PX, pos.y + CELL_SIZE_PX);
-      }
-    }
-  }
 
 }

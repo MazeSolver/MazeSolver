@@ -2,10 +2,8 @@
  * @file MultipleEnvironment.java
  * @date 27/10/2014
  */
-package gui;
+package gui.environment;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -32,15 +30,14 @@ public class MultipleEnvironment extends Environment {
     m_agents = new ArrayList<Agent>();
 
     // Añadimos la escucha del cursor para permitir al usuario seleccionar un
-    // agente
+    // agente.
     addMouseListener(new MouseAdapter() {
       /* (non-Javadoc)
        * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
        */
       @Override
       public void mouseClicked (MouseEvent e) {
-        Point maze_point = new Point(e.getX() / CELL_SIZE_PX,
-                                     e.getY() / CELL_SIZE_PX);
+        Point maze_point = EnvironmentPanel.screenCoordToGrid(e.getPoint());
 
         m_selected = -1;
         for (int i = 0; i < m_agents.size(); i++) {
@@ -173,26 +170,6 @@ public class MultipleEnvironment extends Environment {
     }
 
     return ended;
-  }
-
-  /* (non-Javadoc)
-   * @see gui.Environment#paintComponent(java.awt.Graphics)
-   */
-  protected void paintComponent (Graphics g) {
-    super.paintComponent(g);
-
-    g.setColor(Color.ORANGE);
-    for (Agent i: m_agents)
-      g.fillOval(i.getX() * CELL_SIZE_PX, i.getY() * CELL_SIZE_PX,
-                 CELL_SIZE_PX-1, CELL_SIZE_PX-1);
-
-    // Pintamos el agente seleccionado con otro color para resaltarlo
-    if (m_selected != -1) {
-      g.setColor(Color.RED);
-      g.fillOval(m_agents.get(m_selected).getX() * CELL_SIZE_PX,
-                 m_agents.get(m_selected).getY() * CELL_SIZE_PX,
-                 CELL_SIZE_PX-1, CELL_SIZE_PX-1);
-    }
   }
 
 }

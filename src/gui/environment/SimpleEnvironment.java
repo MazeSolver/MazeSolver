@@ -2,10 +2,8 @@
  * @file SimpleEnvironment.java
  * @date 27/10/2014
  */
-package gui;
+package gui.environment;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 
 import maze.Maze;
@@ -105,19 +103,6 @@ public class SimpleEnvironment extends Environment {
            m_agent.getY() < 0 ||
            m_agent.getX() >= m_maze.getWidth() ||
            m_agent.getY() >= m_maze.getHeight();
-  }
-
-  /* (non-Javadoc)
-   * @see gui.Environment#paintComponent(java.awt.Graphics)
-   */
-  protected void paintComponent (Graphics g) {
-    super.paintComponent(g);
-
-    if (m_agent != null) {
-      g.setColor(Color.RED);
-      g.fillOval(m_agent.getX() * CELL_SIZE_PX, m_agent.getY() * CELL_SIZE_PX,
-                 CELL_SIZE_PX-1, CELL_SIZE_PX-1);
-    }
   }
 
 }
