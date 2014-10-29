@@ -4,8 +4,10 @@
  */
 package gui.environment;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
+import maze.Direction;
 import maze.Maze;
 import agent.Agent;
 
@@ -88,6 +90,14 @@ public class SimpleEnvironment extends Environment {
   @Override
   public int getAgentCount () {
     return m_agent == null? 0 : 1;
+  }
+
+  /* (non-Javadoc)
+   * @see gui.environment.Environment#movementAllowed(java.awt.Point, maze.Direction)
+   */
+  @Override
+  public boolean movementAllowed (Point pos, Direction dir) {
+    return !m_maze.get(pos.y, pos.x).hasWall(dir);
   }
 
   /* (non-Javadoc)

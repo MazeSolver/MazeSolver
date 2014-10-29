@@ -9,7 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import maze.Direction;
 import maze.Maze;
+import util.Pair;
 import agent.Agent;
 
 /**
@@ -153,6 +155,22 @@ public class MultipleEnvironment extends Environment {
   @Override
   public int getAgentCount () {
     return m_agents.size();
+  }
+
+  /* (non-Javadoc)
+   * @see gui.environment.Environment#movementAllowed(java.awt.Point, maze.Direction)
+   */
+  @Override
+  public boolean movementAllowed (Point pos, Direction dir) {
+    if (!m_maze.get(pos.y, pos.x).hasWall(dir)) {
+      Pair<Integer, Integer> desp = Direction.decompose(dir);
+      for (Agent ag: m_agents) {
+        if (pos.x + desp.first == ag.getX() && pos.y + desp.second == ag.getY())
+          return true;
+      }
+    }
+
+    return false;
   }
 
   /* (non-Javadoc)

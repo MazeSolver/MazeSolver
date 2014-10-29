@@ -4,10 +4,12 @@
  */
 package gui.environment;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.swing.JInternalFrame;
 
+import maze.Direction;
 import maze.Maze;
 import agent.Agent;
 
@@ -19,8 +21,11 @@ public abstract class Environment extends JInternalFrame {
   private static final long serialVersionUID = 1L;
   private static final int WINDOW_BORDER_WIDTH = 11;
   private static final int WINDOW_BORDER_HEIGHT = 34;
+  private static final int WINDOWS_OFFSET = 20;
 
   private static int s_instance = 0;
+  private static Point start_pos = new Point();
+
   protected Maze m_maze;
 
   /**
@@ -29,12 +34,20 @@ public abstract class Environment extends JInternalFrame {
    * entre varios entornos.
    */
   protected Environment (Maze maze) {
-    super("Environment " + (++s_instance), true, true, false, false);
+    super("Environment " + (++s_instance), false, false, false, false);
     setMaze(maze);
 
     setVisible(true);
     setContentPane(new EnvironmentPanel(this));
     updateSize();
+
+    setLocation(start_pos);
+    start_pos.x += WINDOWS_OFFSET;
+    start_pos.y += WINDOWS_OFFSET;
+
+    // FIXME Esto debería poner el entorno delante de todos los demás que haya
+    // abiertos, pero no lo hace.
+    moveToFront();
   }
 
   /**
@@ -109,6 +122,15 @@ public abstract class Environment extends JInternalFrame {
    * @return Número de agentes actualmente en el entorno.
    */
   public abstract int getAgentCount ();
+
+  /**
+   * Indica si a partir de una posición, el movimiento hacia una determinada
+   * posición es posible o está ocupado por un agente o muro.
+   * @param pos Posición de partida.
+   * @param dir Dirección de movimiento.
+   * @return true si se puede y false si no.
+   */
+  public abstract boolean movementAllowed (Point pos, Direction dir);
 
   /**
    * Ejecuta un paso de la simulación de ejecución de los agentes en el entorno.
