@@ -5,10 +5,10 @@ program: sa_rule+ EOF ;
 
 sa_rule: situation IMPLIES action DOT ;
 
-situation: term AND term
-         | term OR term
-         | term
-         | LEFTPAR term RIGHTPAR ;
+situation: situation AND situation
+         | situation OR situation
+         | LEFTPAR situation RIGHTPAR
+         | term ;
 
 term: direction (FREE | WALL | VISITED) ;
 
