@@ -1,0 +1,4 @@
+UP WALL -> STOP.
+LEFT WALL & (UP VISITED | UP WALL) & DOWN FREE -> MOVE DOWN.
+left wall & up free -> move up.
+right free -> move right.
