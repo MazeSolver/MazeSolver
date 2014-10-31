@@ -12,6 +12,7 @@ import util.Pair;
  * varias direcciones en la misma variable simultáneamente.
  */
 public enum Direction {
+  NONE  ((short) 0x00),
   UP    ((short) 0x01),
   DOWN  ((short) 0x02),
   LEFT  ((short) 0x04),
