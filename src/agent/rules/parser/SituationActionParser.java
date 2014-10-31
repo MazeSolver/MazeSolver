@@ -1,5 +1,5 @@
 // Generated from SituationAction.g4 by ANTLR 4.4
-package parser;
+package agent.rules.parser;
 
 import java.util.List;
 
@@ -28,10 +28,11 @@ public class SituationActionParser extends Parser {
   protected static final DFA [] _decisionToDFA;
   protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
   public static final int IMPLIES = 1, DOT = 2, AND = 3, OR = 4, LEFTPAR = 5, RIGHTPAR = 6,
-      FREE = 7, WALL = 8, VISITED = 9, MOVE = 10, STOP = 11, UP = 12, DOWN = 13, LEFT = 14,
-      RIGHT = 15, BLANK = 16;
+      NOT = 7, FREE = 8, WALL = 9, VISITED = 10, AGENT = 11, OFFLIMITS = 12, MOVE = 13, STOP = 14,
+      UP = 15, DOWN = 16, LEFT = 17, RIGHT = 18, BLANK = 19;
   public static final String [] tokenNames = {"<INVALID>", "IMPLIES", "'.'", "'&'", "'|'", "'('",
-      "')'", "FREE", "WALL", "VISITED", "MOVE", "STOP", "UP", "DOWN", "LEFT", "RIGHT", "BLANK"};
+      "')'", "NOT", "FREE", "WALL", "VISITED", "AGENT", "OFFLIMITS", "MOVE", "STOP", "UP", "DOWN",
+      "LEFT", "RIGHT", "BLANK"};
   public static final int RULE_program = 0, RULE_sa_rule = 1, RULE_situation = 2, RULE_term = 3,
       RULE_action = 4, RULE_direction = 5;
   public static final String [] ruleNames = {"program", "sa_rule", "situation", "term", "action",
@@ -123,8 +124,8 @@ public class SituationActionParser extends Parser {
           _errHandler.sync(this);
           _la = _input.LA(1);
         }
-        while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LEFTPAR) | (1L << UP) | (1L << DOWN)
-            | (1L << LEFT) | (1L << RIGHT))) != 0));
+        while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LEFTPAR) | (1L << NOT) | (1L << UP)
+            | (1L << DOWN) | (1L << LEFT) | (1L << RIGHT))) != 0));
         setState(17);
         match(EOF);
       }
@@ -207,24 +208,82 @@ public class SituationActionParser extends Parser {
   }
 
   public static class SituationContext extends ParserRuleContext {
-    public List <SituationContext> situation () {
-      return getRuleContexts(SituationContext.class);
+    public SituationContext (ParserRuleContext parent, int invokingState) {
+      super(parent, invokingState);
     }
 
+    @Override
+    public int getRuleIndex () {
+      return RULE_situation;
+    }
+
+    public SituationContext () {
+    }
+
+    public void copyFrom (SituationContext ctx) {
+      super.copyFrom(ctx);
+    }
+  }
+
+  public static class SingleTermContext extends SituationContext {
     public TermContext term () {
       return getRuleContext(TermContext.class, 0);
+    }
+
+    public SingleTermContext (SituationContext ctx) {
+      copyFrom(ctx);
+    }
+
+    @Override
+    public void enterRule (ParseTreeListener listener) {
+      if (listener instanceof SituationActionListener)
+        ((SituationActionListener) listener).enterSingleTerm(this);
+    }
+
+    @Override
+    public void exitRule (ParseTreeListener listener) {
+      if (listener instanceof SituationActionListener)
+        ((SituationActionListener) listener).exitSingleTerm(this);
+    }
+  }
+
+  public static class OrContext extends SituationContext {
+    public List <SituationContext> situation () {
+      return getRuleContexts(SituationContext.class);
     }
 
     public SituationContext situation (int i) {
       return getRuleContext(SituationContext.class, i);
     }
 
-    public TerminalNode AND () {
-      return getToken(SituationActionParser.AND, 0);
-    }
-
     public TerminalNode OR () {
       return getToken(SituationActionParser.OR, 0);
+    }
+
+    public OrContext (SituationContext ctx) {
+      copyFrom(ctx);
+    }
+
+    @Override
+    public void enterRule (ParseTreeListener listener) {
+      if (listener instanceof SituationActionListener)
+        ((SituationActionListener) listener).enterOr(this);
+    }
+
+    @Override
+    public void exitRule (ParseTreeListener listener) {
+      if (listener instanceof SituationActionListener)
+        ((SituationActionListener) listener).exitOr(this);
+    }
+  }
+
+  public static class ParensContext extends SituationContext {
+    public SituationContext situation () {
+      return getRuleContext(SituationContext.class, 0);
+    }
+
+    public TerminalNode NOT () {
+      return getToken(SituationActionParser.NOT, 0);
     }
 
     public TerminalNode RIGHTPAR () {
@@ -235,25 +294,50 @@ public class SituationActionParser extends Parser {
       return getToken(SituationActionParser.LEFTPAR, 0);
     }
 
-    public SituationContext (ParserRuleContext parent, int invokingState) {
-      super(parent, invokingState);
-    }
-
-    @Override
-    public int getRuleIndex () {
-      return RULE_situation;
+    public ParensContext (SituationContext ctx) {
+      copyFrom(ctx);
     }
 
     @Override
     public void enterRule (ParseTreeListener listener) {
       if (listener instanceof SituationActionListener)
-        ((SituationActionListener) listener).enterSituation(this);
+        ((SituationActionListener) listener).enterParens(this);
     }
 
     @Override
     public void exitRule (ParseTreeListener listener) {
       if (listener instanceof SituationActionListener)
-        ((SituationActionListener) listener).exitSituation(this);
+        ((SituationActionListener) listener).exitParens(this);
+    }
+  }
+
+  public static class AndContext extends SituationContext {
+    public List <SituationContext> situation () {
+      return getRuleContexts(SituationContext.class);
+    }
+
+    public SituationContext situation (int i) {
+      return getRuleContext(SituationContext.class, i);
+    }
+
+    public TerminalNode AND () {
+      return getToken(SituationActionParser.AND, 0);
+    }
+
+    public AndContext (SituationContext ctx) {
+      copyFrom(ctx);
+    }
+
+    @Override
+    public void enterRule (ParseTreeListener listener) {
+      if (listener instanceof SituationActionListener)
+        ((SituationActionListener) listener).enterAnd(this);
+    }
+
+    @Override
+    public void exitRule (ParseTreeListener listener) {
+      if (listener instanceof SituationActionListener)
+        ((SituationActionListener) listener).exitAnd(this);
     }
   }
 
@@ -268,18 +352,33 @@ public class SituationActionParser extends Parser {
     SituationContext _prevctx = _localctx;
     int _startState = 4;
     enterRecursionRule(_localctx, 4, RULE_situation, _p);
+    int _la;
     try {
       int _alt;
       enterOuterAlt(_localctx, 1);
       {
-        setState(30);
+        setState(33);
         switch (_input.LA(1)) {
-          case LEFTPAR: {
-            setState(25);
-            match(LEFTPAR);
+          case LEFTPAR:
+          case NOT: {
+            _localctx = new ParensContext(_localctx);
+            _ctx = _localctx;
+            _prevctx = _localctx;
+
             setState(26);
+            _la = _input.LA(1);
+            if (_la == NOT) {
+              {
+                setState(25);
+                match(NOT);
+              }
+            }
+
+            setState(28);
+            match(LEFTPAR);
+            setState(29);
             situation(0);
-            setState(27);
+            setState(30);
             match(RIGHTPAR);
           }
             break;
@@ -287,7 +386,10 @@ public class SituationActionParser extends Parser {
           case DOWN:
           case LEFT:
           case RIGHT: {
-            setState(29);
+            _localctx = new SingleTermContext(_localctx);
+            _ctx = _localctx;
+            _prevctx = _localctx;
+            setState(32);
             term();
           }
             break;
@@ -295,47 +397,47 @@ public class SituationActionParser extends Parser {
             throw new NoViableAltException(this);
         }
         _ctx.stop = _input.LT(-1);
-        setState(40);
+        setState(43);
         _errHandler.sync(this);
-        _alt = getInterpreter().adaptivePredict(_input, 3, _ctx);
+        _alt = getInterpreter().adaptivePredict(_input, 4, _ctx);
         while (_alt != 2 && _alt != org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER) {
           if (_alt == 1) {
             if (_parseListeners != null)
               triggerExitRuleEvent();
             _prevctx = _localctx;
             {
-              setState(38);
-              switch (getInterpreter().adaptivePredict(_input, 2, _ctx)) {
+              setState(41);
+              switch (getInterpreter().adaptivePredict(_input, 3, _ctx)) {
                 case 1: {
-                  _localctx = new SituationContext(_parentctx, _parentState);
+                  _localctx = new AndContext(new SituationContext(_parentctx, _parentState));
                   pushNewRecursionContext(_localctx, _startState, RULE_situation);
-                  setState(32);
+                  setState(35);
                   if (!(precpred(_ctx, 4)))
                     throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-                  setState(33);
+                  setState(36);
                   match(AND);
-                  setState(34);
+                  setState(37);
                   situation(5);
                 }
                   break;
                 case 2: {
-                  _localctx = new SituationContext(_parentctx, _parentState);
+                  _localctx = new OrContext(new SituationContext(_parentctx, _parentState));
                   pushNewRecursionContext(_localctx, _startState, RULE_situation);
-                  setState(35);
+                  setState(38);
                   if (!(precpred(_ctx, 3)))
                     throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-                  setState(36);
+                  setState(39);
                   match(OR);
-                  setState(37);
+                  setState(40);
                   situation(4);
                 }
                   break;
               }
             }
           }
-          setState(42);
+          setState(45);
           _errHandler.sync(this);
-          _alt = getInterpreter().adaptivePredict(_input, 3, _ctx);
+          _alt = getInterpreter().adaptivePredict(_input, 4, _ctx);
         }
       }
     }
@@ -351,8 +453,20 @@ public class SituationActionParser extends Parser {
   }
 
   public static class TermContext extends ParserRuleContext {
+    public TerminalNode NOT () {
+      return getToken(SituationActionParser.NOT, 0);
+    }
+
     public TerminalNode FREE () {
       return getToken(SituationActionParser.FREE, 0);
+    }
+
+    public TerminalNode AGENT () {
+      return getToken(SituationActionParser.AGENT, 0);
+    }
+
+    public TerminalNode OFFLIMITS () {
+      return getToken(SituationActionParser.OFFLIMITS, 0);
     }
 
     public TerminalNode WALL () {
@@ -396,11 +510,21 @@ public class SituationActionParser extends Parser {
     try {
       enterOuterAlt(_localctx, 1);
       {
-        setState(43);
+        setState(46);
         direction();
-        setState(44);
+        setState(48);
         _la = _input.LA(1);
-        if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << FREE) | (1L << WALL) | (1L << VISITED))) != 0))) {
+        if (_la == NOT) {
+          {
+            setState(47);
+            match(NOT);
+          }
+        }
+
+        setState(50);
+        _la = _input.LA(1);
+        if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << FREE) | (1L << WALL)
+            | (1L << VISITED) | (1L << AGENT) | (1L << OFFLIMITS))) != 0))) {
           _errHandler.recoverInline(this);
         }
         consume();
@@ -456,21 +580,21 @@ public class SituationActionParser extends Parser {
     ActionContext _localctx = new ActionContext(_ctx, getState());
     enterRule(_localctx, 8, RULE_action);
     try {
-      setState(49);
+      setState(55);
       switch (_input.LA(1)) {
         case MOVE:
           enterOuterAlt(_localctx, 1);
           {
-            setState(46);
+            setState(52);
             match(MOVE);
-            setState(47);
+            setState(53);
             direction();
           }
           break;
         case STOP:
           enterOuterAlt(_localctx, 2);
           {
-            setState(48);
+            setState(54);
             match(STOP);
           }
           break;
@@ -535,7 +659,7 @@ public class SituationActionParser extends Parser {
     try {
       enterOuterAlt(_localctx, 1);
       {
-        setState(51);
+        setState(57);
         _la = _input.LA(1);
         if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << UP) | (1L << DOWN) | (1L << LEFT) | (1L << RIGHT))) != 0))) {
           _errHandler.recoverInline(this);
@@ -573,21 +697,22 @@ public class SituationActionParser extends Parser {
   }
 
   public static final String _serializedATN =
-      "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\228\4\2\t\2\4\3\t"
+      "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\25>\4\2\t\2\4\3\t"
           + "\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\6\2\20\n\2\r\2\16\2\21\3\2\3\2"
-          + "\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\5\4!\n\4\3\4\3\4\3\4\3\4"
-          + "\3\4\3\4\7\4)\n\4\f\4\16\4,\13\4\3\5\3\5\3\5\3\6\3\6\3\6\5\6\64\n\6\3"
-          + "\7\3\7\3\7\2\3\6\b\2\4\6\b\n\f\2\4\3\2\t\13\3\2\16\21\66\2\17\3\2\2\2"
-          + "\4\25\3\2\2\2\6 \3\2\2\2\b-\3\2\2\2\n\63\3\2\2\2\f\65\3\2\2\2\16\20\5"
-          + "\4\3\2\17\16\3\2\2\2\20\21\3\2\2\2\21\17\3\2\2\2\21\22\3\2\2\2\22\23\3"
-          + "\2\2\2\23\24\7\2\2\3\24\3\3\2\2\2\25\26\5\6\4\2\26\27\7\3\2\2\27\30\5"
-          + "\n\6\2\30\31\7\4\2\2\31\5\3\2\2\2\32\33\b\4\1\2\33\34\7\7\2\2\34\35\5"
-          + "\6\4\2\35\36\7\b\2\2\36!\3\2\2\2\37!\5\b\5\2 \32\3\2\2\2 \37\3\2\2\2!"
-          + "*\3\2\2\2\"#\f\6\2\2#$\7\5\2\2$)\5\6\4\7%&\f\5\2\2&\'\7\6\2\2\')\5\6\4"
-          + "\6(\"\3\2\2\2(%\3\2\2\2),\3\2\2\2*(\3\2\2\2*+\3\2\2\2+\7\3\2\2\2,*\3\2"
-          + "\2\2-.\5\f\7\2./\t\2\2\2/\t\3\2\2\2\60\61\7\f\2\2\61\64\5\f\7\2\62\64"
-          + "\7\r\2\2\63\60\3\2\2\2\63\62\3\2\2\2\64\13\3\2\2\2\65\66\t\3\2\2\66\r"
-          + "\3\2\2\2\7\21 (*\63";
+          + "\3\3\3\3\3\3\3\3\3\3\3\4\3\4\5\4\35\n\4\3\4\3\4\3\4\3\4\3\4\5\4$\n\4\3"
+          + "\4\3\4\3\4\3\4\3\4\3\4\7\4,\n\4\f\4\16\4/\13\4\3\5\3\5\5\5\63\n\5\3\5"
+          + "\3\5\3\6\3\6\3\6\5\6:\n\6\3\7\3\7\3\7\2\3\6\b\2\4\6\b\n\f\2\4\3\2\n\16"
+          + "\3\2\21\24>\2\17\3\2\2\2\4\25\3\2\2\2\6#\3\2\2\2\b\60\3\2\2\2\n9\3\2\2"
+          + "\2\f;\3\2\2\2\16\20\5\4\3\2\17\16\3\2\2\2\20\21\3\2\2\2\21\17\3\2\2\2"
+          + "\21\22\3\2\2\2\22\23\3\2\2\2\23\24\7\2\2\3\24\3\3\2\2\2\25\26\5\6\4\2"
+          + "\26\27\7\3\2\2\27\30\5\n\6\2\30\31\7\4\2\2\31\5\3\2\2\2\32\34\b\4\1\2"
+          + "\33\35\7\t\2\2\34\33\3\2\2\2\34\35\3\2\2\2\35\36\3\2\2\2\36\37\7\7\2\2"
+          + "\37 \5\6\4\2 !\7\b\2\2!$\3\2\2\2\"$\5\b\5\2#\32\3\2\2\2#\"\3\2\2\2$-\3"
+          + "\2\2\2%&\f\6\2\2&\'\7\5\2\2\',\5\6\4\7()\f\5\2\2)*\7\6\2\2*,\5\6\4\6+"
+          + "%\3\2\2\2+(\3\2\2\2,/\3\2\2\2-+\3\2\2\2-.\3\2\2\2.\7\3\2\2\2/-\3\2\2\2"
+          + "\60\62\5\f\7\2\61\63\7\t\2\2\62\61\3\2\2\2\62\63\3\2\2\2\63\64\3\2\2\2"
+          + "\64\65\t\2\2\2\65\t\3\2\2\2\66\67\7\17\2\2\67:\5\f\7\28:\7\20\2\29\66"
+          + "\3\2\2\298\3\2\2\2:\13\3\2\2\2;<\t\3\2\2<\r\3\2\2\2\t\21\34#+-\629";
   public static final ATN _ATN = new ATNDeserializer().deserialize(_serializedATN.toCharArray());
   static {
     _decisionToDFA = new DFA [_ATN.getNumberOfDecisions()];
@@ -595,5 +720,4 @@ public class SituationActionParser extends Parser {
       _decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
     }
   }
-
 }
