@@ -1,5 +1,5 @@
 // Generated from SituationAction.g4 by ANTLR 4.4
-package parser;
+package agent.rules.parser;
 
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -9,6 +9,78 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * {@link SituationActionParser}.
  */
 public interface SituationActionListener extends ParseTreeListener {
+  /**
+   * Enter a parse tree produced by the {@code SingleTerm} labeled alternative
+   * in {@link SituationActionParser#situation}.
+   *
+   * @param ctx
+   *          the parse tree
+   */
+  void enterSingleTerm (@NotNull SituationActionParser.SingleTermContext ctx);
+
+  /**
+   * Exit a parse tree produced by the {@code SingleTerm} labeled alternative in
+   * {@link SituationActionParser#situation}.
+   *
+   * @param ctx
+   *          the parse tree
+   */
+  void exitSingleTerm (@NotNull SituationActionParser.SingleTermContext ctx);
+
+  /**
+   * Enter a parse tree produced by the {@code Or} labeled alternative in
+   * {@link SituationActionParser#situation}.
+   *
+   * @param ctx
+   *          the parse tree
+   */
+  void enterOr (@NotNull SituationActionParser.OrContext ctx);
+
+  /**
+   * Exit a parse tree produced by the {@code Or} labeled alternative in
+   * {@link SituationActionParser#situation}.
+   *
+   * @param ctx
+   *          the parse tree
+   */
+  void exitOr (@NotNull SituationActionParser.OrContext ctx);
+
+  /**
+   * Enter a parse tree produced by the {@code Parens} labeled alternative in
+   * {@link SituationActionParser#situation}.
+   *
+   * @param ctx
+   *          the parse tree
+   */
+  void enterParens (@NotNull SituationActionParser.ParensContext ctx);
+
+  /**
+   * Exit a parse tree produced by the {@code Parens} labeled alternative in
+   * {@link SituationActionParser#situation}.
+   *
+   * @param ctx
+   *          the parse tree
+   */
+  void exitParens (@NotNull SituationActionParser.ParensContext ctx);
+
+  /**
+   * Enter a parse tree produced by the {@code And} labeled alternative in
+   * {@link SituationActionParser#situation}.
+   *
+   * @param ctx
+   *          the parse tree
+   */
+  void enterAnd (@NotNull SituationActionParser.AndContext ctx);
+
+  /**
+   * Exit a parse tree produced by the {@code And} labeled alternative in
+   * {@link SituationActionParser#situation}.
+   *
+   * @param ctx
+   *          the parse tree
+   */
+  void exitAnd (@NotNull SituationActionParser.AndContext ctx);
+
   /**
    * Enter a parse tree produced by {@link SituationActionParser#action}.
    *
@@ -74,22 +146,6 @@ public interface SituationActionListener extends ParseTreeListener {
   void exitSa_rule (@NotNull SituationActionParser.Sa_ruleContext ctx);
 
   /**
-   * Enter a parse tree produced by {@link SituationActionParser#situation}.
-   *
-   * @param ctx
-   *          the parse tree
-   */
-  void enterSituation (@NotNull SituationActionParser.SituationContext ctx);
-
-  /**
-   * Exit a parse tree produced by {@link SituationActionParser#situation}.
-   *
-   * @param ctx
-   *          the parse tree
-   */
-  void exitSituation (@NotNull SituationActionParser.SituationContext ctx);
-
-  /**
    * Enter a parse tree produced by {@link SituationActionParser#direction}.
    *
    * @param ctx
@@ -104,5 +160,4 @@ public interface SituationActionListener extends ParseTreeListener {
    *          the parse tree
    */
   void exitDirection (@NotNull SituationActionParser.DirectionContext ctx);
-
 }

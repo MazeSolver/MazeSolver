@@ -5,12 +5,13 @@ program: sa_rule+ EOF ;
 
 sa_rule: situation IMPLIES action DOT ;
 
-situation: situation AND situation
-         | situation OR situation
-         | LEFTPAR situation RIGHTPAR
-         | term ;
+situation: situation AND situation         # And
+         | situation OR situation          # Or
+         | NOT? LEFTPAR situation RIGHTPAR # Parens
+         | term                            # SingleTerm
+         ;
 
-term: direction (FREE | WALL | VISITED) ;
+term: direction NOT? (FREE | WALL | VISITED | AGENT | OFFLIMITS) ;
 
 action: MOVE direction
       | STOP ;
@@ -18,7 +19,8 @@ action: MOVE direction
 direction: UP
          | DOWN
          | LEFT
-         | RIGHT ;
+         | RIGHT
+         ;
 
 // Tokens
 IMPLIES: '=>'
@@ -30,11 +32,20 @@ OR:       '|' ;
 LEFTPAR:  '(' ;
 RIGHTPAR: ')' ;
 
-FREE:    F R E E ;
-WALL:    W A L L ;
-VISITED: V I S I T E D ;
+NOT: N O T
+   | '!'
+   | '~'
+   ;
 
-MOVE: M O V E ;
+FREE:      F R E E ;
+WALL:      W A L L ;
+VISITED:   V I S I T E D ;
+AGENT:     A G E N T ;
+OFFLIMITS: O F F L I M I T S ;
+
+MOVE: M O V E
+    | G O
+    ;
 STOP: S T O P ;
 
 UP:    U P ;

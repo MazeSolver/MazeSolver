@@ -1,5 +1,5 @@
 // Generated from SituationAction.g4 by ANTLR 4.4
-package parser;
+package agent.rules.parser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -12,6 +12,94 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * which only needs to handle a subset of the available methods.
  */
 public class SituationActionBaseListener implements SituationActionListener {
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * The default implementation does nothing.
+   * </p>
+   */
+  @Override
+  public void enterSingleTerm (@NotNull SituationActionParser.SingleTermContext ctx) {
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * The default implementation does nothing.
+   * </p>
+   */
+  @Override
+  public void exitSingleTerm (@NotNull SituationActionParser.SingleTermContext ctx) {
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * The default implementation does nothing.
+   * </p>
+   */
+  @Override
+  public void enterOr (@NotNull SituationActionParser.OrContext ctx) {
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * The default implementation does nothing.
+   * </p>
+   */
+  @Override
+  public void exitOr (@NotNull SituationActionParser.OrContext ctx) {
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * The default implementation does nothing.
+   * </p>
+   */
+  @Override
+  public void enterParens (@NotNull SituationActionParser.ParensContext ctx) {
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * The default implementation does nothing.
+   * </p>
+   */
+  @Override
+  public void exitParens (@NotNull SituationActionParser.ParensContext ctx) {
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * The default implementation does nothing.
+   * </p>
+   */
+  @Override
+  public void enterAnd (@NotNull SituationActionParser.AndContext ctx) {
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * The default implementation does nothing.
+   * </p>
+   */
+  @Override
+  public void exitAnd (@NotNull SituationActionParser.AndContext ctx) {
+  }
+
   /**
    * {@inheritDoc}
    *
@@ -108,28 +196,6 @@ public class SituationActionBaseListener implements SituationActionListener {
    * </p>
    */
   @Override
-  public void enterSituation (@NotNull SituationActionParser.SituationContext ctx) {
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation does nothing.
-   * </p>
-   */
-  @Override
-  public void exitSituation (@NotNull SituationActionParser.SituationContext ctx) {
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation does nothing.
-   * </p>
-   */
-  @Override
   public void enterDirection (@NotNull SituationActionParser.DirectionContext ctx) {
   }
 
@@ -187,5 +253,4 @@ public class SituationActionBaseListener implements SituationActionListener {
   @Override
   public void visitErrorNode (@NotNull ErrorNode node) {
   }
-
 }
