@@ -164,8 +164,8 @@ public abstract class RulePredicate {
    * Regla que gestiona la unión de 2 reglas usando los operadores definidos.
    */
   private static class ComplexRulePredicate extends RulePredicate {
-    RulePredicate m_p1, m_p2;
-    RuleConnector m_connector;
+    private RulePredicate m_p1, m_p2;
+    private RuleConnector m_connector;
 
     /**
      * @param p1
