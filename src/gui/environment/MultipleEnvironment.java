@@ -143,8 +143,12 @@ public class MultipleEnvironment extends Environment {
   @Override
   public ArrayList <Agent> getAgents () {
     ArrayList <Agent> agents = new ArrayList <Agent>();
-    for (Agent i: m_agents)
-      agents.add(i.duplicate());
+
+    try {
+      for (Agent i: m_agents)
+        agents.add((Agent) i.clone());
+    }
+    catch (CloneNotSupportedException e) {}
 
     return agents;
   }

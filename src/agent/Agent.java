@@ -14,7 +14,7 @@ import maze.Maze;
 /**
  * Clase que representa un agente abstracto que se encuentra en algún laberinto.
  */
-public abstract class Agent {
+public abstract class Agent implements Cloneable {
   protected Point m_pos;
   protected Maze m_maze;
 
@@ -66,11 +66,6 @@ public abstract class Agent {
   }
 
   /**
-   * @return Una copia de sí mismo.
-   */
-  public abstract Agent duplicate ();
-
-  /**
    * @return La dirección en la que el agente quiere realizar el siguiente
    *         movimiento.
    */
@@ -85,5 +80,11 @@ public abstract class Agent {
    * @return Un panel de configuración para el agente.
    */
   public abstract JPanel getConfigurationPanel ();
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public abstract Object clone () throws CloneNotSupportedException;
 
 }

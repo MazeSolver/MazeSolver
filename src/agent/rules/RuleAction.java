@@ -11,7 +11,7 @@ import agent.rules.parser.SituationActionParser.DirectionContext;
 /**
  * Clase que representa a la acción asociada a una regla.
  */
-public class RuleAction {
+public class RuleAction implements Cloneable {
   private Direction m_direction;
 
   /**
@@ -58,6 +58,14 @@ public class RuleAction {
    */
   public Direction getDirection () {
     return m_direction;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  protected Object clone () throws CloneNotSupportedException {
+    return new RuleAction(m_direction);
   }
 
 }

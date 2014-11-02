@@ -18,7 +18,7 @@ import agent.rules.parser.SituationActionParser.TermContext;
 /**
  * Representa una situación o predicado dentro de una regla de situación-acción.
  */
-public abstract class RulePredicate {
+public abstract class RulePredicate implements Cloneable {
   protected boolean m_negated = false;
 
   /**
@@ -83,6 +83,12 @@ public abstract class RulePredicate {
    * @return Si la situación representada se da para el agente indicado.
    */
   public abstract boolean evaluate (Agent ag);
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public abstract Object clone () throws CloneNotSupportedException;
 
   /**
    * Subclase que gestiona una regla sin conectores. Es decir, un término de la
@@ -158,6 +164,16 @@ public abstract class RulePredicate {
       return false;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    @Override
+    public Object clone () throws CloneNotSupportedException {
+      SimpleRulePredicate pred = new SimpleRulePredicate(m_direction, m_status);
+      pred.m_negated = m_negated;
+      return pred;
+    }
+
   }
 
   /**
@@ -198,6 +214,18 @@ public abstract class RulePredicate {
           break;
       }
       return result ^ m_negated;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    @Override
+    public Object clone () throws CloneNotSupportedException {
+      ComplexRulePredicate pred = new ComplexRulePredicate(
+          (RulePredicate) m_p1.clone(), (RulePredicate) m_p2.clone(),
+          m_connector);
+      pred.m_negated = m_negated;
+      return pred;
     }
 
   }

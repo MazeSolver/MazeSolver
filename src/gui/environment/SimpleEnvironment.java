@@ -80,7 +80,12 @@ public class SimpleEnvironment extends Environment {
   @Override
   public ArrayList <Agent> getAgents () {
     ArrayList <Agent> agents = new ArrayList <Agent>();
-    agents.add(m_agent.duplicate());
+
+    try {
+      agents.add((Agent) m_agent.clone());
+    }
+    catch (CloneNotSupportedException e) {}
+
     return agents;
   }
 

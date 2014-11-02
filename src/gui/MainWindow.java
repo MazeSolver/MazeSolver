@@ -4,6 +4,9 @@
  */
 package gui;
 
+import gui.environment.EnvironmentSet;
+import gui.environment.SimpleEnvironment;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
@@ -177,6 +180,13 @@ public class MainWindow extends JFrame {
     m_toolbar.add(new JSeparator(JSeparator.VERTICAL));
     m_toolbar.add(new JLabel("Zoom:"));
     m_toolbar.add(m_zoom);
+  }
+
+  /**
+   * Cierra el panel de configuración.
+   */
+  public void closeConfigurationPanel () {
+    // TODO Se requiere una versión más actualizada de la clase
   }
 
 }

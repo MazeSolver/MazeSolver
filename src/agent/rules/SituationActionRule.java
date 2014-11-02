@@ -10,7 +10,7 @@ import agent.rules.parser.SituationActionParser.Sa_ruleContext;
 /**
  * Clase que modela una regla de situación-acción.
  */
-public class SituationActionRule {
+public class SituationActionRule implements Cloneable {
   private RulePredicate m_predicate;
   private RuleAction m_action;
 
@@ -58,4 +58,14 @@ public class SituationActionRule {
       return m_action;
     return null;
   }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public Object clone () throws CloneNotSupportedException {
+    return new SituationActionRule((RulePredicate) m_predicate.clone(),
+                                   (RuleAction) m_action.clone());
+  }
+
 }
