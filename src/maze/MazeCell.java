@@ -89,4 +89,5 @@ public class MazeCell {
      */
     OFFLIMITS;
   }
+
 }

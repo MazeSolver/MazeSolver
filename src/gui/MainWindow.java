@@ -23,6 +23,7 @@ import javax.swing.JToolBar;
 
 import maze.Maze;
 import maze.algorithm.Prim;
+import agent.SARulesAgent;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -52,7 +53,9 @@ public class MainWindow extends JFrame {
    * @return Instancia única de la clase.
    */
   public static MainWindow getInstance () {
-    return m_instance != null? m_instance : new MainWindow();
+    if (m_instance == null)
+      m_instance = new MainWindow();
+    return m_instance;
   }
 
   // Panel que contiene la barra de acciones y tanto el panel con los laberintos
@@ -105,6 +108,11 @@ public class MainWindow extends JFrame {
     // XXX Sólo de prueba. Borrar cuando se haya probado la visualización del
     // laberinto y la generación del mismo.
     m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Prim(20, 20))));
+
+    // XXX Pruebas
+    SARulesAgent ag = new SARulesAgent(new Maze(new Prim(20, 20)));
+    m_config_panel = ag.getConfigurationPanel();
+    m_global_panel.add(m_config_panel, BorderLayout.WEST);
 
     m_global_panel.add(m_environments, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
@@ -186,7 +194,12 @@ public class MainWindow extends JFrame {
    * Cierra el panel de configuración.
    */
   public void closeConfigurationPanel () {
-    // TODO Se requiere una versión más actualizada de la clase
+    if (m_config_panel != null) {
+      m_global_panel.remove(m_config_panel);
+      m_config_panel = null;
+      m_global_panel.revalidate();
+      m_global_panel.repaint();
+    }
   }
 
 }

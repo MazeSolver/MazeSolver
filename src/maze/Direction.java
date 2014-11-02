@@ -46,6 +46,8 @@ public enum Direction {
   public static Pair<Integer, Integer> decompose (Direction dir) {
     Pair<Integer, Integer> p = new Pair <Integer, Integer>(0, 0);
     switch (dir) {
+      case NONE:
+        break;
       case UP:
         p.second = -1;
         break;

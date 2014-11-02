@@ -7,6 +7,7 @@ package agent;
 import gui.MainWindow;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -28,6 +29,7 @@ import maze.Maze;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import util.Pair;
 import agent.rules.RuleAction;
 import agent.rules.SituationActionRule;
 import agent.rules.parser.SituationActionLexer;
@@ -40,6 +42,8 @@ import agent.rules.parser.SituationActionParser.Sa_ruleContext;
  * para la cual la situación se cumple.
  */
 public class SARulesAgent extends Agent {
+  public static final int MINIMUM_WIDTH = 200;
+  public static final int MINIMUM_HEIGHT = 400;
   public static final String DEFAULT_AGENT_SRC =
         "UP FREE -> MOVE UP.\n"
       + "LEFT NOT VISITED & LEFT FREE -> MOVE LEFT.\n"
@@ -52,7 +56,7 @@ public class SARulesAgent extends Agent {
   /**
    * @param maze Laberinto donde se sitúa el agente.
    */
-  protected SARulesAgent (Maze maze) {
+  public SARulesAgent (Maze maze) {
     super(maze);
     m_rules = new ArrayList <SituationActionRule>();
     m_code = DEFAULT_AGENT_SRC;
@@ -79,8 +83,11 @@ public class SARulesAgent extends Agent {
    */
   @Override
   public void doMovement (Direction dir) {
-    // TODO Se necesita la versión actualizada de Direction
-    // if (!m_maze.get(m_pos.x, m_pos.y).hasWall(dir))
+    if (!m_maze.get(m_pos.x, m_pos.y).hasWall(dir)) {
+      Pair<Integer, Integer> mov = Direction.decompose(dir);
+      m_pos.x += mov.first;
+      m_pos.y += mov.second;
+    }
   }
 
   /* (non-Javadoc)
@@ -124,6 +131,7 @@ public class SARulesAgent extends Agent {
       }
     });
 
+    config_panel.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
     return config_panel;
   }
 
