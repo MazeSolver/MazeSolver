@@ -37,11 +37,9 @@ public class Kruskal extends MazeCreationAlgorithm {
     for (int i = 0; i < rows; i++) {
       m_included_cells.add(new ArrayList <Boolean>(columns));
       for (int j = 0; j < columns; j++)
-      {
         m_included_cells.get(i).add(false);
-        addCell(i, j);
-      }
     }
+    addAll();
   }
 
   /* (non-Javadoc)
@@ -136,6 +134,17 @@ public class Kruskal extends MazeCreationAlgorithm {
         return Direction.RIGHT;
     }
     return null;
+  }
+
+  /**
+   * Añade todos los muros a la lista de muros a elegir aleatoriamente
+   */
+  private void addAll ()
+  {
+    for (int i = 0; i < m_rows; i++) {
+      for (int j = 0; j < m_columns; j++)
+        addCell(i, j);
+    }
   }
 
   /**

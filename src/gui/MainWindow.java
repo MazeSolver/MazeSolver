@@ -19,7 +19,7 @@ import javax.swing.JSlider;
 import javax.swing.JToolBar;
 
 import maze.Maze;
-import maze.algorithm.Prim;
+import maze.algorithm.Kruskal;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -101,7 +101,7 @@ public class MainWindow extends JFrame {
 
     // XXX Sólo de prueba. Borrar cuando se haya probado la visualización del
     // laberinto y la generación del mismo.
-    m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Prim(20, 20))));
+    m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Kruskal(20, 20))));
 
     m_global_panel.add(m_environments, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
