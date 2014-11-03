@@ -77,6 +77,12 @@ public abstract class Agent implements Cloneable {
   public abstract void doMovement (Direction dir);
 
   /**
+   * Elimina la memoria que el agente tenga sobre el entorno. No elimina su
+   * configuración, sino que lo deja en el estado inicial.
+   */
+  public abstract void resetMemory ();
+
+  /**
    * @return Un panel de configuración para el agente.
    */
   public abstract JPanel getConfigurationPanel ();

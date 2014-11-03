@@ -91,6 +91,13 @@ public class SARulesAgent extends Agent {
   }
 
   /* (non-Javadoc)
+   * @see agent.Agent#resetMemory()
+   */
+  public void resetMemory () {
+    // TODO Borrar matriz de visitados
+  }
+
+  /* (non-Javadoc)
    * @see agent.Agent#getConfigurationPanel()
    */
   @Override

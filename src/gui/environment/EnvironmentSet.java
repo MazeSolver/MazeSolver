@@ -88,7 +88,7 @@ public class EnvironmentSet extends JDesktopPane {
    * @param ag Referencia al agente que se quiere eliminar del entorno.
    * @param env Entorno del cual se quiere eliminar el agente.
    */
-  public void deleteAgentFromEnvironment (Agent ag, Environment env) {
+  public void removeAgentFromEnvironment (Agent ag, Environment env) {
     if (m_envs.contains(env)) {
       m_envs.remove(env);
       m_envs.add(env.removeAgent(ag));
