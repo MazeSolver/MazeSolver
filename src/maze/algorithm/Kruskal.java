@@ -96,22 +96,18 @@ public class Kruskal extends MazeCreationAlgorithm {
         case UP:
           m_included_cells.get(i - 1).set(j, true);
           m_maze.get(i - 1).get(j).unsetWall(Direction.DOWN);
-          addCell(i - 1, j);
           break;
         case DOWN:
           m_included_cells.get(i + 1).set(j, true);
           m_maze.get(i + 1).get(j).unsetWall(Direction.UP);
-          addCell(i + 1, j);
           break;
         case LEFT:
           m_included_cells.get(i).set(j - 1, true);
           m_maze.get(i).get(j - 1).unsetWall(Direction.RIGHT);
-          addCell(i, j - 1);
           break;
         case RIGHT:
           m_included_cells.get(i).set(j + 1, true);
           m_maze.get(i).get(j + 1).unsetWall(Direction.LEFT);
-          addCell(i, j + 1);
           break;
       }
     }
