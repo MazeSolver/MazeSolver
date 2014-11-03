@@ -182,13 +182,13 @@ public class MultipleEnvironment extends Environment {
    */
   @Override
   public boolean runStep () {
-    boolean ended = false;
+    boolean ended = true;
 
     for (Agent i: m_agents) {
       i.doMovement(i.getNextMovement());
-      if (i.getX() < 0 || i.getY() < 0 || i.getX() >= m_maze.getWidth() ||
-          i.getY() >= m_maze.getHeight())
-        ended = true;
+      if (i.getX() > 0 && i.getY() > 0 && i.getX() < m_maze.getWidth() &&
+          i.getY() < m_maze.getHeight())
+        ended = false;
     }
 
     return ended;

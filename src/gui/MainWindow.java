@@ -373,4 +373,11 @@ public class MainWindow extends JFrame {
     }
   }
 
+  /**
+   * @return La lista de entornos cargados.
+   */
+  public EnvironmentSet getEnvironments () {
+    return m_environments;
+  }
+
 }
