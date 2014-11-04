@@ -11,6 +11,8 @@ import javax.swing.JInternalFrame;
 
 import maze.Direction;
 import maze.Maze;
+import maze.MazeCell;
+import util.Pair;
 import agent.Agent;
 
 /**
@@ -83,6 +85,41 @@ public abstract class Environment extends JInternalFrame {
   }
 
   /**
+   * Este método permite saber lo que puede ver un agente si mira en una
+   * dirección específica. La versión en la clase principal no maneja agentes,
+   * por lo que debe ser sobrecargada para gestionarlos.
+   * @param pos Posición desde la que mirar.
+   * @param dir Dirección hacia la que mirar.
+   * @return Lo que vería un agente en la posición especificada si mirara hacia
+   * la dirección indicada.
+   */
+  public MazeCell.Vision look (Point pos, Direction dir) {
+    if (m_maze.get(pos.y, pos.x).hasWall(dir))
+      return MazeCell.Vision.WALL;
+
+    Pair <Integer, Integer> desp = dir.decompose();
+    Point n_pos = new Point(pos.x + desp.first, pos.y + desp.second);
+    if (n_pos.x < 0 || n_pos.y < 0 || n_pos.x >= m_maze.getWidth() ||
+        n_pos.y >= m_maze.getHeight())
+      return MazeCell.Vision.OFFLIMITS;
+
+    return MazeCell.Vision.EMPTY;
+  }
+
+  /**
+   * Indica si a partir de una posición, el movimiento hacia una determinada
+   * posición es posible o no.
+   * @param pos Posición de partida.
+   * @param dir Dirección de movimiento.
+   * @return true si se puede y false si no.
+   */
+  public boolean movementAllowed (Point pos, Direction dir) {
+    MazeCell.Vision vision = look (pos, dir);
+    return vision == MazeCell.Vision.EMPTY ||
+           vision == MazeCell.Vision.OFFLIMITS;
+  }
+
+  /**
    * @param ag Agente que se quiere añadir al entorno.
    * @return Una referencia al propio entorno. Si se trata de un entorno simple
    * y se añade un agente, este método devolverá un entorno de agentes múltiples
@@ -122,15 +159,6 @@ public abstract class Environment extends JInternalFrame {
    * @return Número de agentes actualmente en el entorno.
    */
   public abstract int getAgentCount ();
-
-  /**
-   * Indica si a partir de una posición, el movimiento hacia una determinada
-   * posición es posible o está ocupado por un agente o muro.
-   * @param pos Posición de partida.
-   * @param dir Dirección de movimiento.
-   * @return true si se puede y false si no.
-   */
-  public abstract boolean movementAllowed (Point pos, Direction dir);
 
   /**
    * Ejecuta un paso de la simulación de ejecución de los agentes en el entorno.

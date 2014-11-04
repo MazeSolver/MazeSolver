@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import maze.Direction;
 import maze.Maze;
+import maze.MazeCell;
 import util.Pair;
 import agent.Agent;
 
@@ -74,6 +75,22 @@ public class MultipleEnvironment extends Environment {
       }
 
     });
+  }
+
+  @Override
+  public MazeCell.Vision look (Point pos, Direction dir) {
+    MazeCell.Vision vision = super.look(pos, dir);
+    if (vision == MazeCell.Vision.EMPTY) {
+      Pair <Integer, Integer> desp = dir.decompose();
+      pos.x += desp.first;
+      pos.y += desp.second;
+
+      for (Agent ag: m_agents) {
+        if (ag.getX() == pos.getX() && ag.getY() == pos.getY())
+          return MazeCell.Vision.AGENT;
+      }
+    }
+    return vision;
   }
 
   /* (non-Javadoc)
@@ -159,22 +176,6 @@ public class MultipleEnvironment extends Environment {
   @Override
   public int getAgentCount () {
     return m_agents.size();
-  }
-
-  /* (non-Javadoc)
-   * @see gui.environment.Environment#movementAllowed(java.awt.Point, maze.Direction)
-   */
-  @Override
-  public boolean movementAllowed (Point pos, Direction dir) {
-    if (!m_maze.get(pos.y, pos.x).hasWall(dir)) {
-      Pair<Integer, Integer> desp = dir.decompose();
-      for (Agent ag: m_agents) {
-        if (pos.x + desp.first == ag.getX() && pos.y + desp.second == ag.getY())
-          return true;
-      }
-    }
-
-    return false;
   }
 
   /* (non-Javadoc)
