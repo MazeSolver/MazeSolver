@@ -31,6 +31,7 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 import maze.Maze;
 import maze.algorithm.Kruskal;
 import agent.Agent;
+import agent.SARulesAgent;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -40,6 +41,11 @@ public class MainWindow extends JFrame {
   private static String APP_NAME = "Maze Solver";
   private static int DEFAULT_WIDTH = 640;
   private static int DEFAULT_HEIGHT = 480;
+
+  private static int MINIMUM_ZOOM_VAL = 1;
+  private static int MAXIMUM_ZOOM_VAL = 100;
+  private static double MINIMUM_ZOOM_AUG = 1;
+  private static double MAXIMUM_ZOOM_AUG = 3;
 
   private static final long serialVersionUID = 1L;
   private static MainWindow m_instance;
@@ -188,7 +194,7 @@ public class MainWindow extends JFrame {
     m_step = new JButton("Step");
     m_pause = new JButton("Pause");
     m_stop = new JButton("Stop");
-    m_zoom = new JSlider(1, 100);
+    m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
 
     m_toolbar.add(m_run);
     m_toolbar.add(m_step);
@@ -290,6 +296,10 @@ public class MainWindow extends JFrame {
         catch (Exception exc) {
           // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
           // No hay agente seleccionado o no hay entorno seleccionado
+
+          // XXX Sólo para pruebas
+          Agent ag = new SARulesAgent(m_environments.getSelectedEnvironment());
+          setConfigurationPanel(ag.getConfigurationPanel());
         }
       }
     });
@@ -361,7 +371,12 @@ public class MainWindow extends JFrame {
       @Override
       public void stateChanged (ChangeEvent e) {
         JSlider src = (JSlider) e.getSource();
-        m_environments.setZoom(src.getValue() / 50.0);
+
+        // Ajuste lineal del zoom
+        double a = (MAXIMUM_ZOOM_AUG - MINIMUM_ZOOM_AUG) /
+                   (MAXIMUM_ZOOM_VAL - MINIMUM_ZOOM_VAL);
+        double b = MAXIMUM_ZOOM_AUG - a * MAXIMUM_ZOOM_VAL;
+        m_environments.setZoom(a * src.getValue() + b);
       }
     });
   }
