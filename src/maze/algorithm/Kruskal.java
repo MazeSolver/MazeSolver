@@ -18,7 +18,7 @@ public class Kruskal extends MazeCreationAlgorithm {
 
   private final static short MAX_NEIGHBOUR = 4;
   private final static short UERROR = -1;
-  private ArrayList <ArrayList <Boolean>> m_included_cells;
+  private ArrayList <Integer> disjoint_set;
   private ArrayList <short []> walls;
   private ArrayList <ArrayList <MazeCell>> m_maze;
 
@@ -29,20 +29,19 @@ public class Kruskal extends MazeCreationAlgorithm {
   public Kruskal (int rows, int columns) {
     super(rows, columns);
     walls = new ArrayList <short []>();
-    m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
+    disjoint_set = new ArrayList <Integer>();
     m_maze = initializeMaze();
 
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
-    for (int i = 0; i < rows; i++) {
-      m_included_cells.add(new ArrayList <Boolean>(columns));
-      for (int j = 0; j < columns; j++)
-        m_included_cells.get(i).add(false);
-    }
+    for (int i = 0; i < m_rows * m_columns; i++)
+      disjoint_set.add(i);
     addAll();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see maze.MazeCreationAlgorithm#createMaze()
    */
   @Override
@@ -57,12 +56,14 @@ public class Kruskal extends MazeCreationAlgorithm {
 
   /**
    * Busca aleatoriamente un muro de los encontrados al abrir caminos.
+   *
    * @return Un muro que sea válido (evita celdas ya visitadas).
+   * @throws Exception
    */
   private int getWall () {
     int nextWall = 0;
     do {
-      nextWall = (int) Math.round(0 + (Math.random() * (walls.size() - 1) ));
+      nextWall = (int) Math.round(0 + (Math.random() * (walls.size() - 1)));
     }
     while (!checkWall(nextWall) && !walls.isEmpty());
     if (walls.isEmpty()) {
@@ -74,12 +75,14 @@ public class Kruskal extends MazeCreationAlgorithm {
   }
 
   /**
-   * Elimina la pared colocada en la dirección [3] a partir de la
-   * celda (i, j).
-   * @param indx_wall indice del vector que almacena los muros disposibles
-   * el indice siempre será un muro valido hacia una casilla sin visitar
-   * ya que el metodo getWall lo comprueba, para eliminar los muros de la lista
-   * que van hacia celdas ya visitadas.
+   * Elimina la pared colocada en la dirección [3] a partir de la celda (i, j).
+   *
+   * @param indx_wall
+   *          indice del vector que almacena los muros disposibles el indice
+   *          siempre será un muro valido hacia una casilla sin visitar ya que
+   *          el metodo getWall lo comprueba, para eliminar los muros de la
+   *          lista que van hacia celdas ya visitadas.
+   * @throws Exception
    */
   private void throwWall (final int indx_wall) {
     if (indx_wall != UERROR) {
@@ -91,22 +94,21 @@ public class Kruskal extends MazeCreationAlgorithm {
       // Dependiendo de la dirección eliminamos los 2 muros que separan las 2
       // celdas que queremos unir y marcamos la celda de destino como visitada.
       m_maze.get(i).get(j).unsetWall(dir);
-      m_included_cells.get(i).set(j, true);
       switch (dir) {
         case UP:
-          m_included_cells.get(i - 1).set(j, true);
+          union(value(i, j), value(i - 1, j));
           m_maze.get(i - 1).get(j).unsetWall(Direction.DOWN);
           break;
         case DOWN:
-          m_included_cells.get(i + 1).set(j, true);
+          union(value(i, j), value(i + 1, j));
           m_maze.get(i + 1).get(j).unsetWall(Direction.UP);
           break;
         case LEFT:
-          m_included_cells.get(i).set(j - 1, true);
+          union(value(i, j), value(i, j - 1));
           m_maze.get(i).get(j - 1).unsetWall(Direction.RIGHT);
           break;
         case RIGHT:
-          m_included_cells.get(i).set(j + 1, true);
+          union(value(i, j), value(i, j + 1));
           m_maze.get(i).get(j + 1).unsetWall(Direction.LEFT);
           break;
       }
@@ -115,7 +117,9 @@ public class Kruskal extends MazeCreationAlgorithm {
 
   /**
    * Convierte un número entre 1 y 4 en una dirección.
-   * @param number Número a convertir.
+   *
+   * @param number
+   *          Número a convertir.
    * @return Dirección asociada al número.
    */
   private static Direction toDir (short number) {
@@ -135,8 +139,7 @@ public class Kruskal extends MazeCreationAlgorithm {
   /**
    * Añade todos los muros a la lista de muros a elegir aleatoriamente
    */
-  private void addAll ()
-  {
+  private void addAll () {
     for (int i = 0; i < m_rows; i++) {
       for (int j = 0; j < m_columns; j++)
         addCell(i, j);
@@ -145,30 +148,26 @@ public class Kruskal extends MazeCreationAlgorithm {
 
   /**
    * Añade a la lista de muros, los muros disponibles de la celda i,j
+   *
    * @param i
    * @param j
    */
-  private void addCell (final int i, final int j)
-  {
+  private void addCell (final int i, final int j) {
     for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      if (i != 0 && toDir(k) == Direction.UP &&
-          !m_included_cells.get(i-1).get(j)) {
-        short [] aux = {(short) i, (short) j,Direction.UP.val};
+      if (i != 0 && toDir(k) == Direction.UP) {
+        short [] aux = {(short) i, (short) j, Direction.UP.val};
         walls.add(aux);
       }
-      else if (j != 0 && toDir(k) == Direction.LEFT &&
-          !m_included_cells.get(i).get(j-1)) {
-        short [] aux = {(short) i, (short) j,Direction.LEFT.val};
+      else if (j != 0 && toDir(k) == Direction.LEFT) {
+        short [] aux = {(short) i, (short) j, Direction.LEFT.val};
         walls.add(aux);
       }
-      else if (i != m_rows-1 && toDir(k) == Direction.DOWN &&
-          !m_included_cells.get(i+1).get(j)) {
-        short [] aux = {(short) i, (short) j,Direction.DOWN.val};
+      else if (i != m_rows - 1 && toDir(k) == Direction.DOWN) {
+        short [] aux = {(short) i, (short) j, Direction.DOWN.val};
         walls.add(aux);
       }
-      else if (j != m_columns-1 && toDir(k) == Direction.RIGHT &&
-          !m_included_cells.get(i).get(j+1)) {
-        short [] aux = {(short) i, (short) j,Direction.RIGHT.val};
+      else if (j != m_columns - 1 && toDir(k) == Direction.RIGHT) {
+        short [] aux = {(short) i, (short) j, Direction.RIGHT.val};
         walls.add(aux);
       }
     }
@@ -176,44 +175,78 @@ public class Kruskal extends MazeCreationAlgorithm {
 
   /**
    *
-   * @param inx_wall indice del muro a comprobar si la celda colidante o la
-   * propia celda sigue estando disponible o ya no y hay que eliminarla
+   * @param inx_wall
+   *          indice del muro a comprobar si la celda colidante o la propia
+   *          celda estan en diferentes conjuntos o hay que eliminarla
    * @return
+   * @throws Exception
    */
- private Boolean checkWall (final int inx_wall )
- {
-   short i = walls.get(inx_wall)[0];
-   short j = walls.get(inx_wall)[1];
-   Direction dir = Direction.fromValue(walls.get(inx_wall)[2]);
+  private Boolean checkWall (final int inx_wall) {
+    short i = walls.get(inx_wall)[0];
+    short j = walls.get(inx_wall)[1];
+    Direction dir = Direction.fromValue(walls.get(inx_wall)[2]);
 
-   switch (dir) {
-     case UP:
-       if (!m_included_cells.get(i-1).get(j) ||
-           !m_included_cells.get(i).get(j)) {
-         return true;
-       }
-       break;
-     case DOWN:
-       if (!m_included_cells.get(i+1).get(j) ||
-           !m_included_cells.get(i).get(j)) {
-         return true;
-       }
-       break;
-     case LEFT:
-       if (!m_included_cells.get(i).get(j-1) ||
-           !m_included_cells.get(i).get(j)) {
-         return true;
-       }
-       break;
-     case RIGHT:
-       if (!m_included_cells.get(i).get(j+1) ||
-           !m_included_cells.get(i).get(j)) {
-         return true;
-       }
-       break;
-   }
-   walls.remove(inx_wall);
-   return false;
- }
+    switch (dir) {
+      case UP:
+        if (value(i - 1, j) != value(i, j)) {
+          return true;
+        }
+        break;
+      case DOWN:
+        if (value(i + 1, j) != value(i, j)) {
+          return true;
+        }
+        break;
+      case LEFT:
+        if (value(i, j - 1) != value(i, j)) {
+          return true;
+        }
+        break;
+      case RIGHT:
+        if (value(i, j + 1) != value(i, j)) {
+          return true;
+        }
+        break;
+    }
+    walls.remove(inx_wall);
+    return false;
+  }
+
+  /**
+   *
+   * @param i
+   * @param j
+   * @return la posicion del vector dado por los parametros i y j que
+   *         seleccionan la fila y columna
+   */
+  private int pos (final int i, final int j) {
+    return (i * m_columns) + j;
+  }
+
+  /**
+   *
+   * @param value_from
+   * @param value_to
+   *
+   *          Une dos conjuntos-disjuntos, de la forma siguiente, todo conjunto
+   *          que tenga como valor representativo value_from, lo mueve al
+   *          conjunto de valor value_to
+   */
+  private void union (final int value_from, final int value_to) {
+    for (int k = 0; k < disjoint_set.size(); k++)
+      if (disjoint_set.get(k) == value_from)
+        disjoint_set.set(k, value_to);
+  }
+
+  /**
+   *
+   * @param i
+   * @param j
+   * @return valor, del conjunto del elemento i,j. Esta función es simple y
+   *         llanamente para hacer el código mas corto y mas fácil de leer.
+   */
+  private int value (final int i, final int j) {
+    return disjoint_set.get(pos(i, j));
+  }
 
 }
