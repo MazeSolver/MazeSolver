@@ -4,27 +4,28 @@
  */
 package agent;
 
+import gui.environment.Environment;
+
 import java.awt.Point;
 
 import javax.swing.JPanel;
 
 import maze.Direction;
-import maze.Maze;
+import maze.MazeCell;
 
 /**
  * Clase que representa un agente abstracto que se encuentra en algún laberinto.
  */
 public abstract class Agent implements Cloneable {
   protected Point m_pos;
-  protected Maze m_maze;
+  protected Environment m_env;
 
   /**
    * @param maze
    */
-  protected Agent (Maze maze) {
+  protected Agent (Environment env) {
     m_pos = new Point();
-    m_maze = null;
-    setMaze(maze);
+    setEnvironment(env);
   }
 
   /**
@@ -58,11 +59,19 @@ public abstract class Agent implements Cloneable {
    * éste siga siendo coherente tras el cambio de laberinto.
    * @param maze Laberinto donde colocar el agente.
    */
-  public void setMaze (Maze maze) {
-    if (maze != null)
-      m_maze = maze;
+  public void setEnvironment (Environment env) {
+    if (env != null)
+      m_env = env;
     else
       throw new IllegalArgumentException("El laberinto debe ser válido");
+  }
+
+  /**
+   * @param dir Dirección hacia la que mirar.
+   * @return Lo que vería el agente si mira en la dirección especificada.
+   */
+  public MazeCell.Vision look (Direction dir) {
+    return m_env.look(m_pos, dir);
   }
 
   /**

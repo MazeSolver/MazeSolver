@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import maze.Direction;
 import maze.Maze;
+import maze.MazeCell;
+import util.Pair;
 import agent.Agent;
 
 /**
@@ -23,6 +25,19 @@ public class SimpleEnvironment extends Environment {
    */
   public SimpleEnvironment (Maze maze) {
     super(maze);
+  }
+
+  @Override
+  public MazeCell.Vision look (Point pos, Direction dir) {
+    MazeCell.Vision vision = super.look(pos, dir);
+    if (vision == MazeCell.Vision.EMPTY) {
+      Pair <Integer, Integer> desp = dir.decompose();
+      pos.x += desp.first;
+      pos.y += desp.second;
+      if (m_agent.getX() == pos.getX() && m_agent.getY() == pos.getY())
+        return MazeCell.Vision.AGENT;
+    }
+    return vision;
   }
 
   /* (non-Javadoc)
@@ -95,14 +110,6 @@ public class SimpleEnvironment extends Environment {
   @Override
   public int getAgentCount () {
     return m_agent == null? 0 : 1;
-  }
-
-  /* (non-Javadoc)
-   * @see gui.environment.Environment#movementAllowed(java.awt.Point, maze.Direction)
-   */
-  @Override
-  public boolean movementAllowed (Point pos, Direction dir) {
-    return !m_maze.get(pos.y, pos.x).hasWall(dir);
   }
 
   /* (non-Javadoc)

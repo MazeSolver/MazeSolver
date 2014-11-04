@@ -5,6 +5,7 @@
 package agent;
 
 import gui.MainWindow;
+import gui.environment.Environment;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import maze.Direction;
-import maze.Maze;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -52,12 +52,13 @@ public class SARulesAgent extends Agent {
 
   private ArrayList <SituationActionRule> m_rules;
   private String m_code;
+  // TODO boolean[][] m_visited;
 
   /**
    * @param maze Laberinto donde se sitúa el agente.
    */
-  public SARulesAgent (Maze maze) {
-    super(maze);
+  public SARulesAgent (Environment env) {
+    super(env);
     m_rules = new ArrayList <SituationActionRule>();
     m_code = DEFAULT_AGENT_SRC;
     compileCode();
@@ -83,7 +84,7 @@ public class SARulesAgent extends Agent {
    */
   @Override
   public void doMovement (Direction dir) {
-    if (!m_maze.get(m_pos.x, m_pos.y).hasWall(dir)) {
+    if (m_env.movementAllowed(m_pos, dir)) {
       Pair<Integer, Integer> mov = dir.decompose();
       m_pos.x += mov.first;
       m_pos.y += mov.second;
@@ -142,6 +143,11 @@ public class SARulesAgent extends Agent {
     return config_panel;
   }
 
+  public boolean hasVisited (Direction dir) {
+    // TODO Consultar la matriz de visitados
+    return false;
+  }
+
   /**
    * Convierte el código fuente guardado en m_code en la representación de las
    * reglas de situación-acción.
@@ -175,7 +181,7 @@ public class SARulesAgent extends Agent {
    */
   @Override
   public Object clone () throws CloneNotSupportedException {
-    SARulesAgent ag = new SARulesAgent(m_maze);
+    SARulesAgent ag = new SARulesAgent(m_env);
     ag.m_code = m_code;
     ag.m_pos = (Point) m_pos.clone();
     ag.m_rules = new ArrayList <SituationActionRule>(m_rules.size());
