@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import maze.Direction;
 import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
-import util.Pair;
 
 /**
  * Implementación del algoritmo de Prim para la generación aleatoria de
@@ -20,10 +19,7 @@ public class Prim extends MazeCreationAlgorithm {
   private final static short MAX_NEIGHBOUR = 4;
   private final static short UERROR = -1;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
-<<<<<<< HEAD
-=======
   private ArrayList <short []> walls;
->>>>>>> dev-mazegen
   private ArrayList <ArrayList <MazeCell>> m_maze;
 
   /**
@@ -58,11 +54,7 @@ public class Prim extends MazeCreationAlgorithm {
     m_included_cells.get(i).set(j, true);
     addCell(i, j);
     // Mientras haya celdas sin visitar, seguir visitando.
-<<<<<<< HEAD
-    while (nCellVisited < this.m_columns * this.m_rows) {
-=======
     while (!walls.isEmpty()) {
->>>>>>> dev-mazegen
       // Seleccionar un vecino valido para explorar
       // Tirar el muro en una direccion y en la direccion de vuelta.
       throwWall(getWall());
@@ -71,36 +63,6 @@ public class Prim extends MazeCreationAlgorithm {
   }
 
   /**
-<<<<<<< HEAD
-   * Busca aleatoriamente una celda visitada para explorar sus vecinos.
-   * @return Un vecino que sea válido (evita cruzar los bordes).
-   */
-  private short[] getNeighbour () {
-    final short MAX_NEIGHBOUR = 4;
-    Direction neighbour = null;
-
-    for (short i = 0; i < m_included_cells.size(); i++) {
-      for (short j = 0; j < m_included_cells.get(i).size(); j++) {
-        if (m_included_cells.get(i).get(j)) {
-          if ((i > 0 && !m_included_cells.get(i-1).get(j)) ||
-              (j > 0 && !m_included_cells.get(i).get(j-1)) ||
-              (i < m_rows-1 && !m_included_cells.get(i+1).get(j)) ||
-              (j < m_columns-1 && !m_included_cells.get(i).get(j+1))) {
-            do {
-              neighbour = toDir((short) Math.round(0 + (Math.random() * MAX_NEIGHBOUR)));
-            } // Si voy MOV entonces MOV tiene que haber una celda y la celda de
-              // MOV no está visitada.
-            while (!(neighbour == Direction.UP && i > 0 && !m_included_cells.get(i-1).get(j))
-                && !(neighbour == Direction.LEFT && j > 0 && !m_included_cells.get(i).get(j-1))
-                && !(neighbour == Direction.DOWN && i < m_rows-1 && !m_included_cells.get(i+1).get(j))
-                && !(neighbour == Direction.RIGHT && j < m_columns-1 && !m_included_cells.get(i).get(j+1)));
-
-            short[] aux = {i,j,neighbour.val};
-            return aux;
-          }
-        }
-      }
-=======
    * Busca aleatoriamente un muro de los encontrados al abrir caminos.
    * @return Un muro que sea válido (evita celdas ya visitadas).
    */
@@ -115,32 +77,9 @@ public class Prim extends MazeCreationAlgorithm {
     }
     else {
       return nextWall;
->>>>>>> dev-mazegen
     }
   }
 
-<<<<<<< HEAD
-  /**
-   * Elimina la pared colocada en la dirección [3] a partir de la
-   * celda ([1], [2]).
-   * @param neighbour Array de 3 posiciones: i, j y la dirección en la que
-   * eliminar la pared.
-   */
-  private void throwWall (final short[] neighbour) {
-    short i = neighbour[0];
-    short j = neighbour[1];
-    Direction dir = Direction.fromValue(neighbour[2]);
-
-    // Dependiendo de la dirección eliminamos los 2 muros que separan las 2
-    // celdas que queremos unir y marcamos la celda de destino como visitada.
-    m_maze.get(i).get(j).unsetWall(dir);
-
-    Pair<Integer, Integer> desp = dir.decompose();
-    m_included_cells.get(i + desp.second).set(j + desp.first, true);
-    m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
-
-    nCellVisited++;
-=======
 
   /**
    * Elimina la pared colocada en la dirección [3] a partir de la
@@ -183,7 +122,6 @@ public class Prim extends MazeCreationAlgorithm {
           break;
       }
     }
->>>>>>> dev-mazegen
   }
 
   /**
