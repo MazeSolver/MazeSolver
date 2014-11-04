@@ -26,6 +26,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import maze.Maze;
 import maze.algorithm.Kruskal;
@@ -116,6 +117,8 @@ public class MainWindow extends JFrame {
     global_panel.add(m_split_panel, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
     add(global_panel, BorderLayout.CENTER);
+
+    closeConfigurationPanel();
 
     pack();
   }
@@ -367,6 +370,7 @@ public class MainWindow extends JFrame {
    * Cierra el panel de configuración.
    */
   public void closeConfigurationPanel () {
+    ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(false);
     if (m_config_panel != null) {
       m_split_panel.remove(m_config_panel);
       m_config_panel = null;
@@ -381,6 +385,8 @@ public class MainWindow extends JFrame {
    */
   public void setConfigurationPanel (JPanel panel) {
     if (panel != null) {
+      ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(true);
+
       m_config_panel = panel;
       m_split_panel.add(m_config_panel);
       revalidate();
