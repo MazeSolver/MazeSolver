@@ -92,7 +92,6 @@ public class Prim extends MazeCreationAlgorithm {
     return null;
   }
 
-
   /**
    * Elimina la pared colocada en la dirección [3] a partir de la
    * celda ([1], [2]).
