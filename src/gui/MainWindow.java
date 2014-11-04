@@ -22,13 +22,16 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import maze.Maze;
 import maze.algorithm.Kruskal;
 import agent.Agent;
+import agent.SARulesAgent;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -38,6 +41,11 @@ public class MainWindow extends JFrame {
   private static String APP_NAME = "Maze Solver";
   private static int DEFAULT_WIDTH = 640;
   private static int DEFAULT_HEIGHT = 480;
+
+  private static int MINIMUM_ZOOM_VAL = 1;
+  private static int MAXIMUM_ZOOM_VAL = 100;
+  private static double MINIMUM_ZOOM_AUG = 1;
+  private static double MAXIMUM_ZOOM_AUG = 3;
 
   private static final long serialVersionUID = 1L;
   private static MainWindow m_instance;
@@ -63,9 +71,9 @@ public class MainWindow extends JFrame {
     return m_instance;
   }
 
-  // Panel que contiene la barra de acciones y tanto el panel con los laberintos
-  // como el panel de configuración.
-  private JPanel m_global_panel;
+  // Panel que contiene tanto el panel con los laberintos como el panel de
+  // configuración, de tal manera que se pueden cambiar de tamaño.
+  private JSplitPane m_split_panel;
 
   // Barra de menús
   private JMenuBar m_menu_bar;
@@ -106,13 +114,17 @@ public class MainWindow extends JFrame {
     createMenus();
     createToolbar();
 
-    m_global_panel = new JPanel(new BorderLayout());
-    m_global_panel.add(m_toolbar, BorderLayout.NORTH);
+    JPanel global_panel = new JPanel(new BorderLayout());
+    global_panel.add(m_toolbar, BorderLayout.NORTH);
     m_environments = new EnvironmentSet();
 
-    m_global_panel.add(m_environments, BorderLayout.CENTER);
+    m_split_panel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, null, m_environments);
+
+    global_panel.add(m_split_panel, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
-    add(m_global_panel, BorderLayout.CENTER);
+    add(global_panel, BorderLayout.CENTER);
+
+    closeConfigurationPanel();
 
     pack();
   }
@@ -182,7 +194,7 @@ public class MainWindow extends JFrame {
     m_step = new JButton("Step");
     m_pause = new JButton("Pause");
     m_stop = new JButton("Stop");
-    m_zoom = new JSlider(1, 100);
+    m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
 
     m_toolbar.add(m_run);
     m_toolbar.add(m_step);
@@ -279,14 +291,15 @@ public class MainWindow extends JFrame {
       public void actionPerformed (ActionEvent e) {
         try {
           Agent ag = m_environments.getSelectedEnvironment().getSelectedAgent();
-          m_config_panel = ag.getConfigurationPanel();
-          m_global_panel.add(m_config_panel, BorderLayout.WEST);
-          revalidate();
-          repaint();
+          setConfigurationPanel(ag.getConfigurationPanel());
         }
         catch (Exception exc) {
           // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
           // No hay agente seleccionado o no hay entorno seleccionado
+
+          // XXX Sólo para pruebas
+          Agent ag = new SARulesAgent(m_environments.getSelectedEnvironment());
+          setConfigurationPanel(ag.getConfigurationPanel());
         }
       }
     });
@@ -358,7 +371,12 @@ public class MainWindow extends JFrame {
       @Override
       public void stateChanged (ChangeEvent e) {
         JSlider src = (JSlider) e.getSource();
-        m_environments.setZoom(src.getValue() / 50.0);
+
+        // Ajuste lineal del zoom
+        double a = (MAXIMUM_ZOOM_AUG - MINIMUM_ZOOM_AUG) /
+                   (MAXIMUM_ZOOM_VAL - MINIMUM_ZOOM_VAL);
+        double b = MAXIMUM_ZOOM_AUG - a * MAXIMUM_ZOOM_VAL;
+        m_environments.setZoom(a * src.getValue() + b);
       }
     });
   }
@@ -367,11 +385,27 @@ public class MainWindow extends JFrame {
    * Cierra el panel de configuración.
    */
   public void closeConfigurationPanel () {
+    ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(false);
     if (m_config_panel != null) {
-      m_global_panel.remove(m_config_panel);
+      m_split_panel.remove(m_config_panel);
       m_config_panel = null;
-      m_global_panel.revalidate();
-      m_global_panel.repaint();
+      revalidate();
+      repaint();
+    }
+  }
+
+  /**
+   * Abre el panel de configuración.
+   * @param panel Panel de configuración que se quiere abrir.
+   */
+  public void setConfigurationPanel (JPanel panel) {
+    if (panel != null) {
+      ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(true);
+
+      m_config_panel = panel;
+      m_split_panel.add(m_config_panel);
+      revalidate();
+      repaint();
     }
   }
 

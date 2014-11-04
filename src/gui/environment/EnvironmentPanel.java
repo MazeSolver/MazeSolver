@@ -26,14 +26,16 @@ public class EnvironmentPanel extends JPanel {
   private Environment m_env;
 
   /**
-   * @param env Entorno que se dibujará en el panel.
+   * @param env
+   *          Entorno que se dibujará en el panel.
    */
   public EnvironmentPanel (Environment env) {
     setEnvironment(env);
   }
 
   /**
-   * @param env Nuevo entorno que se dibujará en el panel.
+   * @param env
+   *          Nuevo entorno que se dibujará en el panel.
    */
   public void setEnvironment (Environment env) {
     m_env = env;
@@ -49,13 +51,14 @@ public class EnvironmentPanel extends JPanel {
       Maze maze = m_env.getMaze();
       if (maze != null)
         setSize((int) Math.round(maze.getWidth() * CELL_SIZE_PX * s_zoom),
-                (int) Math.round(maze.getHeight() * CELL_SIZE_PX * s_zoom));
+            (int) Math.round(maze.getHeight() * CELL_SIZE_PX * s_zoom));
     }
   }
 
   /**
-   * @param zoom Nivel de escala que se quiere aplicar a la visualización de los
-   * paneles.
+   * @param zoom
+   *          Nivel de escala que se quiere aplicar a la visualización de los
+   *          paneles.
    */
   public static void setZoom (double zoom) {
     if (zoom >= 0.0)
@@ -65,15 +68,19 @@ public class EnvironmentPanel extends JPanel {
   /**
    * Traduce una coordenada de ratón en la pantalla (local al panel) a una
    * dirección de celda dentro de un laberinto.
-   * @param coord Coordenadas (x, y) del ratón.
+   *
+   * @param coord
+   *          Coordenadas (x, y) del ratón.
    * @return Posición (x, y) dentro de la matriz del laberinto.
    */
   public static Point screenCoordToGrid (final Point coord) {
-    return new Point((int)(coord.x / Math.round(CELL_SIZE_PX * s_zoom)),
-                     (int)(coord.y / Math.round(CELL_SIZE_PX * s_zoom)));
+    return new Point((int) Math.round(coord.x / (CELL_SIZE_PX * s_zoom)),
+        (int) Math.round(coord.y / (CELL_SIZE_PX * s_zoom)));
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
    */
   @Override
@@ -82,9 +89,11 @@ public class EnvironmentPanel extends JPanel {
 
     // Si no hay entorno asignado o el entorno no tiene laberinto, no dibujamos
     // nada.
-    if (m_env == null) return;
+    if (m_env == null)
+      return;
     Maze maze = m_env.getMaze();
-    if (maze == null) return;
+    if (maze == null)
+      return;
 
     // Configuramos la paleta.
     g.setColor(Color.BLACK);
@@ -92,22 +101,24 @@ public class EnvironmentPanel extends JPanel {
     int width = maze.getWidth();
     int height = maze.getHeight();
 
-    int cell_size = (int) Math.round(CELL_SIZE_PX * s_zoom);
+    double cell_size = CELL_SIZE_PX * s_zoom;
 
     // Dibujamos el laberinto.
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         final MazeCell actual = maze.get(y, x);
-        Point pos = new Point(x * cell_size, y * cell_size);
+        Point pos = new Point((int) Math.round(x * cell_size), (int) Math.round(y * cell_size));
 
         if (actual.hasWall(Direction.UP))
-          g.drawLine(pos.x, pos.y, pos.x + cell_size, pos.y);
+          g.drawLine(pos.x, pos.y, (int) Math.round(pos.x + cell_size), pos.y);
         if (actual.hasWall(Direction.DOWN))
-          g.drawLine(pos.x, pos.y + cell_size, pos.x + cell_size, pos.y + cell_size);
+          g.drawLine(pos.x, (int) Math.round(pos.y + cell_size),
+              (int) Math.round(pos.x + cell_size), (int) Math.round(pos.y + cell_size));
         if (actual.hasWall(Direction.LEFT))
-          g.drawLine(pos.x, pos.y, pos.x, pos.y + cell_size);
+          g.drawLine(pos.x, pos.y, pos.x, (int) Math.round(pos.y + cell_size));
         if (actual.hasWall(Direction.RIGHT))
-          g.drawLine(pos.x + cell_size, pos.y, pos.x + cell_size, pos.y + cell_size);
+          g.drawLine((int) Math.round(pos.x + cell_size), pos.y,
+              (int) Math.round(pos.x + cell_size), (int) Math.round(pos.y + cell_size));
       }
     }
 
@@ -115,16 +126,17 @@ public class EnvironmentPanel extends JPanel {
     g.setColor(Color.ORANGE);
     for (int i = 0; i < m_env.getAgentCount(); i++) {
       Agent ag = m_env.getAgent(i);
-      g.fillOval(ag.getX() * cell_size, ag.getY() * cell_size,
-                 cell_size-1, cell_size-1);
+      g.fillOval((int) Math.round(ag.getX() * cell_size), (int) Math.round(ag.getY() * cell_size),
+          (int) Math.round(cell_size - 1), (int) Math.round(cell_size - 1));
     }
 
     // Dibujamos el agente seleccionado con otro color para resaltarlo.
     Agent selected = m_env.getSelectedAgent();
     if (selected != null) {
       g.setColor(Color.RED);
-      g.fillOval(selected.getX() * cell_size, selected.getY() * cell_size,
-                 cell_size-1, cell_size-1);
+      g.fillOval((int) Math.round(selected.getX() * cell_size),
+          (int) Math.round(selected.getY() * cell_size), (int) Math.round(cell_size - 1),
+          (int) Math.round(cell_size - 1));
     }
   }
 
