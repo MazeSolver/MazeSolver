@@ -101,8 +101,28 @@ public class MultipleEnvironment extends Environment {
     if (ag == null)
       throw new IllegalArgumentException("El agente especificado es inválido");
 
-    if (!m_agents.contains(ag))
+    if (!m_agents.contains(ag)) {
+      ag.setEnvironment(this);
+
+      // Buscamos un hueco donde colocar el agente
+      loops:
+      for (int x = 0; x < m_maze.getWidth(); x++) {
+        for (int y = 0; y < m_maze.getHeight(); y++) {
+          boolean used = false;
+          for (Agent i: m_agents) {
+            if (i.getX() == x && i.getY() == y) {
+              used = true;
+              break;
+            }
+          }
+          if (!used) {
+            ag.setPosition(new Point(x, y));
+            break loops;
+          }
+        }
+      }
       m_agents.add(ag);
+    }
 
     return this;
   }

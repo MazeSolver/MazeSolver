@@ -32,9 +32,8 @@ public class SimpleEnvironment extends Environment {
     MazeCell.Vision vision = super.look(pos, dir);
     if (vision == MazeCell.Vision.EMPTY) {
       Pair <Integer, Integer> desp = dir.decompose();
-      pos.x += desp.first;
-      pos.y += desp.second;
-      if (m_agent.getX() == pos.getX() && m_agent.getY() == pos.getY())
+      Point new_pos = new Point(pos.x + desp.first, pos.y + desp.second);
+      if (m_agent.getX() == new_pos.getX() && m_agent.getY() == new_pos.getY())
         return MazeCell.Vision.AGENT;
     }
     return vision;
@@ -50,6 +49,8 @@ public class SimpleEnvironment extends Environment {
 
     if (m_agent == null) {
       m_agent = ag;
+      m_agent.setEnvironment(this);
+      m_agent.setPosition(new Point(0, 0));
       return this;
     }
     else {
@@ -118,7 +119,7 @@ public class SimpleEnvironment extends Environment {
   @Override
   public boolean runStep () {
     if (m_agent == null)
-      throw new IllegalStateException("No se puede mover un agente si no existe");
+      return true;
 
     m_agent.doMovement(m_agent.getNextMovement());
     return m_agent.getX() < 0 ||
