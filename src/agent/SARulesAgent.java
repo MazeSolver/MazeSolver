@@ -18,11 +18,14 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 import maze.Direction;
 import maze.Maze;
@@ -33,6 +36,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import util.Pair;
 import agent.rules.RuleAction;
 import agent.rules.SituationActionRule;
+import agent.rules.parser.SituationActionErrorHandler;
 import agent.rules.parser.SituationActionLexer;
 import agent.rules.parser.SituationActionParser;
 import agent.rules.parser.SituationActionParser.Sa_ruleContext;
@@ -51,15 +55,17 @@ public class SARulesAgent extends Agent {
       + "LEFT FREE | DOWN WALL => STOP.\n"
       + "DOWN VISITED & RIGHT FREE => MOVE RIGHT.\n";
 
+  private SituationActionErrorHandler m_error_handler;
   private ArrayList <SituationActionRule> m_rules;
   private String m_code;
-  boolean[][] m_visited;
+  private boolean[][] m_visited;
 
   /**
    * @param maze Laberinto donde se sitúa el agente.
    */
   public SARulesAgent (Environment env) {
     super(env);
+    m_error_handler = new SituationActionErrorHandler();
     m_rules = new ArrayList <SituationActionRule>();
     m_code = DEFAULT_AGENT_SRC;
     compileCode();
@@ -138,9 +144,14 @@ public class SARulesAgent extends Agent {
       public void actionPerformed (ActionEvent e) {
         String prev_code = m_code;
         m_code = text.getText();
+
         if (!compileCode()) {
-          JOptionPane.showMessageDialog(null, "Code couldn't be compiled",
-              "Compilation error", JOptionPane.ERROR_MESSAGE);
+          String error_msg = "";
+          for (String error: m_error_handler.getErrors())
+            error_msg += error + "\n";
+
+          JOptionPane.showMessageDialog(null, error_msg, "Compilation error",
+                                        JOptionPane.ERROR_MESSAGE);
           m_code = prev_code;
         }
         else
@@ -155,6 +166,9 @@ public class SARulesAgent extends Agent {
       }
     });
 
+    Border margins = BorderFactory.createEmptyBorder(2, 2, 2, 2);
+    Border etched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+    config_panel.setBorder(BorderFactory.createCompoundBorder(etched, margins));
     config_panel.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
     return config_panel;
   }
@@ -180,6 +194,9 @@ public class SARulesAgent extends Agent {
    * @return true si la compilación fue exitosa y false si no.
    */
   protected boolean compileCode () {
+    m_error_handler.resetErrorList();
+
+    ArrayList <SituationActionRule> rules = new ArrayList <SituationActionRule>();
     InputStream stream = new ByteArrayInputStream(m_code.getBytes(StandardCharsets.UTF_8));
 
     try {
@@ -188,18 +205,25 @@ public class SARulesAgent extends Agent {
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       SituationActionParser parser = new SituationActionParser(tokens);
 
-      ArrayList <SituationActionRule> rules = new ArrayList <SituationActionRule>();
+      lexer.removeErrorListeners();
+      parser.removeErrorListeners();
+      lexer.addErrorListener(m_error_handler);
+      parser.addErrorListener(m_error_handler);
+
+      rules = new ArrayList <SituationActionRule>();
       for (Sa_ruleContext i: parser.program().sa_rule())
         rules.add(SituationActionRule.createFromTree(i));
-
-      // TODO Sólo si la compilación fue correcta
-      m_rules = rules;
     }
     catch (Exception e) {
       return false;
     }
 
-    return true;
+    if (m_error_handler.hasErrors())
+      return false;
+    else {
+      m_rules = rules;
+      return true;
+    }
   }
 
   /* (non-Javadoc)

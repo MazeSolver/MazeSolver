@@ -28,7 +28,6 @@ import javax.swing.event.ChangeListener;
 
 import maze.Maze;
 import maze.algorithm.Kruskal;
-import maze.algorithm.Prim;
 import agent.Agent;
 
 /**
@@ -110,9 +109,6 @@ public class MainWindow extends JFrame {
     m_global_panel = new JPanel(new BorderLayout());
     m_global_panel.add(m_toolbar, BorderLayout.NORTH);
     m_environments = new EnvironmentSet();
-    // XXX Sólo de prueba. Borrar cuando se haya probado la visualización del
-    // laberinto y la generación del mismo.
-    m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Kruskal(20, 20))));
 
     m_global_panel.add(m_environments, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
@@ -212,7 +208,7 @@ public class MainWindow extends JFrame {
         // generar el laberinto
 
         // XXX Sólo para pruebas
-        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Prim(30, 30))));
+        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Kruskal(30, 30))));
       }
     });
 
@@ -285,6 +281,8 @@ public class MainWindow extends JFrame {
           Agent ag = m_environments.getSelectedEnvironment().getSelectedAgent();
           m_config_panel = ag.getConfigurationPanel();
           m_global_panel.add(m_config_panel, BorderLayout.WEST);
+          revalidate();
+          repaint();
         }
         catch (Exception exc) {
           // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
