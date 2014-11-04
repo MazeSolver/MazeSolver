@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import maze.Direction;
+import maze.Maze;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -52,7 +53,7 @@ public class SARulesAgent extends Agent {
 
   private ArrayList <SituationActionRule> m_rules;
   private String m_code;
-  // TODO boolean[][] m_visited;
+  boolean[][] m_visited;
 
   /**
    * @param maze Laberinto donde se sitúa el agente.
@@ -62,6 +63,15 @@ public class SARulesAgent extends Agent {
     m_rules = new ArrayList <SituationActionRule>();
     m_code = DEFAULT_AGENT_SRC;
     compileCode();
+  }
+
+  /* (non-Javadoc)
+   * @see agent.Agent#setEnvironment(Environment)
+   */
+  public void setEnvironment (Environment env) {
+    super.setEnvironment(env);
+    Maze maze = m_env.getMaze();
+    m_visited = new boolean[maze.getHeight()][maze.getWidth()];
   }
 
   /* (non-Javadoc)
@@ -84,6 +94,10 @@ public class SARulesAgent extends Agent {
    */
   @Override
   public void doMovement (Direction dir) {
+    // Marcamos la celda actual como visitada
+    m_visited[m_pos.y][m_pos.x] = true;
+
+    // Si nos podemos mover en la dirección que se nos indica, lo hacemos
     if (m_env.movementAllowed(m_pos, dir)) {
       Pair<Integer, Integer> mov = dir.decompose();
       m_pos.x += mov.first;
@@ -95,7 +109,9 @@ public class SARulesAgent extends Agent {
    * @see agent.Agent#resetMemory()
    */
   public void resetMemory () {
-    // TODO Borrar matriz de visitados
+    for (boolean[] i: m_visited)
+      for (int j = 0; j < i.length; j++)
+        i[j] = false;
   }
 
   /* (non-Javadoc)
@@ -143,9 +159,19 @@ public class SARulesAgent extends Agent {
     return config_panel;
   }
 
+  /**
+   * @param dir Dirección en la que hay que mirar.
+   * @return Si la celda adyacente en esa dirección ha sido visitada o no.
+   */
   public boolean hasVisited (Direction dir) {
-    // TODO Consultar la matriz de visitados
-    return false;
+    Pair <Integer, Integer> desp = dir.decompose();
+    Point p = new Point(m_pos.x + desp.first, m_pos.y + desp.second);
+    Maze maze = m_env.getMaze();
+
+    if (p.x < 0 || p.y < 0 || p.x >= maze.getWidth() || p.y >= maze.getHeight())
+      return false;
+
+    return m_visited[p.y][p.x];
   }
 
   /**
