@@ -22,6 +22,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -63,9 +64,9 @@ public class MainWindow extends JFrame {
     return m_instance;
   }
 
-  // Panel que contiene la barra de acciones y tanto el panel con los laberintos
-  // como el panel de configuración.
-  private JPanel m_global_panel;
+  // Panel que contiene tanto el panel con los laberintos como el panel de
+  // configuración, de tal manera que se pueden cambiar de tamaño.
+  private JSplitPane m_split_panel;
 
   // Barra de menús
   private JMenuBar m_menu_bar;
@@ -106,13 +107,15 @@ public class MainWindow extends JFrame {
     createMenus();
     createToolbar();
 
-    m_global_panel = new JPanel(new BorderLayout());
-    m_global_panel.add(m_toolbar, BorderLayout.NORTH);
+    JPanel global_panel = new JPanel(new BorderLayout());
+    global_panel.add(m_toolbar, BorderLayout.NORTH);
     m_environments = new EnvironmentSet();
 
-    m_global_panel.add(m_environments, BorderLayout.CENTER);
+    m_split_panel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, null, m_environments);
+
+    global_panel.add(m_split_panel, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
-    add(m_global_panel, BorderLayout.CENTER);
+    add(global_panel, BorderLayout.CENTER);
 
     pack();
   }
@@ -279,10 +282,7 @@ public class MainWindow extends JFrame {
       public void actionPerformed (ActionEvent e) {
         try {
           Agent ag = m_environments.getSelectedEnvironment().getSelectedAgent();
-          m_config_panel = ag.getConfigurationPanel();
-          m_global_panel.add(m_config_panel, BorderLayout.WEST);
-          revalidate();
-          repaint();
+          setConfigurationPanel(ag.getConfigurationPanel());
         }
         catch (Exception exc) {
           // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
@@ -368,10 +368,23 @@ public class MainWindow extends JFrame {
    */
   public void closeConfigurationPanel () {
     if (m_config_panel != null) {
-      m_global_panel.remove(m_config_panel);
+      m_split_panel.remove(m_config_panel);
       m_config_panel = null;
-      m_global_panel.revalidate();
-      m_global_panel.repaint();
+      revalidate();
+      repaint();
+    }
+  }
+
+  /**
+   * Abre el panel de configuración.
+   * @param panel Panel de configuración que se quiere abrir.
+   */
+  public void setConfigurationPanel (JPanel panel) {
+    if (panel != null) {
+      m_config_panel = panel;
+      m_split_panel.add(m_config_panel);
+      revalidate();
+      repaint();
     }
   }
 
