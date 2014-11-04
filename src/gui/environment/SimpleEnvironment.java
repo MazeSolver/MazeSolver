@@ -2,12 +2,12 @@
  * @file SimpleEnvironment.java
  * @date 27/10/2014
  */
-package gui;
+package gui.environment;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 
+import maze.Direction;
 import maze.Maze;
 import agent.Agent;
 
@@ -80,7 +80,12 @@ public class SimpleEnvironment extends Environment {
   @Override
   public ArrayList <Agent> getAgents () {
     ArrayList <Agent> agents = new ArrayList <Agent>();
-    agents.add(m_agent.duplicate());
+
+    try {
+      agents.add((Agent) m_agent.clone());
+    }
+    catch (CloneNotSupportedException e) {}
+
     return agents;
   }
 
@@ -90,6 +95,14 @@ public class SimpleEnvironment extends Environment {
   @Override
   public int getAgentCount () {
     return m_agent == null? 0 : 1;
+  }
+
+  /* (non-Javadoc)
+   * @see gui.environment.Environment#movementAllowed(java.awt.Point, maze.Direction)
+   */
+  @Override
+  public boolean movementAllowed (Point pos, Direction dir) {
+    return !m_maze.get(pos.y, pos.x).hasWall(dir);
   }
 
   /* (non-Javadoc)
@@ -105,17 +118,6 @@ public class SimpleEnvironment extends Environment {
            m_agent.getY() < 0 ||
            m_agent.getX() >= m_maze.getWidth() ||
            m_agent.getY() >= m_maze.getHeight();
-  }
-
-  /* (non-Javadoc)
-   * @see gui.Environment#paintComponent(java.awt.Graphics)
-   */
-  protected void paintComponent (Graphics g) {
-    super.paintComponent(g);
-
-    g.setColor(Color.RED);
-    g.fillOval(m_agent.getX() * CELL_SIZE_PX, m_agent.getY() * CELL_SIZE_PX,
-               CELL_SIZE_PX-1, CELL_SIZE_PX-1);
   }
 
 }

@@ -2,16 +2,16 @@
  * @file MultipleEnvironment.java
  * @date 27/10/2014
  */
-package gui;
+package gui.environment;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import maze.Direction;
 import maze.Maze;
+import util.Pair;
 import agent.Agent;
 
 /**
@@ -32,15 +32,14 @@ public class MultipleEnvironment extends Environment {
     m_agents = new ArrayList<Agent>();
 
     // Añadimos la escucha del cursor para permitir al usuario seleccionar un
-    // agente
+    // agente.
     addMouseListener(new MouseAdapter() {
       /* (non-Javadoc)
        * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
        */
       @Override
       public void mouseClicked (MouseEvent e) {
-        Point maze_point = new Point(e.getX() / CELL_SIZE_PX,
-                                     e.getY() / CELL_SIZE_PX);
+        Point maze_point = EnvironmentPanel.screenCoordToGrid(e.getPoint());
 
         m_selected = -1;
         for (int i = 0; i < m_agents.size(); i++) {
@@ -144,8 +143,12 @@ public class MultipleEnvironment extends Environment {
   @Override
   public ArrayList <Agent> getAgents () {
     ArrayList <Agent> agents = new ArrayList <Agent>();
-    for (Agent i: m_agents)
-      agents.add(i.duplicate());
+
+    try {
+      for (Agent i: m_agents)
+        agents.add((Agent) i.clone());
+    }
+    catch (CloneNotSupportedException e) {}
 
     return agents;
   }
@@ -159,40 +162,36 @@ public class MultipleEnvironment extends Environment {
   }
 
   /* (non-Javadoc)
+   * @see gui.environment.Environment#movementAllowed(java.awt.Point, maze.Direction)
+   */
+  @Override
+  public boolean movementAllowed (Point pos, Direction dir) {
+    if (!m_maze.get(pos.y, pos.x).hasWall(dir)) {
+      Pair<Integer, Integer> desp = Direction.decompose(dir);
+      for (Agent ag: m_agents) {
+        if (pos.x + desp.first == ag.getX() && pos.y + desp.second == ag.getY())
+          return true;
+      }
+    }
+
+    return false;
+  }
+
+  /* (non-Javadoc)
    * @see gui.Environment#runStep()
    */
   @Override
   public boolean runStep () {
-    boolean ended = false;
+    boolean ended = true;
 
     for (Agent i: m_agents) {
       i.doMovement(i.getNextMovement());
-      if (i.getX() < 0 || i.getY() < 0 || i.getX() >= m_maze.getWidth() ||
-          i.getY() >= m_maze.getHeight())
-        ended = true;
+      if (i.getX() > 0 && i.getY() > 0 && i.getX() < m_maze.getWidth() &&
+          i.getY() < m_maze.getHeight())
+        ended = false;
     }
 
     return ended;
-  }
-
-  /* (non-Javadoc)
-   * @see gui.Environment#paintComponent(java.awt.Graphics)
-   */
-  protected void paintComponent (Graphics g) {
-    super.paintComponent(g);
-
-    g.setColor(Color.ORANGE);
-    for (Agent i: m_agents)
-      g.fillOval(i.getX() * CELL_SIZE_PX, i.getY() * CELL_SIZE_PX,
-                 CELL_SIZE_PX-1, CELL_SIZE_PX-1);
-
-    // Pintamos el agente seleccionado con otro color para resaltarlo
-    if (m_selected != -1) {
-      g.setColor(Color.RED);
-      g.fillOval(m_agents.get(m_selected).getX() * CELL_SIZE_PX,
-                 m_agents.get(m_selected).getY() * CELL_SIZE_PX,
-                 CELL_SIZE_PX-1, CELL_SIZE_PX-1);
-    }
   }
 
 }

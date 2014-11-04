@@ -2,7 +2,7 @@
  * @file EnvironmentSet.java
  * @date 25/10/2014
  */
-package gui;
+package gui.environment;
 
 import java.util.ArrayList;
 
@@ -67,6 +67,9 @@ public class EnvironmentSet extends JDesktopPane {
   }
 
   /**
+   * Añade un agente al entorno seleccionado y actualiza la referencia al
+   * entorno por si se trataba de un entorno simple y tras la adición de un
+   * agente pasa a ser un entorno múltiple.
    * @param ag Agente que se quiere añadir al entorno actual.
    */
   public void addAgentToSelectedEnvironment (Agent ag) {
@@ -79,13 +82,29 @@ public class EnvironmentSet extends JDesktopPane {
       throw new IllegalStateException("El usuario no ha seleccionado ningún entorno");
   }
 
-  public void deleteAgentFromEnvironment (Agent ag, Environment env) {
+  /**
+   * Elimina un agente de un entorno y actualiza la referencia al entorno, por
+   * si era un entorno múltiple y tras la eliminación tan sólo queda un agente.
+   * @param ag Referencia al agente que se quiere eliminar del entorno.
+   * @param env Entorno del cual se quiere eliminar el agente.
+   */
+  public void removeAgentFromEnvironment (Agent ag, Environment env) {
     if (m_envs.contains(env)) {
       m_envs.remove(env);
       m_envs.add(env.removeAgent(ag));
     }
     else
       throw new IllegalArgumentException("El entorno no está guardado en el conjunto actual");
+  }
+
+  /**
+   * Actualiza el zoom de los entornos y sus tamaños.
+   * @param zoom Nivel de escala a aplicar a la visualización de los entornos.
+   */
+  public void setZoom (double zoom) {
+    EnvironmentPanel.setZoom(zoom);
+    for (Environment i: m_envs)
+      i.updateSize();
   }
 
 }

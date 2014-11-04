@@ -2,10 +2,8 @@
  * @file Environment.java
  * @date 25/10/2014
  */
-package gui;
+package gui.environment;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -13,7 +11,6 @@ import javax.swing.JInternalFrame;
 
 import maze.Direction;
 import maze.Maze;
-import maze.MazeCell;
 import agent.Agent;
 
 /**
@@ -22,7 +19,12 @@ import agent.Agent;
  */
 public abstract class Environment extends JInternalFrame {
   private static final long serialVersionUID = 1L;
-  protected static final int CELL_SIZE_PX = 5;
+  private static final int WINDOW_BORDER_WIDTH = 11;
+  private static final int WINDOW_BORDER_HEIGHT = 34;
+  private static final int WINDOWS_OFFSET = 20;
+
+  private static int s_instance = 0;
+  private static Point start_pos = new Point();
 
   protected Maze m_maze;
 
@@ -32,9 +34,20 @@ public abstract class Environment extends JInternalFrame {
    * entre varios entornos.
    */
   protected Environment (Maze maze) {
+    super("Environment " + (++s_instance), false, false, false, false);
     setMaze(maze);
+
     setVisible(true);
-    setSize(CELL_SIZE_PX * m_maze.getWidth(), CELL_SIZE_PX * m_maze.getHeight());
+    setContentPane(new EnvironmentPanel(this));
+    updateSize();
+
+    setLocation(start_pos);
+    start_pos.x += WINDOWS_OFFSET;
+    start_pos.y += WINDOWS_OFFSET;
+
+    // FIXME Esto debería poner el entorno delante de todos los demás que haya
+    // abiertos, pero no lo hace.
+    moveToFront();
   }
 
   /**
@@ -56,6 +69,17 @@ public abstract class Environment extends JInternalFrame {
       m_maze = maze;
     else
       throw new IllegalArgumentException("El laberinto debe ser válido");
+  }
+
+  /**
+   * Actualiza el tamaño de la ventana con respecto al tamaño de su contenido,
+   * que es la representación del entorno.
+   */
+  public void updateSize () {
+    EnvironmentPanel panel = ((EnvironmentPanel) getContentPane());
+    panel.updateSize();
+    setSize(panel.getWidth() + WINDOW_BORDER_WIDTH,
+            panel.getHeight() + WINDOW_BORDER_HEIGHT);
   }
 
   /**
@@ -100,41 +124,18 @@ public abstract class Environment extends JInternalFrame {
   public abstract int getAgentCount ();
 
   /**
+   * Indica si a partir de una posición, el movimiento hacia una determinada
+   * posición es posible o está ocupado por un agente o muro.
+   * @param pos Posición de partida.
+   * @param dir Dirección de movimiento.
+   * @return true si se puede y false si no.
+   */
+  public abstract boolean movementAllowed (Point pos, Direction dir);
+
+  /**
    * Ejecuta un paso de la simulación de ejecución de los agentes en el entorno.
    * @return true si algún agente ha salido del laberinto y false en otro caso.
    */
   public abstract boolean runStep ();
-
-  /* (non-Javadoc)
-   * @see javax.swing.JInternalFrame#paintComponent(java.awt.Graphics)
-   */
-  @Override
-  protected void paintComponent (Graphics g) {
-    super.paintComponent(g);
-
-    // Configuramos la paleta
-    g.setColor(Color.BLACK);
-
-    int width = m_maze.getWidth();
-    int height = m_maze.getHeight();
-
-    // Dibujamos sólo el laberinto. Los agentes se dibujan en las respectivas
-    // clases derivadas.
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        final MazeCell actual = m_maze.get(y, x);
-        Point pos = new Point(x * CELL_SIZE_PX, y * CELL_SIZE_PX);
-
-        if (actual.hasWall(Direction.UP))
-          g.drawLine(pos.x, pos.y, pos.x + CELL_SIZE_PX, pos.y);
-        if (actual.hasWall(Direction.DOWN))
-          g.drawLine(pos.x, pos.y + CELL_SIZE_PX, pos.x + CELL_SIZE_PX, pos.y + CELL_SIZE_PX);
-        if (actual.hasWall(Direction.LEFT))
-          g.drawLine(pos.x, pos.y, pos.x, pos.y + CELL_SIZE_PX);
-        if (actual.hasWall(Direction.RIGHT))
-          g.drawLine(pos.x + CELL_SIZE_PX, pos.y, pos.x + CELL_SIZE_PX, pos.y + CELL_SIZE_PX);
-      }
-    }
-  }
 
 }
