@@ -27,8 +27,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import maze.Maze;
+<<<<<<< HEAD
 import maze.algorithm.Prim;
 import agent.Agent;
+=======
+import maze.algorithm.Kruskal;
+>>>>>>> dev-mazegen
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -110,6 +114,13 @@ public class MainWindow extends JFrame {
     m_global_panel.add(m_toolbar, BorderLayout.NORTH);
     m_environments = new EnvironmentSet();
 
+<<<<<<< HEAD
+=======
+    // XXX Sólo de prueba. Borrar cuando se haya probado la visualización del
+    // laberinto y la generación del mismo.
+    m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Kruskal(20, 20))));
+
+>>>>>>> dev-mazegen
     m_global_panel.add(m_environments, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
     add(m_global_panel, BorderLayout.CENTER);
