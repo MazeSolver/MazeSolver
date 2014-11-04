@@ -211,4 +211,5 @@ public class Prim extends MazeCreationAlgorithm {
     walls.remove(inx_wall);
     return false;
   }
+
 }
