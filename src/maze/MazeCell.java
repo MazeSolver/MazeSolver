@@ -61,31 +61,28 @@ public class MazeCell {
    * Enumeración de los diferentes estados que puede tener una celda de cara a
    * un agente cualquiera.
    */
-  public static enum Status {
+  public static enum Vision {
     /**
-     * Este estado significa que la celda está vacía y se puede llegar desde la
-     * celda actual en un paso.
+     * Este estado significa que la celda está vacía y no hay una pared entre
+     * las 2 celdas.
      */
     EMPTY,
 
     /**
-     * Este estado significa que hay una pared entre el agente y la celda.
+     * Este estado significa que hay una pared entre la posición actual del
+     * agente y la celda.
      */
     WALL,
 
     /**
-     * Este estado significa que la celda ha sido visitada por el agente
-     * previamente.
-     */
-    VISITED,
-
-    /**
-     * Este estado significa que hay un agente sobre esa celda actualmente.
+     * Este estado significa que hay un agente sobre esa celda actualmente y
+     * no hay nada interponiéndose en medio.
      */
     AGENT,
 
     /**
-     * Este estado significa que la celda referenciada está fuera del laberinto.
+     * Este estado significa que la celda referenciada está fuera del laberinto
+     * y además no hay una pared en medio.
      */
     OFFLIMITS;
   }

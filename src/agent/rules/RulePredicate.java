@@ -6,7 +6,7 @@ package agent.rules;
 
 import maze.Direction;
 import maze.MazeCell;
-import agent.Agent;
+import agent.SARulesAgent;
 import agent.rules.parser.SituationActionParser.AndContext;
 import agent.rules.parser.SituationActionParser.DirectionContext;
 import agent.rules.parser.SituationActionParser.OrContext;
@@ -24,7 +24,7 @@ public abstract class RulePredicate implements Cloneable {
   /**
    * Distintos conectores de reglas que soporta el lenguaje.
    */
-  public static enum RuleConnector {
+  private static enum RuleConnector {
     OR, AND;
   }
 
@@ -82,7 +82,7 @@ public abstract class RulePredicate implements Cloneable {
    * @param ag Agente sobre el que se quiere evaluar el predicado.
    * @return Si la situación representada se da para el agente indicado.
    */
-  public abstract boolean evaluate (Agent ag);
+  public abstract boolean evaluate (SARulesAgent ag);
 
   /* (non-Javadoc)
    * @see java.lang.Object#clone()
@@ -96,7 +96,8 @@ public abstract class RulePredicate implements Cloneable {
    */
   private static class SimpleRulePredicate extends RulePredicate {
     private Direction m_direction;
-    private MazeCell.Status m_status;
+    private MazeCell.Vision m_vision;
+    private boolean m_visited_status;
 
     /**
      * Construye un término a partir del árbol de parseo generado.
@@ -121,20 +122,23 @@ public abstract class RulePredicate implements Cloneable {
         dir = Direction.RIGHT;
 
       // Extraemos el estado de la celda
-      MazeCell.Status st;
+      MazeCell.Vision vision = null;
       if (term_ctx.FREE() != null)
-        st = MazeCell.Status.EMPTY;
+        vision = MazeCell.Vision.EMPTY;
       else if (term_ctx.WALL() != null)
-        st = MazeCell.Status.WALL;
-      else if (term_ctx.VISITED() != null)
-        st = MazeCell.Status.VISITED;
+        vision = MazeCell.Vision.WALL;
       else if (term_ctx.AGENT() != null)
-        st = MazeCell.Status.AGENT;
-      else // OFFLIMITS
-        st = MazeCell.Status.OFFLIMITS;
+        vision = MazeCell.Vision.AGENT;
+      else if (term_ctx.OFFLIMITS() != null)
+        vision = MazeCell.Vision.OFFLIMITS;
 
       // Creamos la regla y la negamos si es su caso
-      SimpleRulePredicate pred = new SimpleRulePredicate(dir, st);
+      SimpleRulePredicate pred;
+      if (vision == null)
+        pred = new SimpleRulePredicate(dir);
+      else
+        pred = new SimpleRulePredicate(dir, vision);
+
       if (term_ctx.NOT() != null)
         pred.negate();
 
@@ -142,14 +146,26 @@ public abstract class RulePredicate implements Cloneable {
     }
 
     /**
+     * Crea un predicado que hace referencia a que en la dirección indicada se
+     * tiene una visión específica.
      * @param dir
      *          Dirección a la que hace referencia el término.
      * @param st
      *          Estado de la celda.
      */
-    public SimpleRulePredicate (Direction dir, MazeCell.Status st) {
+    public SimpleRulePredicate (Direction dir, MazeCell.Vision vision) {
       m_direction = dir;
-      m_status = st;
+      m_vision = vision;
+    }
+
+    /**
+     * Crea un predicado que hace referencia a que la dirección indicada ha sido
+     * visitada.
+     * @param dir Dirección a la que hace referencia el término.
+     */
+    public SimpleRulePredicate (Direction dir) {
+      m_direction = dir;
+      m_visited_status = true;
     }
 
     /*
@@ -158,10 +174,30 @@ public abstract class RulePredicate implements Cloneable {
      * @see agent.rules.RulePredicate#evaluate(agent.Agent)
      */
     @Override
-    public boolean evaluate (Agent ag) {
-      // TODO Comprobar si la celda en la dirección m_direction del agente el
-      // estado es m_state. Devolver ((ese resultado) ^ m_negated).
-      return false;
+    public boolean evaluate (SARulesAgent ag) {
+      boolean result = false;
+
+      if (m_visited_status)
+        result = ag.hasVisited(m_direction);
+      else {
+        MazeCell.Vision vision = ag.look(m_direction);
+        switch (m_vision) {
+          case AGENT:
+            result = vision == MazeCell.Vision.AGENT;
+            break;
+          case EMPTY:
+            result = vision == MazeCell.Vision.EMPTY;
+            break;
+          case OFFLIMITS:
+            result = vision == MazeCell.Vision.OFFLIMITS;
+            break;
+          case WALL:
+            result = vision == MazeCell.Vision.WALL;
+            break;
+        }
+      }
+
+      return result ^ m_negated;
     }
 
     /* (non-Javadoc)
@@ -169,7 +205,7 @@ public abstract class RulePredicate implements Cloneable {
      */
     @Override
     public Object clone () throws CloneNotSupportedException {
-      SimpleRulePredicate pred = new SimpleRulePredicate(m_direction, m_status);
+      SimpleRulePredicate pred = new SimpleRulePredicate(m_direction, m_vision);
       pred.m_negated = m_negated;
       return pred;
     }
@@ -203,7 +239,7 @@ public abstract class RulePredicate implements Cloneable {
      * @see agent.rules.RulePredicate#evaluate(agent.Agent)
      */
     @Override
-    public boolean evaluate (Agent ag) {
+    public boolean evaluate (SARulesAgent ag) {
       boolean result = false;
       switch (m_connector) {
         case OR:

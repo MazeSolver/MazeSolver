@@ -4,7 +4,7 @@
  */
 package agent.rules;
 
-import agent.Agent;
+import agent.SARulesAgent;
 import agent.rules.parser.SituationActionParser.Sa_ruleContext;
 
 /**
@@ -53,7 +53,7 @@ public class SituationActionRule implements Cloneable {
    * @return Acción que la regla indica que se debería tomar. Si la regla no
    *         aplica dado el estado actual, devuelve null.
    */
-  public RuleAction getAction (Agent ag) {
+  public RuleAction getAction (SARulesAgent ag) {
     if (m_predicate.evaluate(ag))
       return m_action;
     return null;
