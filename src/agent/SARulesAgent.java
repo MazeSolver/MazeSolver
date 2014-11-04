@@ -84,7 +84,7 @@ public class SARulesAgent extends Agent {
   @Override
   public void doMovement (Direction dir) {
     if (!m_maze.get(m_pos.x, m_pos.y).hasWall(dir)) {
-      Pair<Integer, Integer> mov = Direction.decompose(dir);
+      Pair<Integer, Integer> mov = dir.decompose();
       m_pos.x += mov.first;
       m_pos.y += mov.second;
     }

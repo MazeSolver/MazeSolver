@@ -167,7 +167,7 @@ public class MultipleEnvironment extends Environment {
   @Override
   public boolean movementAllowed (Point pos, Direction dir) {
     if (!m_maze.get(pos.y, pos.x).hasWall(dir)) {
-      Pair<Integer, Integer> desp = Direction.decompose(dir);
+      Pair<Integer, Integer> desp = dir.decompose();
       for (Agent ag: m_agents) {
         if (pos.x + desp.first == ag.getX() && pos.y + desp.second == ag.getY())
           return true;

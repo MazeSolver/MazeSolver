@@ -43,9 +43,9 @@ public enum Direction {
    * @param dir Dirección que se quiere traducir.
    * @return Pareja con la descomposición de la dirección (x, y).
    */
-  public static Pair<Integer, Integer> decompose (Direction dir) {
+  public Pair<Integer, Integer> decompose () {
     Pair<Integer, Integer> p = new Pair <Integer, Integer>(0, 0);
-    switch (dir) {
+    switch (this) {
       case NONE:
         break;
       case UP:
@@ -62,6 +62,21 @@ public enum Direction {
         break;
     }
     return p;
+  }
+
+  public Direction getOpposite () {
+    switch (this) {
+      case UP:
+        return DOWN;
+      case DOWN:
+        return UP;
+      case LEFT:
+        return RIGHT;
+      case RIGHT:
+        return LEFT;
+      default:
+        return NONE;
+    }
   }
 
 }
