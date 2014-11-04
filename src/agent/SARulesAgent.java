@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -47,8 +48,7 @@ import agent.rules.parser.SituationActionParser.Sa_ruleContext;
  * para la cual la situación se cumple.
  */
 public class SARulesAgent extends Agent {
-  public static final int MINIMUM_WIDTH = 200;
-  public static final int MINIMUM_HEIGHT = 400;
+  public static final int MINIMUM_WIDTH = 300;
   public static final String DEFAULT_AGENT_SRC =
         "UP FREE -> MOVE UP.\n"
       + "LEFT NOT VISITED & LEFT FREE -> MOVE LEFT.\n"
@@ -127,7 +127,9 @@ public class SARulesAgent extends Agent {
   public JPanel getConfigurationPanel () {
     JPanel config_panel = new JPanel(new BorderLayout());
     JLabel title = new JLabel("Write your rules here:");
+
     final JTextArea text = new JTextArea(m_code);
+    JScrollPane scroll = new JScrollPane(text);
 
     JPanel buttons = new JPanel(new FlowLayout());
     JButton accept = new JButton("OK");
@@ -136,7 +138,7 @@ public class SARulesAgent extends Agent {
     buttons.add(accept);
     buttons.add(cancel);
     config_panel.add(title, BorderLayout.NORTH);
-    config_panel.add(text, BorderLayout.CENTER);
+    config_panel.add(scroll, BorderLayout.CENTER);
     config_panel.add(buttons, BorderLayout.SOUTH);
 
     accept.addActionListener(new ActionListener() {
@@ -169,7 +171,7 @@ public class SARulesAgent extends Agent {
     Border margins = BorderFactory.createEmptyBorder(2, 2, 2, 2);
     Border etched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
     config_panel.setBorder(BorderFactory.createCompoundBorder(etched, margins));
-    config_panel.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
+    config_panel.setMinimumSize(new Dimension(MINIMUM_WIDTH, 0));
     return config_panel;
   }
 
