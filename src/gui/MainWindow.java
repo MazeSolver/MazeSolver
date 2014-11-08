@@ -272,7 +272,6 @@ public class MainWindow extends JFrame {
       @Override
       public void actionPerformed (ActionEvent e) {
         m_environments.removeSelectedEnvironment();
-        repaint();
       }
     });
 
@@ -283,6 +282,9 @@ public class MainWindow extends JFrame {
       public void actionPerformed (ActionEvent e) {
         // TODO Mostrar la interfaz para la selección de un tipo de agente y
         // agregarlo al entorno en alguna posición disponible
+
+        // XXX Sólo para pruebas
+        m_environments.addAgentToSelectedEnvironment(new SARulesAgent(m_environments.getSelectedEnvironment()));
       }
     });
 

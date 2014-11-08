@@ -67,8 +67,10 @@ public abstract class Environment extends JInternalFrame {
    * @param maze Laberinto en el que se basa el entorno.
    */
   public void setMaze (Maze maze) {
-    if (maze != null)
+    if (maze != null) {
       m_maze = maze;
+      repaint();
+    }
     else
       throw new IllegalArgumentException("El laberinto debe ser válido");
   }
@@ -82,6 +84,7 @@ public abstract class Environment extends JInternalFrame {
     panel.updateSize();
     setSize(panel.getWidth() + WINDOW_BORDER_WIDTH,
             panel.getHeight() + WINDOW_BORDER_HEIGHT);
+    repaint();
   }
 
   /**

@@ -52,6 +52,7 @@ public class EnvironmentSet extends JDesktopPane {
     if (env != null) {
       m_envs.add(env);
       add(env);
+      repaint();
     }
   }
 
@@ -63,6 +64,7 @@ public class EnvironmentSet extends JDesktopPane {
     if (env != null) {
       m_envs.remove(env);
       remove(env);
+      repaint();
     }
   }
 
@@ -75,11 +77,8 @@ public class EnvironmentSet extends JDesktopPane {
   public void addAgentToSelectedEnvironment (Agent ag) {
     Environment env = getSelectedEnvironment();
     if (env != null) {
-      m_envs.remove(env);
-      remove(env);
       Environment new_env = env.addAgent(ag);
-      m_envs.add(new_env);
-      add(new_env);
+      exchangeEnvironments(env, new_env);
     }
     else
       throw new IllegalStateException("El usuario no ha seleccionado ningún entorno");
@@ -93,11 +92,8 @@ public class EnvironmentSet extends JDesktopPane {
    */
   public void removeAgentFromEnvironment (Agent ag, Environment env) {
     if (m_envs.contains(env)) {
-      m_envs.remove(env);
-      remove(env);
       Environment new_env = env.removeAgent(ag);
-      m_envs.add(new_env);
-      add(new_env);
+      exchangeEnvironments(env, new_env);
     }
     else
       throw new IllegalArgumentException("El entorno no está guardado en el conjunto actual");
@@ -111,6 +107,30 @@ public class EnvironmentSet extends JDesktopPane {
     EnvironmentPanel.setZoom(zoom);
     for (Environment i: m_envs)
       i.updateSize();
+  }
+
+  /**
+   * Intercambia un entorno dentro del conjunto de entornos por otro que no
+   * está en dicho conjunto.
+   * @param e1 Entorno que se quiere eliminar del conjunto.
+   * @param e2 Entorno que se quiere introducir en su lugar.
+   */
+  private void exchangeEnvironments (Environment e1, Environment e2) {
+    // Evitamos intercambiar un entorno por sí mismo
+    if (e1 != e2) {
+      if (!m_envs.contains(e1) || m_envs.contains(e2))
+        throw new IllegalArgumentException("No se pueden intercambiar estos entornos");
+
+      // Quitamos el primer entorno
+      m_envs.remove(e1);
+      remove(e1);
+      // Ponemos el segundo entorno
+      m_envs.add(e2);
+      add(e2);
+      // Lo seleccionamos como entorno activo
+      setSelectedFrame(e2);
+    }
+    repaint();
   }
 
 }

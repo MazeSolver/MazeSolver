@@ -34,7 +34,7 @@ public class MultipleEnvironment extends Environment {
 
     // Añadimos la escucha del cursor para permitir al usuario seleccionar un
     // agente.
-    addMouseListener(new MouseAdapter() {
+    getContentPane().addMouseListener(new MouseAdapter() {
       /* (non-Javadoc)
        * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
        */
@@ -52,6 +52,7 @@ public class MultipleEnvironment extends Environment {
           }
         }
 
+        repaint();
         super.mouseClicked(e);
       }
 
@@ -77,6 +78,9 @@ public class MultipleEnvironment extends Environment {
     });
   }
 
+  /* (non-Javadoc)
+   * @see gui.environment.Environment#look(java.awt.Point, maze.Direction)
+   */
   @Override
   public MazeCell.Vision look (Point pos, Direction dir) {
     MazeCell.Vision vision = super.look(pos, dir);
@@ -122,6 +126,7 @@ public class MultipleEnvironment extends Environment {
         }
       }
       m_agents.add(ag);
+      repaint();
     }
 
     return this;
@@ -149,6 +154,7 @@ public class MultipleEnvironment extends Environment {
     }
 
     // En otro caso, devolvemos el mismo entorno
+    repaint();
     return this;
   }
 
@@ -212,6 +218,7 @@ public class MultipleEnvironment extends Environment {
         ended = false;
     }
 
+    repaint();
     return ended;
   }
 
