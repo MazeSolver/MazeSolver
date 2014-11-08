@@ -12,6 +12,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,7 +40,7 @@ import agent.SARulesAgent;
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
  * patrón 'singleton'.
  */
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements Observer {
   private static String APP_NAME = "Maze Solver";
   private static int DEFAULT_WIDTH = 640;
   private static int DEFAULT_HEIGHT = 480;
@@ -108,6 +110,7 @@ public class MainWindow extends JFrame {
   private MainWindow () {
     createInterface();
     m_simulation = new SimulationManager(m_environments);
+    m_simulation.addObserver(this);
   }
 
   /**
@@ -490,6 +493,15 @@ public class MainWindow extends JFrame {
     m_step.setEnabled(true);
     m_pause.setEnabled(false);
     m_stop.setEnabled(false);
+  }
+
+  /* (non-Javadoc)
+   * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+   */
+  @Override
+  public void update (Observable obs, Object obj) {
+    // Esto sucede cuando todos los entornos han terminado de ejecutarse.
+    // TODO Recopilar y mostrar estadísticas de ejecución
   }
 
 }
