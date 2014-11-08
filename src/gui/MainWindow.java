@@ -92,7 +92,8 @@ public class MainWindow extends JFrame {
   private JMenuItem m_itm_maze_new, m_itm_maze_save, m_itm_maze_open,
                     m_itm_exit;
   private JMenuItem m_itm_maze_clone, m_itm_maze_change, m_itm_maze_close;
-  private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_remove;
+  private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_clone,
+                    m_itm_agent_remove;
   private JMenuItem m_itm_about;
 
   EnvironmentSet m_environments;
@@ -165,10 +166,12 @@ public class MainWindow extends JFrame {
     // Menú "Agent"
     m_itm_agent_add = new JMenuItem("Add agent...");
     m_itm_agent_config = new JMenuItem("Configure agent...");
+    m_itm_agent_clone = new JMenuItem("Clone agent");
     m_itm_agent_remove = new JMenuItem("Remove agent");
 
     m_menu_agent.add(m_itm_agent_add);
     m_menu_agent.add(m_itm_agent_config);
+    m_menu_agent.add(m_itm_agent_clone);
     m_menu_agent.add(m_itm_agent_remove);
 
     // Menú "Help"
@@ -195,6 +198,7 @@ public class MainWindow extends JFrame {
     m_pause = new JButton("Pause");
     m_stop = new JButton("Stop");
     m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
+    m_zoom.setValue(MINIMUM_ZOOM_VAL);
 
     m_toolbar.add(m_run);
     m_toolbar.add(m_step);
@@ -302,6 +306,20 @@ public class MainWindow extends JFrame {
           // XXX Sólo para pruebas
           Agent ag = new SARulesAgent(m_environments.getSelectedEnvironment());
           setConfigurationPanel(ag.getConfigurationPanel());
+        }
+      }
+    });
+
+    m_itm_agent_clone.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Environment env = m_environments.getSelectedEnvironment();
+          m_environments.addAgentToSelectedEnvironment((Agent) env.getSelectedAgent().clone());
+        }
+        catch (Exception exc) {
+          // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
+          // No hay agente seleccionado o no hay entorno seleccionado
         }
       }
     });

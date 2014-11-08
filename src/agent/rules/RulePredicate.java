@@ -207,6 +207,7 @@ public abstract class RulePredicate implements Cloneable {
     public Object clone () throws CloneNotSupportedException {
       SimpleRulePredicate pred = new SimpleRulePredicate(m_direction, m_vision);
       pred.m_negated = m_negated;
+      pred.m_visited_status = m_visited_status;
       return pred;
     }
 
