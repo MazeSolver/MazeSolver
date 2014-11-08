@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * Gestor de la simulación.
  */
 public class SimulationManager extends Observable implements Runnable {
-  private static int DEFAULT_INTERVAL = 10;
+  private static int DEFAULT_INTERVAL = 200;
 
   private int m_interval;
   private ScheduledThreadPoolExecutor m_executor;
@@ -68,7 +68,9 @@ public class SimulationManager extends Observable implements Runnable {
     if (isStopped())
       m_finished = new boolean[m_environments.getEnvironmentCount()];
 
-    m_future = m_executor.scheduleAtFixedRate(this, 0, m_interval,
+    // Lanzamos un hilo sólo si no se está ejecutando todavía
+    if (!isRunning())
+      m_future = m_executor.scheduleAtFixedRate(this, 0, m_interval,
         TimeUnit.MILLISECONDS);
   }
 

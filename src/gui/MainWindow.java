@@ -204,6 +204,9 @@ public class MainWindow extends JFrame {
     m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
     m_zoom.setValue(MINIMUM_ZOOM_VAL);
 
+    m_pause.setEnabled(false);
+    m_stop.setEnabled(false);
+
     m_toolbar.add(m_run);
     m_toolbar.add(m_step);
     m_toolbar.add(m_pause);
@@ -353,13 +356,13 @@ public class MainWindow extends JFrame {
     });
   }
 
+  /**
+   * Configura los listeners de los botones en la barra de herramientas.
+   */
   private void setupToolbarListeners () {
     m_run.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Lanzar un hilo / timer / algo que regularmente ejecute un paso
-        // de simulación en todos los entornos. Si la simulación está pausada,
-        // se reanuda.
         startSimulation();
       }
     });
@@ -375,8 +378,6 @@ public class MainWindow extends JFrame {
     m_pause.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Pausar el hilo / timer / algo que se esté ejecutando si hay
-        // alguno. No hacer nada si no hay nada ejecutándose o está pausado.
         pauseSimulation();
       }
     });
@@ -384,8 +385,6 @@ public class MainWindow extends JFrame {
     m_stop.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Parar y eliminar el hilo / timer / algo y borrar la memoria de
-        // los agentes
         stopSimulation();
       }
     });
@@ -435,21 +434,62 @@ public class MainWindow extends JFrame {
     }
   }
 
+  /**
+   * Adapta los menús al estado de "Simulación en curso" y la comienza.
+   */
   private void startSimulation () {
+    // Desactivamos los menús que no se pueden utilizar durante la simulación
+    m_itm_maze_new.setEnabled(false);
+    m_itm_maze_change.setEnabled(false);
+    m_itm_maze_open.setEnabled(false);
+    m_itm_maze_clone.setEnabled(false);
+
+    m_run.setEnabled(false);
+    m_step.setEnabled(false);
+    m_pause.setEnabled(true);
+    m_stop.setEnabled(true);
+
     m_simulation.startSimulation();
   }
 
+  /**
+   * Pausa o reanuda la simulación dependiendo de su estado y mantiene coherente
+   * el estado de los menús.
+   */
   private void pauseSimulation () {
-    if (m_simulation.isRunning())
+    if (!m_simulation.isPaused()) {
+      m_pause.setText("Continue");
       m_simulation.pauseSimulation();
+      m_step.setEnabled(true);
+    }
+    else {
+      m_pause.setText("Pause");
+      m_step.setEnabled(false);
+      m_simulation.startSimulation();
+    }
   }
 
+  /**
+   * Para la simulación y vuelve a dejar los menús en su estado inicial.
+   */
   private void stopSimulation () {
     m_simulation.stopSimulation();
     for (Environment env: m_environments.getEnvironmentList()) {
-      for (Agent ag: env.getAgents())
-        ag.resetMemory();
+      for (int i = 0; i < env.getAgentCount(); i++)
+        env.getAgent(i).resetMemory();
     }
+
+    // Volvemos a activar los menús que desactivamos antes
+    m_itm_maze_new.setEnabled(true);
+    m_itm_maze_change.setEnabled(true);
+    m_itm_maze_open.setEnabled(true);
+    m_itm_maze_clone.setEnabled(true);
+
+    m_pause.setText("Pause");
+    m_run.setEnabled(true);
+    m_step.setEnabled(true);
+    m_pause.setEnabled(false);
+    m_stop.setEnabled(false);
   }
 
 }
