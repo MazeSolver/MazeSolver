@@ -142,18 +142,23 @@ public abstract class Environment extends JInternalFrame {
   public abstract Environment removeAgent (Agent ag);
 
   /**
+   * Extrae una referencia al agente seleccionado dentro del entorno.
    * @return Agente seleccionado actualmente en el entorno o null si no hay
    * ninguno seleccionado.
    */
   public abstract Agent getSelectedAgent ();
 
   /**
+   * Extrae una referencia a un agente del entorno.
    * @param index Índice del agente que se quiere consultar.
    * @return Agente número 'index' dentro del entorno.
    */
   public abstract Agent getAgent (int index);
 
   /**
+   * Extrae una copia profunda de la lista de agentes que hay dentro del
+   * entorno. Hay que tener en cuenta que cualquier modificación en esta lista
+   * no va a tener ninguna repercusión en los agentes o el entorno original.
    * @return Copia de la lista de agentes dentro del entorno.
    */
   public abstract ArrayList <Agent> getAgents ();
