@@ -115,7 +115,7 @@ public class EnvironmentSet extends JDesktopPane {
    * @param e1 Entorno que se quiere eliminar del conjunto.
    * @param e2 Entorno que se quiere introducir en su lugar.
    */
-  private void exchangeEnvironments (Environment e1, Environment e2) {
+  public void exchangeEnvironments (Environment e1, Environment e2) {
     // Evitamos intercambiar un entorno por sí mismo
     if (e1 != e2) {
       if (!m_envs.contains(e1) || m_envs.contains(e2))

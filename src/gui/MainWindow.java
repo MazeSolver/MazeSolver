@@ -12,6 +12,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -231,8 +232,15 @@ public class MainWindow extends JFrame {
     m_itm_maze_save.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO LLamar al método para mostrar la interfaz para guardar el
-        // laberinto y luego guardarlo
+        try {
+          // TODO Desactivar los controles que no se pueden usar cuando no hay
+          // entornos seleccionados para evitar tener que crear un montón de
+          // mensajes de error
+          FileDialog.saveMaze(m_environments.getSelectedEnvironment().getMaze());
+        }
+        catch (IOException exc) {
+          // TODO Manejar excepción -- Mostrar error
+        }
       }
     });
 
@@ -240,6 +248,14 @@ public class MainWindow extends JFrame {
       @Override
       public void actionPerformed (ActionEvent e) {
         // TODO Llamar al método para cargar un fichero de laberinto
+        try {
+          Maze[] mazes = FileDialog.loadMazes();
+          for (Maze maze: mazes)
+            m_environments.addEnvironment(new SimpleEnvironment(maze));
+        }
+        catch (IOException exc) {
+          // TODO Manejar excepción -- Mostrar error
+        }
       }
     });
 
@@ -267,8 +283,22 @@ public class MainWindow extends JFrame {
     m_itm_maze_change.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Llamar al método para cargar un fichero de laberinto
-        // También hay que añadir los agentes al nuevo laberinto
+        try {
+          Maze maze = FileDialog.loadMaze();
+
+          if (maze != null) {
+            Environment actual_env = m_environments.getSelectedEnvironment();
+            Environment new_env = new SimpleEnvironment(maze);
+
+            for (int i = 0; i < actual_env.getAgentCount(); i++)
+              new_env = new_env.addAgent(actual_env.getAgent(i));
+
+            m_environments.exchangeEnvironments(actual_env, new_env);
+          }
+        }
+        catch (IOException exc) {
+          // TODO Reportar error
+        }
       }
     });
 

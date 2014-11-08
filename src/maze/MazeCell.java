@@ -4,10 +4,14 @@
  */
 package maze;
 
+import java.io.Serializable;
+
 /**
  * Clase que representa una celda del laberinto.
  */
-public class MazeCell {
+public class MazeCell implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   private short m_cell;
 
   /**
