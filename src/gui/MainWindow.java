@@ -401,6 +401,9 @@ public class MainWindow extends JFrame {
    * @param panel Panel de configuración que se quiere abrir.
    */
   public void setConfigurationPanel (JPanel panel) {
+    if (m_config_panel != null)
+      closeConfigurationPanel();
+
     if (panel != null) {
       ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(true);
 
