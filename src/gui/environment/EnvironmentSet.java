@@ -46,6 +46,13 @@ public class EnvironmentSet extends JDesktopPane {
   }
 
   /**
+   * @return Número de entornos en el conjunto.
+   */
+  public int getEnvironmentCount () {
+    return m_envs.size();
+  }
+
+  /**
    * @param env Añade un entorno a la lista.
    */
   public void addEnvironment (Environment env) {

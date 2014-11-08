@@ -30,6 +30,7 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import maze.Maze;
 import maze.algorithm.Kruskal;
+import util.SimulationManager;
 import agent.Agent;
 import agent.SARulesAgent;
 
@@ -48,7 +49,7 @@ public class MainWindow extends JFrame {
   private static double MAXIMUM_ZOOM_AUG = 3;
 
   private static final long serialVersionUID = 1L;
-  private static MainWindow m_instance;
+  private static MainWindow s_instance;
 
   /**
    * @param args No utilizados.
@@ -66,9 +67,9 @@ public class MainWindow extends JFrame {
    * @return Instancia única de la clase.
    */
   public static MainWindow getInstance () {
-    if (m_instance == null)
-      m_instance = new MainWindow();
-    return m_instance;
+    if (s_instance == null)
+      s_instance = new MainWindow();
+    return s_instance;
   }
 
   // Panel que contiene tanto el panel con los laberintos como el panel de
@@ -96,7 +97,9 @@ public class MainWindow extends JFrame {
                     m_itm_agent_remove;
   private JMenuItem m_itm_about;
 
+  // Representación del modelo
   EnvironmentSet m_environments;
+  SimulationManager m_simulation;
 
   /**
    * Constructor de la clase. Crea la interfaz y configura su estado interno
@@ -104,6 +107,7 @@ public class MainWindow extends JFrame {
    */
   private MainWindow () {
     createInterface();
+    m_simulation = new SimulationManager(m_environments);
   }
 
   /**
@@ -356,6 +360,7 @@ public class MainWindow extends JFrame {
         // TODO Lanzar un hilo / timer / algo que regularmente ejecute un paso
         // de simulación en todos los entornos. Si la simulación está pausada,
         // se reanuda.
+        startSimulation();
       }
     });
 
@@ -372,6 +377,7 @@ public class MainWindow extends JFrame {
       public void actionPerformed (ActionEvent e) {
         // TODO Pausar el hilo / timer / algo que se esté ejecutando si hay
         // alguno. No hacer nada si no hay nada ejecutándose o está pausado.
+        pauseSimulation();
       }
     });
 
@@ -380,10 +386,7 @@ public class MainWindow extends JFrame {
       public void actionPerformed (ActionEvent e) {
         // TODO Parar y eliminar el hilo / timer / algo y borrar la memoria de
         // los agentes
-        for (Environment env: m_environments.getEnvironmentList()) {
-          for (Agent ag: env.getAgents())
-            ag.resetMemory();
-        }
+        stopSimulation();
       }
     });
 
@@ -432,11 +435,21 @@ public class MainWindow extends JFrame {
     }
   }
 
-  /**
-   * @return La lista de entornos cargados.
-   */
-  public EnvironmentSet getEnvironments () {
-    return m_environments;
+  private void startSimulation () {
+    m_simulation.startSimulation();
+  }
+
+  private void pauseSimulation () {
+    if (m_simulation.isRunning())
+      m_simulation.pauseSimulation();
+  }
+
+  private void stopSimulation () {
+    m_simulation.stopSimulation();
+    for (Environment env: m_environments.getEnvironmentList()) {
+      for (Agent ag: env.getAgents())
+        ag.resetMemory();
+    }
   }
 
 }

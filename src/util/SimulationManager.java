@@ -4,8 +4,8 @@
  */
 package util;
 
-import gui.MainWindow;
 import gui.environment.Environment;
+import gui.environment.EnvironmentSet;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -14,37 +14,26 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Gestor de la simulación. Sólo puede haber uno, así que implementa el patrón
- * 'singleton'.
+ * Gestor de la simulación.
  */
 public class SimulationManager extends Observable implements Runnable {
   private static int DEFAULT_INTERVAL = 10;
-  private static SimulationManager s_instance;
-
-  /**
-   * @return Instancia única de la clase.
-   */
-  public static SimulationManager getInstance () {
-    if (s_instance == null)
-      s_instance = new SimulationManager();
-    return s_instance;
-  }
 
   private int m_interval;
   private ScheduledThreadPoolExecutor m_executor;
   private ScheduledFuture <?> m_future;
 
-  private ArrayList <Environment> m_environments;
+  private EnvironmentSet m_environments;
   private boolean[] m_finished;
   private boolean m_sim_finished;
 
   /**
    * Constructor por defecto del simulador.
    */
-  private SimulationManager () {
+  public SimulationManager (EnvironmentSet env_set) {
     m_interval = DEFAULT_INTERVAL;
     m_executor = new ScheduledThreadPoolExecutor(1);
-    m_environments = MainWindow.getInstance().getEnvironments().getEnvironmentList();
+    setEnvironments(env_set);
   }
 
   /**
@@ -53,6 +42,17 @@ public class SimulationManager extends Observable implements Runnable {
   public void setInterval (int msec) {
     if (msec > 0)
       m_interval = msec;
+  }
+
+  /**
+   * Establece el conjunto de entornos que manipula la simulación.
+   * @param env_set Conjunto de entornos.
+   */
+  public void setEnvironments (EnvironmentSet env_set) {
+    if (env_set == null)
+      throw new IllegalArgumentException("No se puede asignar un entorno nulo.");
+
+    m_environments = env_set;
   }
 
   /**
@@ -66,7 +66,7 @@ public class SimulationManager extends Observable implements Runnable {
     // Actualizamos el tamaño de la lista de entornos finalizados por si hay un
     // número diferente de entornos que en la última ejecución
     if (isStopped())
-      m_finished = new boolean[m_environments.size()];
+      m_finished = new boolean[m_environments.getEnvironmentCount()];
 
     m_future = m_executor.scheduleAtFixedRate(this, 0, m_interval,
         TimeUnit.MILLISECONDS);
@@ -127,15 +127,16 @@ public class SimulationManager extends Observable implements Runnable {
 
     // Hacemos que ejecuten un paso todos los agentes de todos los entornos
     // donde no haya acabado algún agente
-    for (int i = 0; i < m_environments.size(); i++) {
+    ArrayList <Environment> envs = m_environments.getEnvironmentList();
+    for (int i = 0; i < envs.size(); i++) {
       if (!m_finished[i])
-        m_finished[i] = m_environments.get(i).runStep();
+        m_finished[i] = envs.get(i).runStep();
       else
         amount_finished++;
     }
 
     // Si todos los agentes han terminado de ejecutar, paramos la simulación
-    if (amount_finished == m_environments.size()) {
+    if (amount_finished == m_environments.getEnvironmentCount()) {
       stopSimulation();
       m_sim_finished = true;
     }
