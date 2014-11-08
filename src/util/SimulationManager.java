@@ -141,10 +141,11 @@ public class SimulationManager extends Observable implements Runnable {
     if (amount_finished == m_environments.getEnvironmentCount()) {
       stopSimulation();
       m_sim_finished = true;
-    }
 
-    setChanged();
-    notifyObservers();
+      // Avisamos a los observadores que la simulación ha terminado
+      setChanged();
+      notifyObservers();
+    }
   }
 
 }
