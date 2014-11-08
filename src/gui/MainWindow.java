@@ -33,6 +33,7 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 import maze.Maze;
 import maze.algorithm.Kruskal;
 import util.SimulationManager;
+import util.SimulationResults;
 import agent.Agent;
 import agent.SARulesAgent;
 
@@ -501,7 +502,8 @@ public class MainWindow extends JFrame implements Observer {
   @Override
   public void update (Observable obs, Object obj) {
     // Esto sucede cuando todos los entornos han terminado de ejecutarse.
-    // TODO Recopilar y mostrar estadísticas de ejecución
+    // TODO Mostrar estadísticas de ejecución
+    SimulationResults results = (SimulationResults) obj;
   }
 
 }

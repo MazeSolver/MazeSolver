@@ -67,6 +67,13 @@ public abstract class Agent implements Cloneable {
   }
 
   /**
+   * @return Entorno en el que se encuentra el agente.
+   */
+  public Environment getEnvironment () {
+    return m_env;
+  }
+
+  /**
    * @param dir Dirección hacia la que mirar.
    * @return Lo que vería el agente si mira en la dirección especificada.
    */

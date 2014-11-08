@@ -13,6 +13,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import maze.Maze;
+import agent.Agent;
+
 /**
  * Gestor de la simulación.
  */
@@ -27,12 +30,15 @@ public class SimulationManager extends Observable implements Runnable {
   private boolean[] m_finished;
   private boolean m_sim_finished;
 
+  private SimulationResults m_results;
+
   /**
    * Constructor por defecto del simulador.
    */
   public SimulationManager (EnvironmentSet env_set) {
     m_interval = DEFAULT_INTERVAL;
     m_executor = new ScheduledThreadPoolExecutor(1);
+    m_results = new SimulationResults();
     setEnvironments(env_set);
   }
 
@@ -65,21 +71,27 @@ public class SimulationManager extends Observable implements Runnable {
 
     // Actualizamos el tamaño de la lista de entornos finalizados por si hay un
     // número diferente de entornos que en la última ejecución
-    if (isStopped())
+    if (isStopped()) {
       m_finished = new boolean[m_environments.getEnvironmentCount()];
+      m_results.clear();
+    }
 
     // Lanzamos un hilo sólo si no se está ejecutando todavía
-    if (!isRunning())
+    if (!isRunning()) {
       m_future = m_executor.scheduleAtFixedRate(this, 0, m_interval,
         TimeUnit.MILLISECONDS);
+      m_results.startTimer();
+    }
   }
 
   /**
    * Pausa la simulación actual si se está ejecutando.
    */
   public void pauseSimulation () {
-    if (isRunning())
+    if (isRunning()) {
       m_future.cancel(false);
+      m_results.pauseTimer();
+    }
   }
 
   /**
@@ -89,6 +101,7 @@ public class SimulationManager extends Observable implements Runnable {
     if (m_future != null) {
       m_future.cancel(false);
       m_future = null;
+      m_results.pauseTimer();
     }
   }
 
@@ -120,6 +133,14 @@ public class SimulationManager extends Observable implements Runnable {
     return m_sim_finished;
   }
 
+  /**
+   * @return Resultados de la simulación actual. Puede ser que sean incompletos,
+   * dado que puede ser que la simulación no haya acabado.
+   */
+  public final SimulationResults getResults () {
+    return m_results;
+  }
+
   /* (non-Javadoc)
    * @see java.lang.Runnable#run()
    */
@@ -131,8 +152,23 @@ public class SimulationManager extends Observable implements Runnable {
     // donde no haya acabado algún agente
     ArrayList <Environment> envs = m_environments.getEnvironmentList();
     for (int i = 0; i < envs.size(); i++) {
-      if (!m_finished[i])
+      if (!m_finished[i]) {
         m_finished[i] = envs.get(i).runStep();
+
+        // Actualizamos la información de la simulación
+        for (int j = 0; j < envs.get(i).getAgentCount(); j++) {
+          Agent ag = envs.get(i).getAgent(j);
+          Maze mz = envs.get(i).getMaze();
+
+          // Todos los agentes del entorno han caminado
+          m_results.agentWalked(ag);
+          // Si acaba de terminar algún agente, lo buscamos para decir que
+          // ha llegado
+          if (m_finished[i] && (ag.getX() < 0 || ag.getY() < 0 ||
+              ag.getX() >= mz.getWidth() || ag.getY() >= mz.getHeight()))
+            m_results.agentFinished(ag);
+        }
+      }
       else
         amount_finished++;
     }
@@ -144,7 +180,7 @@ public class SimulationManager extends Observable implements Runnable {
 
       // Avisamos a los observadores que la simulación ha terminado
       setChanged();
-      notifyObservers();
+      notifyObservers(m_results);
     }
   }
 
