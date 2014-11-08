@@ -50,10 +50,14 @@ import agent.rules.parser.SituationActionParser.Sa_ruleContext;
 public class SARulesAgent extends Agent {
   public static final int MINIMUM_WIDTH = 300;
   public static final String DEFAULT_AGENT_SRC =
-        "UP FREE -> MOVE UP.\n"
-      + "LEFT NOT VISITED & LEFT FREE -> MOVE LEFT.\n"
-      + "LEFT FREE | DOWN WALL => STOP.\n"
-      + "DOWN VISITED & RIGHT FREE => MOVE RIGHT.\n";
+        "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
+      + "RIGHT FREE & RIGHT ~VISITED => GO RIGHT.\n"
+      + "LEFT FREE & LEFT ~VISITED => GO LEFT.\n"
+      + "UP FREE & UP ~VISITED => GO UP.\n"
+      + "Up Not Wall & Up ~Agent -> MOVE up.\n"
+      + "not (left wall | left agent) -> move left.\n"
+      + "right !wall & right !agent -> move right.\n"
+      + "!(down wall | down agent) -> move down.\n";
 
   private SituationActionErrorHandler m_error_handler;
   private ArrayList <SituationActionRule> m_rules;
