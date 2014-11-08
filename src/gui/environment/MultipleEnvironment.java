@@ -86,11 +86,10 @@ public class MultipleEnvironment extends Environment {
     MazeCell.Vision vision = super.look(pos, dir);
     if (vision == MazeCell.Vision.EMPTY) {
       Pair <Integer, Integer> desp = dir.decompose();
-      pos.x += desp.first;
-      pos.y += desp.second;
+      Point n_pos = new Point(pos.x + desp.first, pos.y + desp.second);
 
       for (Agent ag: m_agents) {
-        if (ag.getX() == pos.getX() && ag.getY() == pos.getY())
+        if (ag.getX() == n_pos.getX() && ag.getY() == n_pos.getY())
           return MazeCell.Vision.AGENT;
       }
     }
@@ -110,8 +109,8 @@ public class MultipleEnvironment extends Environment {
 
       // Buscamos un hueco donde colocar el agente
       loops:
-      for (int x = 0; x < m_maze.getWidth(); x++) {
-        for (int y = 0; y < m_maze.getHeight(); y++) {
+      for (int y = 0; y < m_maze.getHeight(); y++) {
+        for (int x = 0; x < m_maze.getWidth(); x++) {
           boolean used = false;
           for (Agent i: m_agents) {
             if (i.getX() == x && i.getY() == y) {
@@ -213,7 +212,7 @@ public class MultipleEnvironment extends Environment {
 
     for (Agent i: m_agents) {
       i.doMovement(i.getNextMovement());
-      if (i.getX() > 0 && i.getY() > 0 && i.getX() < m_maze.getWidth() &&
+      if (i.getX() >= 0 && i.getY() >= 0 && i.getX() < m_maze.getWidth() &&
           i.getY() < m_maze.getHeight())
         ended = false;
     }
