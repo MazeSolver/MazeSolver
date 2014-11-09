@@ -86,7 +86,7 @@ public class SARulesAgent extends Agent {
   @Override
   public Direction getNextMovement () {
     // Recorremos las reglas y nos quedamos con la primera acción para la
-    // que se cumple la situación.
+    // que se cumple la situación (arquitectura de subsunción).
     for (SituationActionRule r: m_rules) {
       RuleAction act = r.getAction(this);
       if (act != null)

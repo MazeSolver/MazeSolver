@@ -51,6 +51,7 @@ public class SimpleEnvironment extends Environment {
       m_agent = ag;
       m_agent.setEnvironment(this);
       m_agent.setPosition(new Point(0, 0));
+      repaint();
       return this;
     }
     else {
@@ -65,8 +66,10 @@ public class SimpleEnvironment extends Environment {
    * @see gui.Environment#removeAgent(agent.Agent)
    */
   public Environment removeAgent (Agent ag) {
-    if (m_agent == ag)
+    if (m_agent == ag) {
       m_agent = null;
+      repaint();
+    }
 
     return this;
   }
@@ -122,6 +125,7 @@ public class SimpleEnvironment extends Environment {
       return true;
 
     m_agent.doMovement(m_agent.getNextMovement());
+    repaint();
     return m_agent.getX() < 0 ||
            m_agent.getY() < 0 ||
            m_agent.getX() >= m_maze.getWidth() ||

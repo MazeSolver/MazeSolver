@@ -74,8 +74,8 @@ public class EnvironmentPanel extends JPanel {
    * @return Posición (x, y) dentro de la matriz del laberinto.
    */
   public static Point screenCoordToGrid (final Point coord) {
-    return new Point((int) Math.round(coord.x / (CELL_SIZE_PX * s_zoom)),
-        (int) Math.round(coord.y / (CELL_SIZE_PX * s_zoom)));
+    return new Point((int)(coord.x / (CELL_SIZE_PX * s_zoom)),
+                     (int)(coord.y / (CELL_SIZE_PX * s_zoom)));
   }
 
   /*

@@ -12,6 +12,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,6 +32,8 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import maze.Maze;
 import maze.algorithm.Kruskal;
+import util.SimulationManager;
+import util.SimulationResults;
 import agent.Agent;
 import agent.SARulesAgent;
 
@@ -37,7 +41,7 @@ import agent.SARulesAgent;
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
  * patrón 'singleton'.
  */
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements Observer {
   private static String APP_NAME = "Maze Solver";
   private static int DEFAULT_WIDTH = 640;
   private static int DEFAULT_HEIGHT = 480;
@@ -48,7 +52,7 @@ public class MainWindow extends JFrame {
   private static double MAXIMUM_ZOOM_AUG = 3;
 
   private static final long serialVersionUID = 1L;
-  private static MainWindow m_instance;
+  private static MainWindow s_instance;
 
   /**
    * @param args No utilizados.
@@ -66,9 +70,9 @@ public class MainWindow extends JFrame {
    * @return Instancia única de la clase.
    */
   public static MainWindow getInstance () {
-    if (m_instance == null)
-      m_instance = new MainWindow();
-    return m_instance;
+    if (s_instance == null)
+      s_instance = new MainWindow();
+    return s_instance;
   }
 
   // Panel que contiene tanto el panel con los laberintos como el panel de
@@ -92,10 +96,13 @@ public class MainWindow extends JFrame {
   private JMenuItem m_itm_maze_new, m_itm_maze_save, m_itm_maze_open,
                     m_itm_exit;
   private JMenuItem m_itm_maze_clone, m_itm_maze_change, m_itm_maze_close;
-  private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_remove;
+  private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_clone,
+                    m_itm_agent_remove;
   private JMenuItem m_itm_about;
 
+  // Representación del modelo
   EnvironmentSet m_environments;
+  SimulationManager m_simulation;
 
   /**
    * Constructor de la clase. Crea la interfaz y configura su estado interno
@@ -103,6 +110,8 @@ public class MainWindow extends JFrame {
    */
   private MainWindow () {
     createInterface();
+    m_simulation = new SimulationManager(m_environments);
+    m_simulation.addObserver(this);
   }
 
   /**
@@ -165,10 +174,12 @@ public class MainWindow extends JFrame {
     // Menú "Agent"
     m_itm_agent_add = new JMenuItem("Add agent...");
     m_itm_agent_config = new JMenuItem("Configure agent...");
+    m_itm_agent_clone = new JMenuItem("Clone agent");
     m_itm_agent_remove = new JMenuItem("Remove agent");
 
     m_menu_agent.add(m_itm_agent_add);
     m_menu_agent.add(m_itm_agent_config);
+    m_menu_agent.add(m_itm_agent_clone);
     m_menu_agent.add(m_itm_agent_remove);
 
     // Menú "Help"
@@ -195,6 +206,10 @@ public class MainWindow extends JFrame {
     m_pause = new JButton("Pause");
     m_stop = new JButton("Stop");
     m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
+    m_zoom.setValue(MINIMUM_ZOOM_VAL);
+
+    m_pause.setEnabled(false);
+    m_stop.setEnabled(false);
 
     m_toolbar.add(m_run);
     m_toolbar.add(m_step);
@@ -272,7 +287,6 @@ public class MainWindow extends JFrame {
       @Override
       public void actionPerformed (ActionEvent e) {
         m_environments.removeSelectedEnvironment();
-        repaint();
       }
     });
 
@@ -283,6 +297,9 @@ public class MainWindow extends JFrame {
       public void actionPerformed (ActionEvent e) {
         // TODO Mostrar la interfaz para la selección de un tipo de agente y
         // agregarlo al entorno en alguna posición disponible
+
+        // XXX Sólo para pruebas
+        m_environments.addAgentToSelectedEnvironment(new SARulesAgent(m_environments.getSelectedEnvironment()));
       }
     });
 
@@ -300,6 +317,20 @@ public class MainWindow extends JFrame {
           // XXX Sólo para pruebas
           Agent ag = new SARulesAgent(m_environments.getSelectedEnvironment());
           setConfigurationPanel(ag.getConfigurationPanel());
+        }
+      }
+    });
+
+    m_itm_agent_clone.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Environment env = m_environments.getSelectedEnvironment();
+          m_environments.addAgentToSelectedEnvironment((Agent) env.getSelectedAgent().clone());
+        }
+        catch (Exception exc) {
+          // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
+          // No hay agente seleccionado o no hay entorno seleccionado
         }
       }
     });
@@ -329,13 +360,14 @@ public class MainWindow extends JFrame {
     });
   }
 
+  /**
+   * Configura los listeners de los botones en la barra de herramientas.
+   */
   private void setupToolbarListeners () {
     m_run.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Lanzar un hilo / timer / algo que regularmente ejecute un paso
-        // de simulación en todos los entornos. Si la simulación está pausada,
-        // se reanuda.
+        startSimulation();
       }
     });
 
@@ -350,20 +382,14 @@ public class MainWindow extends JFrame {
     m_pause.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Pausar el hilo / timer / algo que se esté ejecutando si hay
-        // alguno. No hacer nada si no hay nada ejecutándose o está pausado.
+        pauseSimulation();
       }
     });
 
     m_stop.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Parar y eliminar el hilo / timer / algo y borrar la memoria de
-        // los agentes
-        for (Environment env: m_environments.getEnvironmentList()) {
-          for (Agent ag: env.getAgents())
-            ag.resetMemory();
-        }
+        stopSimulation();
       }
     });
 
@@ -399,6 +425,9 @@ public class MainWindow extends JFrame {
    * @param panel Panel de configuración que se quiere abrir.
    */
   public void setConfigurationPanel (JPanel panel) {
+    if (m_config_panel != null)
+      closeConfigurationPanel();
+
     if (panel != null) {
       ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(true);
 
@@ -410,10 +439,71 @@ public class MainWindow extends JFrame {
   }
 
   /**
-   * @return La lista de entornos cargados.
+   * Adapta los menús al estado de "Simulación en curso" y la comienza.
    */
-  public EnvironmentSet getEnvironments () {
-    return m_environments;
+  private void startSimulation () {
+    // Desactivamos los menús que no se pueden utilizar durante la simulación
+    m_itm_maze_new.setEnabled(false);
+    m_itm_maze_change.setEnabled(false);
+    m_itm_maze_open.setEnabled(false);
+    m_itm_maze_clone.setEnabled(false);
+
+    m_run.setEnabled(false);
+    m_step.setEnabled(false);
+    m_pause.setEnabled(true);
+    m_stop.setEnabled(true);
+
+    m_simulation.startSimulation();
+  }
+
+  /**
+   * Pausa o reanuda la simulación dependiendo de su estado y mantiene coherente
+   * el estado de los menús.
+   */
+  private void pauseSimulation () {
+    if (!m_simulation.isPaused()) {
+      m_pause.setText("Continue");
+      m_simulation.pauseSimulation();
+      m_step.setEnabled(true);
+    }
+    else {
+      m_pause.setText("Pause");
+      m_step.setEnabled(false);
+      m_simulation.startSimulation();
+    }
+  }
+
+  /**
+   * Para la simulación y vuelve a dejar los menús en su estado inicial.
+   */
+  private void stopSimulation () {
+    m_simulation.stopSimulation();
+    for (Environment env: m_environments.getEnvironmentList()) {
+      for (int i = 0; i < env.getAgentCount(); i++)
+        env.getAgent(i).resetMemory();
+    }
+
+    // Volvemos a activar los menús que desactivamos antes
+    m_itm_maze_new.setEnabled(true);
+    m_itm_maze_change.setEnabled(true);
+    m_itm_maze_open.setEnabled(true);
+    m_itm_maze_clone.setEnabled(true);
+
+    m_pause.setText("Pause");
+    m_run.setEnabled(true);
+    m_step.setEnabled(true);
+    m_pause.setEnabled(false);
+    m_stop.setEnabled(false);
+  }
+
+  /* (non-Javadoc)
+   * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+   */
+  @Override
+  public void update (Observable obs, Object obj) {
+    // Esto sucede cuando todos los entornos han terminado de ejecutarse.
+    // TODO Mostrar estadísticas de ejecución
+    SimulationResults results = (SimulationResults) obj;
   }
 
 }
