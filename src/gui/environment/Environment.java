@@ -7,19 +7,19 @@ package gui.environment;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import javax.swing.JInternalFrame;
-
 import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
 import util.Pair;
 import agent.Agent;
 
+import com.tomtessier.scrollabledesktop.BaseInternalFrame;
+
 /**
  * Una instancia de esta clase representa un entorno de ejecución, formado por
  * un laberinto y por un conjunto de agentes.
  */
-public abstract class Environment extends JInternalFrame {
+public abstract class Environment extends BaseInternalFrame {
   private static final long serialVersionUID = 1L;
   private static final int WINDOW_BORDER_WIDTH = 11;
   private static final int WINDOW_BORDER_HEIGHT = 34;
@@ -36,7 +36,7 @@ public abstract class Environment extends JInternalFrame {
    * entre varios entornos.
    */
   protected Environment (Maze maze) {
-    super("Environment " + (++s_instance), false, false, false, false);
+    super("Env " + (++s_instance), false, false, false, false);
     setMaze(maze);
 
     setVisible(true);
