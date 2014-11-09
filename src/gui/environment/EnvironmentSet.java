@@ -6,15 +6,15 @@ package gui.environment;
 
 import java.util.ArrayList;
 
-import javax.swing.JDesktopPane;
-
 import agent.Agent;
+
+import com.tomtessier.scrollabledesktop.JScrollableDesktopPane;
 
 /**
  * Panel principal en el que se encuentran todos los laberintos cargados.
  * Proporciona la gestión de los laberintos.
  */
-public class EnvironmentSet extends JDesktopPane {
+public class EnvironmentSet extends JScrollableDesktopPane {
   private static final long serialVersionUID = 1L;
 
   private ArrayList <Environment> m_envs;
