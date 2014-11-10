@@ -32,7 +32,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import maze.Maze;
-import maze.algorithm.Kruskal;
+import maze.algorithm.HuntAndKill;
 import util.SimulationManager;
 import util.SimulationResults;
 import agent.Agent;
@@ -236,7 +236,7 @@ public class MainWindow extends JFrame implements Observer {
         // generar el laberinto
 
         // XXX Sólo para pruebas
-        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Kruskal(30, 30))));
+        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new HuntAndKill(30, 30))));
       }
     });
 
