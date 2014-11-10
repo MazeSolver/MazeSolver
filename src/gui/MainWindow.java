@@ -27,6 +27,7 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
@@ -59,6 +60,14 @@ public class MainWindow extends JFrame implements Observer {
    * @param args No utilizados.
    */
   public static void main (String [] args) {
+    try {
+      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    }
+    catch (Exception e)
+    {
+
+    }
+
     MainWindow wnd = MainWindow.getInstance();
 
     wnd.setTitle(APP_NAME);
