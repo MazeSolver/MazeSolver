@@ -46,7 +46,7 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   public ArrayList <ArrayList <MazeCell>> createMaze () {
     int x = (int) Math.round(0 + (Math.random() * (m_rows - 1)));
     int y = (int) Math.round(0 + (Math.random() * (m_columns - 1)));
-    int [] pos = {x,y};
+    int [] pos = {x, y};
     while (cellVisitedCount < ((m_columns * m_rows) - 1)) {
       walk(pos[0], pos[1]);
       pos = hunt();
@@ -54,6 +54,13 @@ public class HuntAndKill extends MazeCreationAlgorithm {
     return m_maze;
   }
 
+  /**
+   * Dada una posición de inicio va explorando dicho camino hasta que no
+   * encuentre un nuevo camino.
+   *
+   * @param x
+   * @param y
+   */
   private void walk (int x, int y) {
     Pair <Integer, Integer> desp;
     Direction dir = getRandomDirection(x, y);
@@ -67,9 +74,17 @@ public class HuntAndKill extends MazeCreationAlgorithm {
     }
   }
 
+  /**
+   * Busca por todo el tablero una casilla explorada y que puede ser el origen
+   * de una nueva exploracion (el metodo walk puede empezar por esa casilla)
+   * Dicha casilla con ese posible camino es explorado por el metodo hunt (kill)
+   *
+   * @return devuelve una posición por la cual el "cursor" puede seguir
+   *         explorando
+   */
   private int [] hunt () {
     Pair <Integer, Integer> desp;
-    int pos[] = {0,0};
+    int pos [] = {0, 0};
     for (int i = 0; i < m_rows; i++) {
       for (int j = 0; j < m_columns; j++) {
         Direction dir = getRandomDirection(i, j);
