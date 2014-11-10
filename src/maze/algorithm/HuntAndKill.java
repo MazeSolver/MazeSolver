@@ -51,6 +51,7 @@ public class HuntAndKill extends MazeCreationAlgorithm {
       walk(pos[0], pos[1]);
       pos = hunt();
     }
+    hunt();
     return m_maze;
   }
 
