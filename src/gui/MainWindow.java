@@ -32,7 +32,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import maze.Maze;
-import maze.algorithm.Prim;
+import maze.algorithm.Kruskal;
 import util.SimulationManager;
 import util.SimulationResults;
 import agent.Agent;
@@ -236,7 +236,7 @@ public class MainWindow extends JFrame implements Observer {
         // generar el laberinto
 
         // XXX Sólo para pruebas
-        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Prim(30, 30))));
+        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Kruskal(30, 30))));
       }
     });
 
