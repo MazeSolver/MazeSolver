@@ -75,27 +75,9 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
    *         visitada aún.
    */
   private Boolean checkDir (final int i, final int j, final Direction dir) {
-    switch (dir) {
-      case UP:
-        if (!m_included_cells.get(i - 1).get(j)) {
-          return true;
-        }
-        break;
-      case DOWN:
-        if (!m_included_cells.get(i + 1).get(j)) {
-          return true;
-        }
-        break;
-      case LEFT:
-        if (!m_included_cells.get(i).get(j - 1)) {
-          return true;
-        }
-        break;
-      case RIGHT:
-        if (!m_included_cells.get(i).get(j + 1)) {
-          return true;
-        }
-        break;
+    Pair <Integer, Integer> desp = dir.decompose();
+    if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
+      return true;
     }
     return false;
   }

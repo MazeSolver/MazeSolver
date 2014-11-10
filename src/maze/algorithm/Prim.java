@@ -169,27 +169,9 @@ public class Prim extends MazeCreationAlgorithm {
     short j = walls.get(inx_wall)[1];
     Direction dir = Direction.fromValue(walls.get(inx_wall)[2]);
 
-    switch (dir) {
-      case UP:
-        if (!m_included_cells.get(i-1).get(j)) {
-          return true;
-        }
-        break;
-      case DOWN:
-        if (!m_included_cells.get(i+1).get(j)) {
-          return true;
-        }
-        break;
-      case LEFT:
-        if (!m_included_cells.get(i).get(j-1)) {
-          return true;
-        }
-        break;
-      case RIGHT:
-        if (!m_included_cells.get(i).get(j+1)) {
-          return true;
-        }
-        break;
+    Pair <Integer, Integer> desp = dir.decompose();
+    if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
+      return true;
     }
     walls.remove(inx_wall);
     return false;
