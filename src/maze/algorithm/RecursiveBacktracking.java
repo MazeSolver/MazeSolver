@@ -142,24 +142,9 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
    */
   private void throwWall (final int i, final int j, final Direction dir) {
     m_maze.get(i).get(j).unsetWall(dir);
-    switch (dir) {
-      case UP:
-        m_included_cells.get(i - 1).set(j, true);
-        m_maze.get(i - 1).get(j).unsetWall(Direction.DOWN);
-        break;
-      case DOWN:
-        m_included_cells.get(i + 1).set(j, true);
-        m_maze.get(i + 1).get(j).unsetWall(Direction.UP);
-        break;
-      case LEFT:
-        m_included_cells.get(i).set(j - 1, true);
-        m_maze.get(i).get(j - 1).unsetWall(Direction.RIGHT);
-        break;
-      case RIGHT:
-        m_included_cells.get(i).set(j + 1, true);
-        m_maze.get(i).get(j + 1).unsetWall(Direction.LEFT);
-        break;
-    }
+    Pair<Integer, Integer> desp = dir.decompose();
+    m_included_cells.get(i + desp.second).set(j + desp.first, true);
+    m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
   }
 
 }
