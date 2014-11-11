@@ -22,7 +22,7 @@ import com.tomtessier.scrollabledesktop.BaseInternalFrame;
 public abstract class Environment extends BaseInternalFrame {
   private static final long serialVersionUID = 1L;
   private static final int WINDOW_BORDER_WIDTH = 11;
-  private static final int WINDOW_BORDER_HEIGHT = 34;
+  private static final int WINDOW_BORDER_HEIGHT = 33;
   private static final int WINDOWS_OFFSET = 20;
 
   private static int s_instance = 0;
