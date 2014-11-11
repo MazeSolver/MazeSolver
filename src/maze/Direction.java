@@ -4,6 +4,8 @@
  */
 package maze;
 
+import java.awt.Point;
+
 import util.Pair;
 
 /**
@@ -64,6 +66,10 @@ public enum Direction {
     return p;
   }
 
+  /**
+   * Invierte la posición actual.
+   * @return Dirección contraria de la actual.
+   */
   public Direction getOpposite () {
     switch (this) {
       case UP:
@@ -77,6 +83,16 @@ public enum Direction {
       default:
         return NONE;
     }
+  }
+
+  /**
+   * Desplaza un punto en la dirección y lo guarda en un punto nuevo.
+   * @param p Punto que se desea mover en esta dirección.
+   * @return Nuevo punto equivalente al indicado desplazado en esta dirección.
+   */
+  public Point movePoint(final Point p) {
+    Pair<Integer, Integer> desp = decompose();
+    return new Point(p.x + desp.first, p.y + desp.second);
   }
 
 }

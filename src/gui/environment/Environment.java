@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
-import util.Pair;
 import agent.Agent;
 
 import com.tomtessier.scrollabledesktop.BaseInternalFrame;
@@ -100,8 +99,7 @@ public abstract class Environment extends BaseInternalFrame {
     if (m_maze.get(pos.y, pos.x).hasWall(dir))
       return MazeCell.Vision.WALL;
 
-    Pair <Integer, Integer> desp = dir.decompose();
-    Point n_pos = new Point(pos.x + desp.first, pos.y + desp.second);
+    Point n_pos = dir.movePoint(pos);
     if (n_pos.x < 0 || n_pos.y < 0 || n_pos.x >= m_maze.getWidth() ||
         n_pos.y >= m_maze.getHeight())
       return MazeCell.Vision.OFFLIMITS;

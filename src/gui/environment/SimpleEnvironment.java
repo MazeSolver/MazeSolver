@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
-import util.Pair;
 import agent.Agent;
 
 /**
@@ -31,8 +30,7 @@ public class SimpleEnvironment extends Environment {
   public MazeCell.Vision look (Point pos, Direction dir) {
     MazeCell.Vision vision = super.look(pos, dir);
     if (vision == MazeCell.Vision.EMPTY) {
-      Pair <Integer, Integer> desp = dir.decompose();
-      Point new_pos = new Point(pos.x + desp.first, pos.y + desp.second);
+      Point new_pos = dir.movePoint(pos);
       if (m_agent.getX() == new_pos.getX() && m_agent.getY() == new_pos.getY())
         return MazeCell.Vision.AGENT;
     }
