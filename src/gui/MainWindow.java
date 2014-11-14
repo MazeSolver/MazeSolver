@@ -275,7 +275,6 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_maze_open.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Llamar al método para cargar un fichero de laberinto
         try {
           Maze[] mazes = FileDialog.loadMazes();
           for (Maze maze: mazes)

@@ -46,8 +46,6 @@ public abstract class Environment extends BaseInternalFrame {
     start_pos.x += WINDOWS_OFFSET;
     start_pos.y += WINDOWS_OFFSET;
 
-    // FIXME Esto debería poner el entorno delante de todos los demás que haya
-    // abiertos, pero no lo hace.
     moveToFront();
   }
 
