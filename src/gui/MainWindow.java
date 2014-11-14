@@ -34,7 +34,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import maze.Maze;
-import maze.algorithm.HuntAndKill;
 import util.SimulationManager;
 import util.SimulationResults;
 import agent.Agent;
@@ -250,11 +249,11 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_maze_new.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Mostrar interfaz para elegir las dimensiones y algoritmo para
-        // generar el laberinto
+        MazeSelectorDialog dialog = new MazeSelectorDialog();
+        Maze generated = dialog.showDialog();
 
-        // XXX Sólo para pruebas
-        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new HuntAndKill(30, 30))));
+        if (generated != null)
+          m_environments.addEnvironment(new SimpleEnvironment(generated));
       }
     });
 
