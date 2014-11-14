@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -156,12 +155,14 @@ public class SARulesAgent extends Agent {
           for (String error: m_error_handler.getErrors())
             error_msg += error + "\n";
 
-          JOptionPane.showMessageDialog(null, error_msg, "Compilation error",
-                                        JOptionPane.ERROR_MESSAGE);
+          MainWindow.getInstance().getConsole().writeError(error_msg);
           m_code = prev_code;
         }
-        else
-          MainWindow.getInstance().closeConfigurationPanel();
+        else {
+          MainWindow wnd = MainWindow.getInstance();
+          wnd.getConsole().writeInfo("Code compiled successfully.");
+          wnd.closeConfigurationPanel();
+        }
       }
     });
 

@@ -111,8 +111,11 @@ public class MainWindow extends JFrame implements Observer {
   private JMenuItem m_itm_about;
 
   // Representación del modelo
-  EnvironmentSet m_environments;
-  SimulationManager m_simulation;
+  private EnvironmentSet m_environments;
+  private SimulationManager m_simulation;
+
+  // Interacción con el usuario
+  private LoggingConsole m_console;
 
   /**
    * Constructor de la clase. Crea la interfaz y configura su estado interno
@@ -139,7 +142,12 @@ public class MainWindow extends JFrame implements Observer {
 
     m_split_panel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, null, m_environments);
 
-    global_panel.add(m_split_panel, BorderLayout.CENTER);
+    m_console = new LoggingConsole();
+    JSplitPane console_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, m_split_panel, m_console);
+
+    console_split.setResizeWeight(0.75);
+
+    global_panel.add(console_split, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
     add(global_panel, BorderLayout.CENTER);
 
@@ -457,6 +465,14 @@ public class MainWindow extends JFrame implements Observer {
       revalidate();
       repaint();
     }
+  }
+
+  /**
+   * Devuelve una referencia a la consola.
+   * @return Referencia a la consola de la ventana.
+   */
+  public LoggingConsole getConsole () {
+    return m_console;
   }
 
   /**
