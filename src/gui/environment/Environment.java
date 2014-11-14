@@ -118,6 +118,22 @@ public abstract class Environment extends BaseInternalFrame {
            vision == MazeCell.Vision.OFFLIMITS;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals (Object obj) {
+    return this == obj;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode () {
+    return new Integer(s_instance).hashCode();
+  }
+
   /**
    * @param ag Agente que se quiere añadir al entorno.
    * @return Una referencia al propio entorno. Si se trata de un entorno simple
