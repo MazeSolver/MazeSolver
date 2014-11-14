@@ -96,9 +96,9 @@ public class SimulationResults {
     Integer steps = info.steps.get(agent);
 
     if (steps == null)
-      steps = 1;
+      info.steps.put(agent, 1);
     else
-      steps++;
+      info.steps.put(agent, steps + 1);
   }
 
   /**
@@ -108,7 +108,8 @@ public class SimulationResults {
    * @return El agente que salió antes del laberinto en el entorno.
    */
   public Agent getWinner (Environment env) {
-    return m_info.get(env).winner_agent;
+    EnvironmentSimulationInfo info = m_info.get(env);
+    return info != null? info.winner_agent : null;
   }
 
   /**
@@ -125,12 +126,15 @@ public class SimulationResults {
     // agente que haya llegado el primero al exterior
     for (Environment env: m_info.keySet()) {
       if (env.getMaze() == maze) {
-        Agent other_winner = m_info.get(env).winner_agent;
-        if (other_winner != null) {
-          int other_steps = m_info.get(env).steps.get(other_winner);
-          if (winner == null || other_steps < winner_steps) {
-            winner = other_winner;
-            winner_steps = other_steps;
+        EnvironmentSimulationInfo info = m_info.get(env);
+        if (info != null) {
+          Agent other_winner = info.winner_agent;
+          if (other_winner != null) {
+            int other_steps = info.steps.get(other_winner);
+            if (winner == null || other_steps < winner_steps) {
+              winner = other_winner;
+              winner_steps = other_steps;
+            }
           }
         }
       }
@@ -147,13 +151,18 @@ public class SimulationResults {
     // Utilizamos el nº de agentes guardados en lugar del nº actual en el
     // entorno porque se pueden añadir y eliminar agentes en tiempo de ejecución
     EnvironmentSimulationInfo info = m_info.get(env);
-    int[] steps = new int[info.steps.size()];
 
-    int i = 0;
-    for (Agent ag: info.steps.keySet())
-      steps[i++] = info.steps.get(info.steps.get(ag));
+    if (info != null) {
+      int[] steps = new int[info.steps.size()];
 
-    return steps;
+      int i = 0;
+      for (Agent ag: info.steps.keySet())
+        steps[i++] = info.steps.get(ag);
+
+      return steps;
+    }
+    else
+      return new int[0];
   }
 
   /**
@@ -161,7 +170,8 @@ public class SimulationResults {
    * @return Tiempo que le llevó salir del laberinto al primero que salió.
    */
   public long timeTakenFirst (Environment env) {
-    return m_info.get(env).first_elapsed;
+    EnvironmentSimulationInfo info = m_info.get(env);
+    return info != null? info.first_elapsed : -1;
   }
 
   /**
@@ -189,7 +199,8 @@ public class SimulationResults {
    * @return Tiempo que le llevó salir del laberinto al último que salió.
    */
   public long timeTakenLast (Environment env) {
-    return m_info.get(env).last_elapsed;
+    EnvironmentSimulationInfo info = m_info.get(env);
+    return info != null? info.last_elapsed : -1;
   }
 
   /**

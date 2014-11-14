@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import maze.Direction;
 import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
+import util.Pair;
 
 /**
  * Implementación del algoritmo de Kruskal para la generación aleatoria de
@@ -94,24 +95,9 @@ public class Kruskal extends MazeCreationAlgorithm {
       // Dependiendo de la dirección eliminamos los 2 muros que separan las 2
       // celdas que queremos unir y marcamos la celda de destino como visitada.
       m_maze.get(i).get(j).unsetWall(dir);
-      switch (dir) {
-        case UP:
-          union(value(i, j), value(i - 1, j));
-          m_maze.get(i - 1).get(j).unsetWall(Direction.DOWN);
-          break;
-        case DOWN:
-          union(value(i, j), value(i + 1, j));
-          m_maze.get(i + 1).get(j).unsetWall(Direction.UP);
-          break;
-        case LEFT:
-          union(value(i, j), value(i, j - 1));
-          m_maze.get(i).get(j - 1).unsetWall(Direction.RIGHT);
-          break;
-        case RIGHT:
-          union(value(i, j), value(i, j + 1));
-          m_maze.get(i).get(j + 1).unsetWall(Direction.LEFT);
-          break;
-      }
+      Pair<Integer, Integer> desp = dir.decompose();
+      union(value(i, j), value(i + desp.second, j + desp.first));
+      m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
     }
   }
 
@@ -186,27 +172,9 @@ public class Kruskal extends MazeCreationAlgorithm {
     short j = walls.get(inx_wall)[1];
     Direction dir = Direction.fromValue(walls.get(inx_wall)[2]);
 
-    switch (dir) {
-      case UP:
-        if (value(i - 1, j) != value(i, j)) {
-          return true;
-        }
-        break;
-      case DOWN:
-        if (value(i + 1, j) != value(i, j)) {
-          return true;
-        }
-        break;
-      case LEFT:
-        if (value(i, j - 1) != value(i, j)) {
-          return true;
-        }
-        break;
-      case RIGHT:
-        if (value(i, j + 1) != value(i, j)) {
-          return true;
-        }
-        break;
+    Pair <Integer, Integer> desp = dir.decompose();
+    if (value(i, j) != value(i + desp.second, j + desp.first)) {
+      return true;
     }
     walls.remove(inx_wall);
     return false;

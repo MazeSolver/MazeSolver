@@ -135,6 +135,7 @@ public class EnvironmentSet extends JScrollableDesktopPane {
       m_envs.add(e2);
       add(e2);
       // Lo seleccionamos como entorno activo
+      e2.setLocation(e1.getLocation());
       setSelectedFrame(e2);
     }
     repaint();

@@ -102,6 +102,10 @@ public class SimulationManager extends Observable implements Runnable {
       m_future.cancel(false);
       m_future = null;
       m_results.pauseTimer();
+
+      // Avisamos a los observadores que la simulación ha terminado
+      setChanged();
+      notifyObservers(m_results);
     }
   }
 

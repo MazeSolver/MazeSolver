@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,12 +28,13 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import maze.Maze;
-import maze.algorithm.Kruskal;
+import maze.algorithm.HuntAndKill;
 import util.SimulationManager;
 import util.SimulationResults;
 import agent.Agent;
@@ -59,6 +61,14 @@ public class MainWindow extends JFrame implements Observer {
    * @param args No utilizados.
    */
   public static void main (String [] args) {
+    try {
+      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    }
+    catch (Exception e)
+    {
+
+    }
+
     MainWindow wnd = MainWindow.getInstance();
 
     wnd.setTitle(APP_NAME);
@@ -102,8 +112,11 @@ public class MainWindow extends JFrame implements Observer {
   private JMenuItem m_itm_about;
 
   // Representación del modelo
-  EnvironmentSet m_environments;
-  SimulationManager m_simulation;
+  private EnvironmentSet m_environments;
+  private SimulationManager m_simulation;
+
+  // Interacción con el usuario
+  private LoggingConsole m_console;
 
   /**
    * Constructor de la clase. Crea la interfaz y configura su estado interno
@@ -130,7 +143,12 @@ public class MainWindow extends JFrame implements Observer {
 
     m_split_panel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, null, m_environments);
 
-    global_panel.add(m_split_panel, BorderLayout.CENTER);
+    m_console = new LoggingConsole();
+    JSplitPane console_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, m_split_panel, m_console);
+
+    console_split.setResizeWeight(0.75);
+
+    global_panel.add(console_split, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
     add(global_panel, BorderLayout.CENTER);
 
@@ -236,7 +254,7 @@ public class MainWindow extends JFrame implements Observer {
         // generar el laberinto
 
         // XXX Sólo para pruebas
-        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new Kruskal(30, 30))));
+        m_environments.addEnvironment(new SimpleEnvironment(new Maze(new HuntAndKill(30, 30))));
       }
     });
 
@@ -258,7 +276,6 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_maze_open.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Llamar al método para cargar un fichero de laberinto
         try {
           Maze[] mazes = FileDialog.loadMazes();
           for (Maze maze: mazes)
@@ -451,6 +468,14 @@ public class MainWindow extends JFrame implements Observer {
   }
 
   /**
+   * Devuelve una referencia a la consola.
+   * @return Referencia a la consola de la ventana.
+   */
+  public LoggingConsole getConsole () {
+    return m_console;
+  }
+
+  /**
    * Abre el panel de configuración.
    * @param panel Panel de configuración que se quiere abrir.
    */
@@ -531,9 +556,44 @@ public class MainWindow extends JFrame implements Observer {
    */
   @Override
   public void update (Observable obs, Object obj) {
-    // Esto sucede cuando todos los entornos han terminado de ejecutarse.
-    // TODO Mostrar estadísticas de ejecución
+    // Esto sucede cuando todos los entornos han terminado de ejecutarse o se ha
+    // parado la simulación.
     SimulationResults results = (SimulationResults) obj;
+
+    ArrayList <Environment> envs = m_environments.getEnvironmentList();
+    ArrayList <Maze> mazes = new ArrayList<Maze>();
+    for (Environment env: envs) {
+      if (!mazes.contains(env.getMaze()))
+        mazes.add(env.getMaze());
+    }
+
+    m_console.writeInfo("SIMULATION RESULTS");
+    m_console.writeInfo("==================");
+    for (int i = 0; i < mazes.size(); i++) {
+      Maze maze = mazes.get(i);
+      m_console.writeInfo("=== Maze " + (i+1) + " (" + maze.getWidth() + "x" + maze.getHeight() + ") ===");
+      m_console.writeInfo("* Time taken first: " + results.timeTakenFirst(maze));
+      m_console.writeInfo("* Time taken last: " + results.timeTakenLast(maze));
+      m_console.writeInfo("* Winner: " + results.getWinner(maze));
+      m_console.writeInfo("");
+
+      for (int j = 0; j < envs.size(); j++) {
+        Environment env = envs.get(j);
+        if (env.getMaze() == maze) {
+          m_console.writeInfo("  == " + env.getTitle() + " ==");
+          m_console.writeInfo("  * Time taken first: " + results.timeTakenFirst(env));
+          m_console.writeInfo("  * Time taken last: " + results.timeTakenLast(env));
+          m_console.writeInfo("  * Winner: " + results.getWinner(env));
+          m_console.writeInfo("");
+          m_console.writeInfo("  * Steps made:");
+
+          int[] steps = results.getSteps(env);
+          for (int k = 0; k < steps.length; k++)
+            m_console.writeInfo("    - Agent " + (k+1) + ": " + steps[k] + " steps");
+        }
+      }
+    }
+    m_console.writeInfo("==================");
   }
 
 }

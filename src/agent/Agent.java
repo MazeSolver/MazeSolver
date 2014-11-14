@@ -81,6 +81,22 @@ public abstract class Agent implements Cloneable {
     return m_env.look(m_pos, dir);
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals (Object obj) {
+    return this == obj;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode () {
+    return m_env.hashCode();
+  }
+
   /**
    * @return La dirección en la que el agente quiere realizar el siguiente
    *         movimiento.

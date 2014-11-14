@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import maze.Direction;
 import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
+import util.Pair;
 
 /**
  * Implementación del algoritmo de Prim para la generación aleatoria de
@@ -99,28 +100,10 @@ public class Prim extends MazeCreationAlgorithm {
       // Dependiendo de la dirección eliminamos los 2 muros que separan las 2
       // celdas que queremos unir y marcamos la celda de destino como visitada.
       m_maze.get(i).get(j).unsetWall(dir);
-      switch (dir) {
-        case UP:
-          m_included_cells.get(i - 1).set(j, true);
-          m_maze.get(i - 1).get(j).unsetWall(Direction.DOWN);
-          addCell(i - 1, j);
-          break;
-        case DOWN:
-          m_included_cells.get(i + 1).set(j, true);
-          m_maze.get(i + 1).get(j).unsetWall(Direction.UP);
-          addCell(i + 1, j);
-          break;
-        case LEFT:
-          m_included_cells.get(i).set(j - 1, true);
-          m_maze.get(i).get(j - 1).unsetWall(Direction.RIGHT);
-          addCell(i, j - 1);
-          break;
-        case RIGHT:
-          m_included_cells.get(i).set(j + 1, true);
-          m_maze.get(i).get(j + 1).unsetWall(Direction.LEFT);
-          addCell(i, j + 1);
-          break;
-      }
+      Pair<Integer, Integer> desp = dir.decompose();
+      m_included_cells.get(i + desp.second).set(j + desp.first, true);
+      m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
+      addCell(i + desp.second, j + desp.first);
     }
   }
 
@@ -186,27 +169,9 @@ public class Prim extends MazeCreationAlgorithm {
     short j = walls.get(inx_wall)[1];
     Direction dir = Direction.fromValue(walls.get(inx_wall)[2]);
 
-    switch (dir) {
-      case UP:
-        if (!m_included_cells.get(i-1).get(j)) {
-          return true;
-        }
-        break;
-      case DOWN:
-        if (!m_included_cells.get(i+1).get(j)) {
-          return true;
-        }
-        break;
-      case LEFT:
-        if (!m_included_cells.get(i).get(j-1)) {
-          return true;
-        }
-        break;
-      case RIGHT:
-        if (!m_included_cells.get(i).get(j+1)) {
-          return true;
-        }
-        break;
+    Pair <Integer, Integer> desp = dir.decompose();
+    if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
+      return true;
     }
     walls.remove(inx_wall);
     return false;

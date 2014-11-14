@@ -66,6 +66,15 @@ public class MultipleEnvironment extends Environment {
       }
 
       /* (non-Javadoc)
+       * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
+       */
+      @Override
+      public void mouseReleased (MouseEvent e) {
+        // TODO Si se estaba arrastrando el ratón, soltar el agente en la
+        // posición actual
+      }
+
+      /* (non-Javadoc)
        * @see java.awt.event.MouseAdapter#mouseMoved(java.awt.event.MouseEvent)
        */
       @Override

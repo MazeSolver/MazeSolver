@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
-import util.Pair;
 import agent.Agent;
 
 import com.tomtessier.scrollabledesktop.BaseInternalFrame;
@@ -22,7 +21,7 @@ import com.tomtessier.scrollabledesktop.BaseInternalFrame;
 public abstract class Environment extends BaseInternalFrame {
   private static final long serialVersionUID = 1L;
   private static final int WINDOW_BORDER_WIDTH = 11;
-  private static final int WINDOW_BORDER_HEIGHT = 34;
+  private static final int WINDOW_BORDER_HEIGHT = 33;
   private static final int WINDOWS_OFFSET = 20;
 
   private static int s_instance = 0;
@@ -47,8 +46,6 @@ public abstract class Environment extends BaseInternalFrame {
     start_pos.x += WINDOWS_OFFSET;
     start_pos.y += WINDOWS_OFFSET;
 
-    // FIXME Esto debería poner el entorno delante de todos los demás que haya
-    // abiertos, pero no lo hace.
     moveToFront();
   }
 
@@ -100,8 +97,7 @@ public abstract class Environment extends BaseInternalFrame {
     if (m_maze.get(pos.y, pos.x).hasWall(dir))
       return MazeCell.Vision.WALL;
 
-    Pair <Integer, Integer> desp = dir.decompose();
-    Point n_pos = new Point(pos.x + desp.first, pos.y + desp.second);
+    Point n_pos = dir.movePoint(pos);
     if (n_pos.x < 0 || n_pos.y < 0 || n_pos.x >= m_maze.getWidth() ||
         n_pos.y >= m_maze.getHeight())
       return MazeCell.Vision.OFFLIMITS;
@@ -120,6 +116,22 @@ public abstract class Environment extends BaseInternalFrame {
     MazeCell.Vision vision = look (pos, dir);
     return vision == MazeCell.Vision.EMPTY ||
            vision == MazeCell.Vision.OFFLIMITS;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals (Object obj) {
+    return this == obj;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode () {
+    return new Integer(s_instance).hashCode();
   }
 
   /**
