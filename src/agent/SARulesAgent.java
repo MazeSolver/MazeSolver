@@ -49,14 +49,20 @@ import agent.rules.parser.SituationActionParser.Sa_ruleContext;
 public class SARulesAgent extends Agent {
   public static final int MINIMUM_WIDTH = 300;
   public static final String DEFAULT_AGENT_SRC =
-        "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
+        "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
+      + "// Siempre intenta acercarse a la esquina inferior izquierda\n"
+      + "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
       + "RIGHT FREE & RIGHT ~VISITED => GO RIGHT.\n"
       + "LEFT FREE & LEFT ~VISITED => GO LEFT.\n"
-      + "UP FREE & UP ~VISITED => GO UP.\n"
-      + "Up Not Wall & Up ~Agent -> MOVE up.\n"
-      + "not (left wall | left agent) -> move left.\n"
-      + "right !wall & right !agent -> move right.\n"
-      + "!(down wall | down agent) -> move down.\n";
+      + "UP FREE & UP ~VISITED => GO UP.\n\n"
+      + "// Reglas para mover al agente si todo alrededor está visitado u\n"
+      + "// ocupado. Utilizamos varias operaciones lógicas para demostrar\n"
+      + "// la flexibilidad del lenguaje. Se pueden traducir como:\n"
+      + "//     <dirección> FREE -> MOVE <dirección>.\n"
+      + "Up Not Wall and Up ~Agent -> MOVE up.\n"
+      + "not (left wall OR left agent) -> move left.\n"
+      + "right !wall And right !agent -> move right.\n"
+      + "!(down wall or down agent) -> move down.\n";
 
   private SituationActionErrorHandler m_error_handler;
   private ArrayList <SituationActionRule> m_rules;

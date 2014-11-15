@@ -27,9 +27,14 @@ IMPLIES: '=>'
        | '->' ;
 DOT:     '.' ;
 
-AND:      '&' ;
-OR:       '|' ;
-LEFTPAR:  '(' ;
+AND: '&'
+   | A N D
+   ;
+OR:  '|'
+   | O R
+   ;
+
+LEFTPAR: '(' ;
 RIGHTPAR: ')' ;
 
 NOT: N O T
@@ -53,7 +58,8 @@ DOWN:  D O W N ;
 LEFT:  L E F T ;
 RIGHT: R I G H T ;
 
-BLANK : [ \t\n\r]+ -> skip ;
+COMMENT: '//' ~[\r\n]* -> skip ;
+BLANK: [ \t\n\r]+ -> skip ;
 
 // Cosas de Antlr para poder casar con cadenas sin diferenciar mayúsculas y
 // minúsculas

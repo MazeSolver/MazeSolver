@@ -29,10 +29,10 @@ public class SituationActionParser extends Parser {
   protected static final PredictionContextCache _sharedContextCache = new PredictionContextCache();
   public static final int IMPLIES = 1, DOT = 2, AND = 3, OR = 4, LEFTPAR = 5, RIGHTPAR = 6,
       NOT = 7, FREE = 8, WALL = 9, VISITED = 10, AGENT = 11, OFFLIMITS = 12, MOVE = 13, STOP = 14,
-      UP = 15, DOWN = 16, LEFT = 17, RIGHT = 18, BLANK = 19;
-  public static final String [] tokenNames = {"<INVALID>", "IMPLIES", "'.'", "'&'", "'|'", "'('",
+      UP = 15, DOWN = 16, LEFT = 17, RIGHT = 18, COMMENT = 19, BLANK = 20;
+  public static final String [] tokenNames = {"<INVALID>", "IMPLIES", "'.'", "AND", "OR", "'('",
       "')'", "NOT", "FREE", "WALL", "VISITED", "AGENT", "OFFLIMITS", "MOVE", "STOP", "UP", "DOWN",
-      "LEFT", "RIGHT", "BLANK"};
+      "LEFT", "RIGHT", "COMMENT", "BLANK"};
   public static final int RULE_program = 0, RULE_sa_rule = 1, RULE_situation = 2, RULE_term = 3,
       RULE_action = 4, RULE_direction = 5;
   public static final String [] ruleNames = {"program", "sa_rule", "situation", "term", "action",
@@ -697,7 +697,7 @@ public class SituationActionParser extends Parser {
   }
 
   public static final String _serializedATN =
-      "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\25>\4\2\t\2\4\3\t"
+      "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\26>\4\2\t\2\4\3\t"
           + "\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\6\2\20\n\2\r\2\16\2\21\3\2\3\2"
           + "\3\3\3\3\3\3\3\3\3\3\3\4\3\4\5\4\35\n\4\3\4\3\4\3\4\3\4\3\4\5\4$\n\4\3"
           + "\4\3\4\3\4\3\4\3\4\3\4\7\4,\n\4\f\4\16\4/\13\4\3\5\3\5\5\5\63\n\5\3\5"
