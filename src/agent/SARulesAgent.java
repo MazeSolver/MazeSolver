@@ -13,19 +13,24 @@ import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.text.DefaultEditorKit;
 
 import maze.Direction;
 import maze.Maze;
@@ -139,6 +144,31 @@ public class SARulesAgent extends Agent {
 
     final JTextArea text = new JTextArea(m_code);
     JScrollPane scroll = new JScrollPane(text);
+
+    // Añadimos un popup para cortar, copiar, pegar y seleccionar todo
+    final JPopupMenu popup = new JPopupMenu();
+    ActionMap actions = text.getActionMap();
+    popup.add(actions.get(DefaultEditorKit.cutAction));
+    popup.add(actions.get(DefaultEditorKit.copyAction));
+    popup.add(actions.get(DefaultEditorKit.pasteAction));
+    popup.addSeparator();
+    popup.add(actions.get(DefaultEditorKit.selectAllAction));
+
+    text.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        maybeShowPopup(e);
+      }
+
+      public void mouseReleased(MouseEvent e) {
+        maybeShowPopup(e);
+      }
+
+      private void maybeShowPopup(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+          popup.show(e.getComponent(), e.getX(), e.getY());
+        }
+      }
+    });
 
     JPanel buttons = new JPanel(new FlowLayout());
     JButton accept = new JButton("OK");
