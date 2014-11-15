@@ -5,6 +5,9 @@
 package gui.environment;
 
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import maze.Direction;
@@ -17,6 +20,8 @@ import agent.Agent;
  */
 public class SimpleEnvironment extends Environment {
   private static final long serialVersionUID = 1L;
+
+  private boolean m_selected;
   private Agent m_agent;
 
   /**
@@ -24,8 +29,48 @@ public class SimpleEnvironment extends Environment {
    */
   public SimpleEnvironment (Maze maze) {
     super(maze);
+
+    getContentPane().addMouseListener(new MouseAdapter() {
+      /* (non-Javadoc)
+       * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+       */
+      @Override
+      public void mousePressed (MouseEvent e) {
+        if (m_agent != null) {
+          Point maze_point = EnvironmentPanel.screenCoordToGrid(e.getPoint());
+          m_selected = m_agent.getX() == maze_point.getX() &&
+                       m_agent.getY() == maze_point.getY();
+          repaint();
+        }
+        super.mousePressed(e);
+      }
+    });
+
+    getContentPane().addMouseMotionListener(new MouseMotionListener() {
+      @Override
+      public void mouseMoved (MouseEvent e) {
+        // TODO Controlar el movimiento de ratón para resaltar el objeto
+        // actualmente bajo el cursor.
+      }
+
+      @Override
+      public void mouseDragged (MouseEvent e) {
+        Agent ag = getSelectedAgent();
+        if (ag != null) {
+          Point grid_pos = EnvironmentPanel.screenCoordToGrid(e.getPoint());
+          if (grid_pos.x >= 0 && grid_pos.x < m_maze.getWidth() &&
+              grid_pos.y >= 0 && grid_pos.y < m_maze.getHeight()) {
+            ag.setPosition(grid_pos);
+            repaint();
+          }
+        }
+      }
+    });
   }
 
+  /* (non-Javadoc)
+   * @see gui.environment.Environment#look(java.awt.Point, maze.Direction)
+   */
   @Override
   public MazeCell.Vision look (Point pos, Direction dir) {
     MazeCell.Vision vision = super.look(pos, dir);
@@ -64,10 +109,12 @@ public class SimpleEnvironment extends Environment {
    * @see gui.Environment#removeAgent(agent.Agent)
    */
   public Environment removeAgent (Agent ag) {
-    if (m_agent == ag) {
+    if (ag != null && m_agent == ag) {
       m_agent = null;
       repaint();
     }
+    else
+      throw new IllegalArgumentException("El agente no se encuentra en el entorno");
 
     return this;
   }
@@ -77,7 +124,7 @@ public class SimpleEnvironment extends Environment {
    */
   @Override
   public Agent getSelectedAgent () {
-    return m_agent;
+    return m_selected? m_agent : null;
   }
 
   /* (non-Javadoc)

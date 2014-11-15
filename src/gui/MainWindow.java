@@ -12,6 +12,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -23,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
@@ -63,10 +65,7 @@ public class MainWindow extends JFrame implements Observer {
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
     }
-    catch (Exception e)
-    {
-
-    }
+    catch (Exception e){}
 
     MainWindow wnd = MainWindow.getInstance();
 
@@ -261,13 +260,15 @@ public class MainWindow extends JFrame implements Observer {
       @Override
       public void actionPerformed (ActionEvent e) {
         try {
-          // TODO Desactivar los controles que no se pueden usar cuando no hay
-          // entornos seleccionados para evitar tener que crear un montón de
-          // mensajes de error
           FileDialog.saveMaze(m_environments.getSelectedEnvironment().getMaze());
         }
         catch (IOException exc) {
-          // TODO Manejar excepción -- Mostrar error
+          JOptionPane.showMessageDialog(null, exc.getMessage(), "File save failed",
+              JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception exc) {
+          JOptionPane.showMessageDialog(null, "There is no environment selected",
+              "File save failed", JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -281,7 +282,8 @@ public class MainWindow extends JFrame implements Observer {
             m_environments.addEnvironment(new SimpleEnvironment(maze));
         }
         catch (IOException exc) {
-          // TODO Manejar excepción -- Mostrar error
+          JOptionPane.showMessageDialog(null, exc.getMessage(), "File open failed",
+              JOptionPane.ERROR_MESSAGE);
         }
       }
     });
@@ -289,7 +291,8 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_exit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        System.exit(0);
+        dispatchEvent(new WindowEvent(MainWindow.getInstance(),
+            WindowEvent.WINDOW_CLOSING));
       }
     });
 
@@ -302,7 +305,8 @@ public class MainWindow extends JFrame implements Observer {
         if (env != null)
           m_environments.addEnvironment(new SimpleEnvironment(env.getMaze()));
         else {
-          // TODO Reportar error
+          JOptionPane.showMessageDialog(null, "There are no mazes selected",
+              "Cloning failed", JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -324,7 +328,12 @@ public class MainWindow extends JFrame implements Observer {
           }
         }
         catch (IOException exc) {
-          // TODO Reportar error
+          JOptionPane.showMessageDialog(null, exc.getMessage(), "Maze change failed",
+              JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception exc) {
+          JOptionPane.showMessageDialog(null, "There are no environments selected",
+              "Maze change failed", JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -345,6 +354,7 @@ public class MainWindow extends JFrame implements Observer {
         // agregarlo al entorno en alguna posición disponible
 
         // XXX Sólo para pruebas
+        // Lanza IllegalArgumentException cuando no hay entorno seleccionado
         m_environments.addAgentToSelectedEnvironment(new SARulesAgent(m_environments.getSelectedEnvironment()));
       }
     });
@@ -357,12 +367,8 @@ public class MainWindow extends JFrame implements Observer {
           setConfigurationPanel(ag.getConfigurationPanel());
         }
         catch (Exception exc) {
-          // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
-          // No hay agente seleccionado o no hay entorno seleccionado
-
-          // XXX Sólo para pruebas
-          Agent ag = new SARulesAgent(m_environments.getSelectedEnvironment());
-          setConfigurationPanel(ag.getConfigurationPanel());
+          JOptionPane.showMessageDialog(null, "There are no agents selected",
+              "Agent config failed", JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -375,8 +381,8 @@ public class MainWindow extends JFrame implements Observer {
           m_environments.addAgentToSelectedEnvironment((Agent) env.getSelectedAgent().clone());
         }
         catch (Exception exc) {
-          // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
-          // No hay agente seleccionado o no hay entorno seleccionado
+          JOptionPane.showMessageDialog(null, "There are no agents selected",
+              "Agent cloning failed", JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -389,8 +395,8 @@ public class MainWindow extends JFrame implements Observer {
           m_environments.removeAgentFromEnvironment(env.getSelectedAgent(), env);
         }
         catch (Exception exc) {
-          // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
-          // No hay agente seleccionado o no hay entorno seleccionado
+          JOptionPane.showMessageDialog(null, "There are no agents selected",
+              "Agent removing failed", JOptionPane.WARNING_MESSAGE);
         }
       }
     });
