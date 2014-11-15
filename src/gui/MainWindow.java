@@ -39,7 +39,6 @@ import maze.Maze;
 import util.SimulationManager;
 import util.SimulationResults;
 import agent.Agent;
-import agent.SARulesAgent;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -248,7 +247,7 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_maze_new.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        MazeSelectorDialog dialog = new MazeSelectorDialog();
+        MazeSelectorDialog dialog = new MazeSelectorDialog(MainWindow.getInstance());
         Maze generated = dialog.showDialog();
 
         if (generated != null)
@@ -350,12 +349,19 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_agent_add.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Mostrar la interfaz para la selección de un tipo de agente y
-        // agregarlo al entorno en alguna posición disponible
+        if (m_environments.getSelectedEnvironment() == null) {
+          JOptionPane.showMessageDialog(null, "There are no environments selected",
+              "Agent creation failed", JOptionPane.WARNING_MESSAGE);
+          return;
+        }
 
-        // XXX Sólo para pruebas
-        // Lanza IllegalArgumentException cuando no hay entorno seleccionado
-        m_environments.addAgentToSelectedEnvironment(new SARulesAgent(m_environments.getSelectedEnvironment()));
+        AgentSelectorDialog dialog = new AgentSelectorDialog(MainWindow.getInstance());
+        Agent[] agents = dialog.showDialog();
+
+        if (agents != null) {
+          for (Agent ag: agents)
+            m_environments.addAgentToSelectedEnvironment(ag);
+        }
       }
     });
 
@@ -478,6 +484,14 @@ public class MainWindow extends JFrame implements Observer {
    */
   public LoggingConsole getConsole () {
     return m_console;
+  }
+
+  /**
+   * Devuelve una referencia al conjunto de entornos.
+   * @return Referencia al conjunto de entornos de la ventana.
+   */
+  public EnvironmentSet getEnvironments () {
+    return m_environments;
   }
 
   /**

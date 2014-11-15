@@ -44,8 +44,8 @@ public class MazeSelectorDialog extends JDialog {
 
   private Maze m_result;
 
-  public MazeSelectorDialog () {
-    super((Window) null,"Create a new maze");
+  public MazeSelectorDialog (Window parent) {
+    super(parent,"Create a new maze");
 
     String[] algos = {"Aldous Broder", "Hunt and Kill", "Kruskal", "Prim",
                       "Recursive Backtracking"};
