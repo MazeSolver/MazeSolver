@@ -12,6 +12,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -289,7 +290,8 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_exit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        System.exit(0);
+        dispatchEvent(new WindowEvent(MainWindow.getInstance(),
+            WindowEvent.WINDOW_CLOSING));
       }
     });
 
@@ -359,10 +361,6 @@ public class MainWindow extends JFrame implements Observer {
         catch (Exception exc) {
           // TODO Mostrar error (No se ha podido acceder al agente seleccionado)
           // No hay agente seleccionado o no hay entorno seleccionado
-
-          // XXX Sólo para pruebas
-          Agent ag = new SARulesAgent(m_environments.getSelectedEnvironment());
-          setConfigurationPanel(ag.getConfigurationPanel());
         }
       }
     });
