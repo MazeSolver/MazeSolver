@@ -152,6 +152,8 @@ public class MultipleEnvironment extends Environment {
 
       m_agents.remove(ag);
     }
+    else
+      throw new IllegalArgumentException("El agente no se encuentra en el entorno");
 
     // Si tras el borrado de un elemento el entorno tiene un solo agente, éste
     // pasa a ser un entorno simple

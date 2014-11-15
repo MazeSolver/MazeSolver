@@ -64,10 +64,12 @@ public class SimpleEnvironment extends Environment {
    * @see gui.Environment#removeAgent(agent.Agent)
    */
   public Environment removeAgent (Agent ag) {
-    if (m_agent == ag) {
+    if (ag != null && m_agent == ag) {
       m_agent = null;
       repaint();
     }
+    else
+      throw new IllegalArgumentException("El agente no se encuentra en el entorno");
 
     return this;
   }
