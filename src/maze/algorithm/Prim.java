@@ -18,7 +18,6 @@ import util.Pair;
 public class Prim extends MazeCreationAlgorithm {
 
   private final static short MAX_NEIGHBOUR = 4;
-  private final static short UERROR = -1;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
   private ArrayList <short []> walls;
 
@@ -57,11 +56,17 @@ public class Prim extends MazeCreationAlgorithm {
     // Mientras haya celdas sin visitar, seguir visitando.
     int nextWall = 0;
     while (!walls.isEmpty()) {
+      // Seleccionamos una celda y una direccion de dentro de las posibles que
+      // no hemos escogido aun.
       nextWall = (int) Math.round(0 + (Math.random() * (walls.size() - 1)));
       i = walls.get(nextWall)[0];
       j = walls.get(nextWall)[1];
       Direction dir = Direction.fromValue(walls.get(nextWall)[2]);
       Pair <Integer, Integer> desp = dir.decompose();
+      // Si la celda vecina a la posicion i,j +dir sigue estando disponible
+      // la elegimos y agregamos las celdas vecinas a esta al conjunto, si no
+      // eliminamos dicha posicion con dicha direccion para que no vuelva
+      // a salir de forma aleatoria
       if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
         openPassage(i, j, dir);
         m_included_cells.get(i + desp.second).set(j + desp.first, true);
