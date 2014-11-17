@@ -18,10 +18,8 @@ import util.Pair;
 public class Kruskal extends MazeCreationAlgorithm {
 
   private final static short MAX_NEIGHBOUR = 4;
-  private final static short UERROR = -1;
   private ArrayList <Integer> disjoint_set;
   private ArrayList <short []> walls;
-  private ArrayList <ArrayList <MazeCell>> m_maze;
 
   /**
    * @param rows
@@ -31,7 +29,6 @@ public class Kruskal extends MazeCreationAlgorithm {
     super(rows, columns);
     walls = new ArrayList <short []>();
     disjoint_set = new ArrayList <Integer>();
-    m_maze = initializeMaze();
 
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
@@ -47,116 +44,42 @@ public class Kruskal extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
+    int nextWall, i, j;
     while (!walls.isEmpty()) {
-      // Seleccionar un vecino valido para explorar
-      // Tirar el muro en una direccion y en la direccion de vuelta.
-      throwWall(getWall());
-    }
-    return this.m_maze;
-  }
-
-  /**
-   * Busca aleatoriamente un muro de los encontrados al abrir caminos.
-   *
-   * @return Un muro que sea válido (evita celdas ya visitadas).
-   * @throws Exception
-   */
-  private int getWall () {
-    int nextWall = 0;
-    do {
+      // Seleccionamos una celda y una direccion de dentro de las posibles que
+      // no hemos escogido aun.
       nextWall = (int) Math.round(0 + (Math.random() * (walls.size() - 1)));
+      i = walls.get(nextWall)[0];
+      j = walls.get(nextWall)[1];
+      Direction dir = Direction.fromValue(walls.get(nextWall)[2]);
+      Pair <Integer, Integer> desp = dir.decompose();
+      // Si la celda vecina a la posicion i,j +dir pertenece a otro conjunto
+      // entonces, la marcamos del mismo conjunto (y a cada elemento del mismo)
+      // y abrimos el pasillo por ahi.
+      if (value(i, j) != value(i + desp.second, j + desp.first)) {
+        openPassage(i, j, dir);
+        union(value(i, j), value(i + desp.second, j + desp.first));
+      }
+      walls.remove(nextWall);
     }
-    while (!checkWall(nextWall) && !walls.isEmpty());
-    if (walls.isEmpty()) {
-      return UERROR;
-    }
-    else {
-      return nextWall;
-    }
-  }
-
-  /**
-   * Elimina la pared colocada en la dirección [3] a partir de la celda (i, j).
-   *
-   * @param indx_wall
-   *          indice del vector que almacena los muros disposibles el indice
-   *          siempre será un muro valido hacia una casilla sin visitar ya que
-   *          el metodo getWall lo comprueba, para eliminar los muros de la
-   *          lista que van hacia celdas ya visitadas.
-   * @throws Exception
-   */
-  private void throwWall (final int indx_wall) {
-    if (indx_wall != UERROR) {
-      short i = walls.get(indx_wall)[0];
-      short j = walls.get(indx_wall)[1];
-      Direction dir = Direction.fromValue(walls.get(indx_wall)[2]);
-      walls.remove(indx_wall);
-
-      // Dependiendo de la dirección eliminamos los 2 muros que separan las 2
-      // celdas que queremos unir y marcamos la celda de destino como visitada.
-      m_maze.get(i).get(j).unsetWall(dir);
-      Pair<Integer, Integer> desp = dir.decompose();
-      union(value(i, j), value(i + desp.second, j + desp.first));
-      m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
-    }
+    return m_maze;
   }
 
   /**
    * Añade todos los muros a la lista de muros a elegir aleatoriamente
    */
   private void addAll () {
-    for (int i = 0; i < m_rows; i++) {
+    for (int i = 0; i < m_rows; i++)
       for (int j = 0; j < m_columns; j++)
-        addCell(i, j);
-    }
-  }
-
-  /**
-   * Añade a la lista de muros, los muros disponibles de la celda i,j
-   *
-   * @param i
-   * @param j
-   */
-  private void addCell (final int i, final int j) {
-    for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      if (i != 0 && toDir(k) == Direction.UP) {
-        short [] aux = {(short) i, (short) j, Direction.UP.val};
-        walls.add(aux);
-      }
-      else if (j != 0 && toDir(k) == Direction.LEFT) {
-        short [] aux = {(short) i, (short) j, Direction.LEFT.val};
-        walls.add(aux);
-      }
-      else if (i != m_rows - 1 && toDir(k) == Direction.DOWN) {
-        short [] aux = {(short) i, (short) j, Direction.DOWN.val};
-        walls.add(aux);
-      }
-      else if (j != m_columns - 1 && toDir(k) == Direction.RIGHT) {
-        short [] aux = {(short) i, (short) j, Direction.RIGHT.val};
-        walls.add(aux);
-      }
-    }
-  }
-
-  /**
-   *
-   * @param inx_wall
-   *          indice del muro a comprobar si la celda colidante o la propia
-   *          celda estan en diferentes conjuntos o hay que eliminarla
-   * @return
-   * @throws Exception
-   */
-  private Boolean checkWall (final int inx_wall) {
-    short i = walls.get(inx_wall)[0];
-    short j = walls.get(inx_wall)[1];
-    Direction dir = Direction.fromValue(walls.get(inx_wall)[2]);
-
-    Pair <Integer, Integer> desp = dir.decompose();
-    if (value(i, j) != value(i + desp.second, j + desp.first)) {
-      return true;
-    }
-    walls.remove(inx_wall);
-    return false;
+        for (short k = 0; k < MAX_NEIGHBOUR; k++) {
+          Direction dir = toDir(k);
+          Pair <Integer, Integer> desp = dir.decompose();
+          if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
+              && (j + desp.first < m_columns)) {
+            short [] aux = {(short) i, (short) j, dir.val};
+            walls.add(aux);
+          }
+        }
   }
 
   /**
