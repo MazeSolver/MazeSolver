@@ -100,10 +100,9 @@ public class Prim extends MazeCreationAlgorithm {
 
       // Dependiendo de la dirección eliminamos los 2 muros que separan las 2
       // celdas que queremos unir y marcamos la celda de destino como visitada.
-      m_maze.get(i).get(j).unsetWall(dir);
       Pair <Integer, Integer> desp = dir.decompose();
+      openPassage(i, j, dir);
       m_included_cells.get(i + desp.second).set(j + desp.first, true);
-      m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
       addCell(i + desp.second, j + desp.first);
     }
   }

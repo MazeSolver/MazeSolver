@@ -6,6 +6,8 @@ package maze;
 
 import java.util.ArrayList;
 
+import util.Pair;
+
 /**
  * Interfaz que encapsula un algoritmo de creación de laberintos.
  */
@@ -49,6 +51,12 @@ public abstract class MazeCreationAlgorithm {
     }
 
     return maze;
+  }
+
+  protected void openPassage (final int i, final int j, final Direction dir) {
+    Pair <Integer, Integer> desp = dir.decompose();
+    m_maze.get(i).get(j).unsetWall(dir);
+    m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
   }
 
   /**
