@@ -123,27 +123,6 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
   }
 
   /**
-   * Convierte un número entre 1 y 4 en una dirección.
-   *
-   * @param number
-   *          Número a convertir.
-   * @return Dirección asociada al número.
-   */
-  private static Direction toDir (short number) {
-    switch (number) {
-      case 0:
-        return Direction.UP;
-      case 1:
-        return Direction.LEFT;
-      case 2:
-        return Direction.DOWN;
-      case 3:
-        return Direction.RIGHT;
-    }
-    return null;
-  }
-
-  /**
    * Elimina la pared colocada en la dirección dir a partir de la celda (i, j).
    *
    * @param i

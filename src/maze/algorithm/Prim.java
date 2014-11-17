@@ -23,8 +23,10 @@ public class Prim extends MazeCreationAlgorithm {
   private ArrayList <short []> walls;
 
   /**
-   * @param rows Filas en el laberinto resultado.
-   * @param columns Columnas en el laberinto resultado.
+   * @param rows
+   *          Filas en el laberinto resultado.
+   * @param columns
+   *          Columnas en el laberinto resultado.
    */
   public Prim (int rows, int columns) {
     super(rows, columns);
@@ -63,12 +65,13 @@ public class Prim extends MazeCreationAlgorithm {
 
   /**
    * Busca aleatoriamente un muro de los encontrados al abrir caminos.
+   *
    * @return Un muro que sea válido (evita celdas ya visitadas).
    */
   private int getWall () {
     int nextWall = 0;
     do {
-      nextWall = (int) Math.round(0 + (Math.random() * (walls.size() - 1) ));
+      nextWall = (int) Math.round(0 + (Math.random() * (walls.size() - 1)));
     }
     while (!checkWall(nextWall) && !walls.isEmpty());
     if (walls.isEmpty()) {
@@ -79,14 +82,14 @@ public class Prim extends MazeCreationAlgorithm {
     }
   }
 
-
   /**
-   * Elimina la pared colocada en la dirección [3] a partir de la
-   * celda (i, j).
-   * @param indx_wall indice del vector que almacena los muros disposibles
-   * el indice siempre será un muro valido hacia una casilla sin visitar
-   * ya que el metodo getWall lo comprueba, para eliminar los muros de la lista
-   * que van hacia celdas ya visitadas.
+   * Elimina la pared colocada en la dirección [3] a partir de la celda (i, j).
+   *
+   * @param indx_wall
+   *          indice del vector que almacena los muros disposibles el indice
+   *          siempre será un muro valido hacia una casilla sin visitar ya que
+   *          el metodo getWall lo comprueba, para eliminar los muros de la
+   *          lista que van hacia celdas ya visitadas.
    */
   private void throwWall (final int indx_wall) {
     if (indx_wall != UERROR) {
@@ -98,7 +101,7 @@ public class Prim extends MazeCreationAlgorithm {
       // Dependiendo de la dirección eliminamos los 2 muros que separan las 2
       // celdas que queremos unir y marcamos la celda de destino como visitada.
       m_maze.get(i).get(j).unsetWall(dir);
-      Pair<Integer, Integer> desp = dir.decompose();
+      Pair <Integer, Integer> desp = dir.decompose();
       m_included_cells.get(i + desp.second).set(j + desp.first, true);
       m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
       addCell(i + desp.second, j + desp.first);
@@ -106,50 +109,19 @@ public class Prim extends MazeCreationAlgorithm {
   }
 
   /**
-   * Convierte un número entre 1 y 4 en una dirección.
-   * @param number Número a convertir.
-   * @return Dirección asociada al número.
-   */
-  private static Direction toDir (short number) {
-    switch (number) {
-      case 0:
-        return Direction.UP;
-      case 1:
-        return Direction.LEFT;
-      case 2:
-        return Direction.DOWN;
-      case 3:
-        return Direction.RIGHT;
-    }
-    return null;
-  }
-
-  /**
    * Añade a la lista de muros, los muros disponibles de la celda i,j
+   *
    * @param i
    * @param j
    */
-  private void addCell (final int i, final int j)
-  {
+  private void addCell (final int i, final int j) {
     for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      if (i != 0 && toDir(k) == Direction.UP &&
-          !m_included_cells.get(i-1).get(j)) {
-        short [] aux = {(short) i, (short) j,Direction.UP.val};
-        walls.add(aux);
-      }
-      else if (j != 0 && toDir(k) == Direction.LEFT &&
-          !m_included_cells.get(i).get(j-1)) {
-        short [] aux = {(short) i, (short) j,Direction.LEFT.val};
-        walls.add(aux);
-      }
-      else if (i != m_rows-1 && toDir(k) == Direction.DOWN &&
-          !m_included_cells.get(i+1).get(j)) {
-        short [] aux = {(short) i, (short) j,Direction.DOWN.val};
-        walls.add(aux);
-      }
-      else if (j != m_columns-1 && toDir(k) == Direction.RIGHT &&
-          !m_included_cells.get(i).get(j+1)) {
-        short [] aux = {(short) i, (short) j,Direction.RIGHT.val};
+      Direction dir = toDir(k);
+      Pair <Integer, Integer> desp = dir.decompose();
+      if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
+          && (j + desp.first < m_columns)
+          && !m_included_cells.get(i + desp.second).get(j + desp.first)) {
+        short [] aux = {(short) i, (short) j, dir.val};
         walls.add(aux);
       }
     }
@@ -157,12 +129,12 @@ public class Prim extends MazeCreationAlgorithm {
 
   /**
    *
-   * @param inx_wall indice del muro a comprobar si la celda colidante sigue
-   * estando disponible o ya no y hay que eliminarla
+   * @param inx_wall
+   *          indice del muro a comprobar si la celda colidante sigue estando
+   *          disponible o ya no y hay que eliminarla
    * @return
    */
-  private Boolean checkWall (final int inx_wall )
-  {
+  private Boolean checkWall (final int inx_wall) {
     short i = walls.get(inx_wall)[0];
     short j = walls.get(inx_wall)[1];
     Direction dir = Direction.fromValue(walls.get(inx_wall)[2]);
