@@ -21,7 +21,6 @@ public class Prim extends MazeCreationAlgorithm {
   private final static short UERROR = -1;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
   private ArrayList <short []> walls;
-  private ArrayList <ArrayList <MazeCell>> m_maze;
 
   /**
    * @param rows Filas en el laberinto resultado.
@@ -31,7 +30,6 @@ public class Prim extends MazeCreationAlgorithm {
     super(rows, columns);
     walls = new ArrayList <short []>();
     m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
-    m_maze = initializeMaze();
 
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
@@ -60,7 +58,7 @@ public class Prim extends MazeCreationAlgorithm {
       // Tirar el muro en una direccion y en la direccion de vuelta.
       throwWall(getWall());
     }
-    return this.m_maze;
+    return m_maze;
   }
 
   /**

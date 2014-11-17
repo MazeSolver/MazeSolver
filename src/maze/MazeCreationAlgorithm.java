@@ -14,6 +14,7 @@ public abstract class MazeCreationAlgorithm {
   public static int MIN_COLUMNS = 5;
 
   protected int m_rows, m_columns;
+  protected ArrayList <ArrayList <MazeCell>> m_maze;
 
   /**
    * @param rows Número de filas del laberinto.
@@ -22,9 +23,9 @@ public abstract class MazeCreationAlgorithm {
   public MazeCreationAlgorithm (int rows, int columns) {
     if (rows <= MIN_ROWS || columns <= MIN_COLUMNS)
       throw new IllegalArgumentException("El número de filas o columnas es demasiado pequeño");
-
     m_rows = rows;
     m_columns = columns;
+    m_maze = initializeMaze();
   }
 
   /**
