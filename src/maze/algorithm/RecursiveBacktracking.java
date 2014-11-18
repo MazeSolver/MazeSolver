@@ -6,6 +6,7 @@ package maze.algorithm;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import maze.Direction;
 import maze.MazeCell;
@@ -19,7 +20,6 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
 
   private final static short MAX_NEIGHBOUR = 4;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
-  private ArrayList <Point> stack_positions;
 
   /**
    * @param rows
@@ -35,7 +35,6 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
       for (int j = 0; j < columns; j++)
         m_included_cells.get(i).add(false);
     }
-    stack_positions = new ArrayList <Point>();
   }
 
   /*
@@ -45,26 +44,25 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
+    Stack<Point> stack = new Stack<Point>();
+    Pair <Integer, Integer> desp;
     Point p = new Point(0, 0);
-    ArrayList <Direction> dir;
-    stack_positions.add(0, p);
-    while (!stack_positions.isEmpty()) {
-      dir = getDirections(stack_positions.get(0).x, stack_positions.get(0).y);
-      while (dir.isEmpty() && !stack_positions.isEmpty()) {
-        stack_positions.remove(0);
-        dir = getDirections(stack_positions.get(0).x, stack_positions.get(0).y);
+    Direction dir;
+    stack.push(p);
+    m_included_cells.get(p.x).set(p.y, true);
+    while (!stack.isEmpty()) {
+      p = stack.peek();
+      dir = getDirections(p.x, p.y);
+      if (dir == Direction.NONE) {
+        stack.pop();
       }
-      if (!dir.isEmpty()) {
-        int k = (int) Math.round(0 + (Math.random() * (dir.size() - 1)));
-        p = stack_positions.get(0);
-        Pair <Integer, Integer> desp = dir.get(k).decompose();
-        if (!m_included_cells.get(p.x + desp.second).get(p.y + desp.first)) {
-          openPassage(p.x, p.y, dir.get(k));
-          m_included_cells.get(p.x + desp.second).set(p.y + desp.first, true);
-          p.x = p.x + desp.second;
-          p.y = p.y + desp.first;
-          stack_positions.add(0, p);
-        }
+      else {
+        desp = dir.decompose();
+        openPassage(p.x, p.y, dir);
+        p.x = p.x + desp.second;
+        p.y = p.y + desp.first;
+        m_included_cells.get(p.x).set(p.y, true);
+        stack.push(p);
       }
     }
     return m_maze;
@@ -74,21 +72,23 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
    *
    * @param i
    * @param j
-   * @return retorna un vector con las direcciones posibles a las que ir en la
-   *         casilla dada por las posiciones i y j
+   * @return retorna una direccion posible a la que ir en la casilla dada por
+   *         las posiciones i y j
    */
-  private ArrayList <Direction> getDirections (int i, int j) {
+  private Direction getDirections (int i, int j) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
     for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      Direction dir = toDir(k);
-      Pair <Integer, Integer> desp = dir.decompose();
+      Pair <Integer, Integer> desp = toDir(k).decompose();
       if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
           && (j + desp.first < m_columns)
           && !m_included_cells.get(i + desp.second).get(j + desp.first)) {
         directions.add(toDir(k));
       }
     }
-    return directions;
+    if (directions.isEmpty()) {
+      return Direction.NONE;
+    }
+    return directions.get((int) Math.round(0 + (Math.random() * (directions.size() - 1))));
   }
 
 }
