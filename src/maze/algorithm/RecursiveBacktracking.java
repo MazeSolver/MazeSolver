@@ -4,6 +4,7 @@
  */
 package maze.algorithm;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import maze.Direction;
@@ -18,7 +19,7 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
 
   private final static short MAX_NEIGHBOUR = 4;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
-  private ArrayList <ArrayList <MazeCell>> m_maze;
+  private ArrayList <Point> stack_positions;
 
   /**
    * @param rows
@@ -26,7 +27,6 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
    */
   public RecursiveBacktracking (int rows, int columns) {
     super(rows, columns);
-    m_maze = initializeMaze();
     m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
@@ -35,6 +35,7 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
       for (int j = 0; j < columns; j++)
         m_included_cells.get(i).add(false);
     }
+    stack_positions = new ArrayList <Point>();
   }
 
   /*
@@ -44,42 +45,29 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
-    explore(0, 0);
-    return m_maze;
-  }
-
-  /**
-   * Explora los multiples caminos de la casilla i,j
-   * @param i
-   * @param j
-   */
-  private void explore (int i, int j) {
-    ArrayList <Direction> dir = getDirections(i, j);
-    for (int k = 0; k < dir.size(); k++) {
-      Direction auxDir = dir.get(k);
-      Pair <Integer, Integer> desp = dir.get(k).decompose();
-      if (checkDir(i, j, auxDir)) {
-        throwWall(i, j, dir.get(k));
-        explore(i + desp.second, j + desp.first);
+    Point p = new Point(0, 0);
+    ArrayList <Direction> dir;
+    stack_positions.add(0, p);
+    while (!stack_positions.isEmpty()) {
+      dir = getDirections(stack_positions.get(0).x, stack_positions.get(0).y);
+      while (dir.isEmpty() && !stack_positions.isEmpty()) {
+        stack_positions.remove(0);
+        dir = getDirections(stack_positions.get(0).x, stack_positions.get(0).y);
+      }
+      if (!dir.isEmpty()) {
+        int k = (int) Math.round(0 + (Math.random() * (dir.size() - 1)));
+        p = stack_positions.get(0);
+        Pair <Integer, Integer> desp = dir.get(k).decompose();
+        if (!m_included_cells.get(p.x + desp.second).get(p.y + desp.first)) {
+          openPassage(p.x, p.y, dir.get(k));
+          m_included_cells.get(p.x + desp.second).set(p.y + desp.first, true);
+          p.x = p.x + desp.second;
+          p.y = p.y + desp.first;
+          stack_positions.add(0, p);
+        }
       }
     }
-  }
-
-  /**
-   *
-   * @param i
-   * @param j
-   * @param dir
-   * @return devuelve true si la dirección dir en la casilla i,j es viable para
-   *         ir. Es decir, si en esa dirección hay una casilla que no ha sido
-   *         visitada aún.
-   */
-  private Boolean checkDir (final int i, final int j, final Direction dir) {
-    Pair <Integer, Integer> desp = dir.decompose();
-    if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
-      return true;
-    }
-    return false;
+    return m_maze;
   }
 
   /**
@@ -92,48 +80,15 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
   private ArrayList <Direction> getDirections (int i, int j) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
     for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      if (i != 0 && toDir(k) == Direction.UP && !m_included_cells.get(i - 1).get(j))
-        directions.add(Direction.UP);
-      else if (j != 0 && toDir(k) == Direction.LEFT && !m_included_cells.get(i).get(j - 1))
-        directions.add(Direction.LEFT);
-      else if (i != m_rows - 1 && toDir(k) == Direction.DOWN && !m_included_cells.get(i + 1).get(j))
-        directions.add(Direction.DOWN);
-      else if (j != m_columns - 1 && toDir(k) == Direction.RIGHT
-          && !m_included_cells.get(i).get(j + 1))
-        directions.add(Direction.RIGHT);
+      Direction dir = toDir(k);
+      Pair <Integer, Integer> desp = dir.decompose();
+      if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
+          && (j + desp.first < m_columns)
+          && !m_included_cells.get(i + desp.second).get(j + desp.first)) {
+        directions.add(toDir(k));
+      }
     }
-    return toRand(directions);
-  }
-
-  /**
-   *
-   * @param vector
-   * @return dado un vector de direcciones posibles para visitar, devuelve un
-   *         vector con esas mismas direcciones pero desordenadas aleatoriamente
-   */
-  private ArrayList <Direction> toRand (ArrayList <Direction> vector) {
-    ArrayList <Direction> rand = new ArrayList <Direction>();
-    int nextDir = 0;
-    while (!vector.isEmpty()) {
-      nextDir = (int) Math.round(0 + (Math.random() * (vector.size() - 1)));
-      rand.add(vector.get(nextDir));
-      vector.remove(nextDir);
-    }
-    return rand;
-  }
-
-  /**
-   * Elimina la pared colocada en la dirección dir a partir de la celda (i, j).
-   *
-   * @param i
-   * @param j
-   * @param dir
-   */
-  private void throwWall (final int i, final int j, final Direction dir) {
-    m_maze.get(i).get(j).unsetWall(dir);
-    Pair <Integer, Integer> desp = dir.decompose();
-    m_included_cells.get(i + desp.second).set(j + desp.first, true);
-    m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
+    return directions;
   }
 
 }
