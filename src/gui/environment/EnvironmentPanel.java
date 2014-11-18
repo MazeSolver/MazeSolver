@@ -95,17 +95,14 @@ public class EnvironmentPanel extends JPanel {
     if (maze == null)
       return;
 
-    // Configuramos la paleta.
-    g.setColor(Color.BLACK);
-
-    int width = maze.getWidth();
-    int height = maze.getHeight();
-
+    // Calculamos una vez el tamaño de las celdas para utilizarlo en todos los
+    // cálculos de dimensiones
     double cell_size = CELL_SIZE_PX * s_zoom;
 
     // Dibujamos el laberinto.
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
+    g.setColor(Color.BLACK);
+    for (int x = 0; x < maze.getWidth(); x++) {
+      for (int y = 0; y < maze.getHeight(); y++) {
         final MazeCell actual = maze.get(y, x);
         Point pos = new Point((int) Math.round(x * cell_size), (int) Math.round(y * cell_size));
 
@@ -123,21 +120,36 @@ public class EnvironmentPanel extends JPanel {
     }
 
     // Dibujamos los agentes.
-    g.setColor(Color.ORANGE);
-    for (int i = 0; i < m_env.getAgentCount(); i++) {
-      Agent ag = m_env.getAgent(i);
-      g.fillOval((int) Math.round(ag.getX() * cell_size), (int) Math.round(ag.getY() * cell_size),
-          (int) Math.round(cell_size - 1), (int) Math.round(cell_size - 1));
-    }
+    for (int i = 0; i < m_env.getAgentCount(); i++)
+      drawAgent(m_env.getAgent(i), Color.BLUE, g, cell_size);
 
     // Dibujamos el agente seleccionado con otro color para resaltarlo.
     Agent selected = m_env.getSelectedAgent();
-    if (selected != null) {
-      g.setColor(Color.RED);
-      g.fillOval((int) Math.round(selected.getX() * cell_size),
-          (int) Math.round(selected.getY() * cell_size), (int) Math.round(cell_size - 1),
+    if (selected != null)
+      drawAgent(selected, Color.RED, g, cell_size);
+
+    // Dibujamos un marcador al agente sobre el que se encuentra el ratón.
+    Agent hovered = m_env.getHoveredAgent();
+    if (hovered != null) {
+      g.setColor(Color.GREEN);
+      g.drawOval((int) Math.round(hovered.getX() * cell_size),
+          (int) Math.round(hovered.getY() * cell_size), (int) Math.round(cell_size - 1),
           (int) Math.round(cell_size - 1));
     }
   }
 
+  /**
+   * Dibuja un agente en el panel.
+   * @param ag Agente que dibujar.
+   * @param col Color en el que dibujar el agente.
+   * @param g "Pincel" con el que hacer el dibujado.
+   * @param cell_size Tamaño de las celdas en el panel.
+   */
+  private void drawAgent (Agent ag, Color col, Graphics g, double cell_size) {
+    g.setColor(col);
+    g.fillOval((int) Math.round(ag.getX() * cell_size),
+               (int) Math.round(ag.getY() * cell_size),
+               (int) Math.round(cell_size - 1),
+               (int) Math.round(cell_size - 1));
+  }
 }
