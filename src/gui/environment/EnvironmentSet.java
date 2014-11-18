@@ -83,10 +83,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
    */
   public void addAgentToSelectedEnvironment (Agent ag) {
     Environment env = getSelectedEnvironment();
-    if (env != null) {
-      Environment new_env = env.addAgent(ag);
-      exchangeEnvironments(env, new_env);
-    }
+    if (env != null)
+      env.addAgent(ag);
     else
       throw new IllegalStateException("El usuario no ha seleccionado ningún entorno");
   }
@@ -98,10 +96,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
    * @param env Entorno del cual se quiere eliminar el agente.
    */
   public void removeAgentFromEnvironment (Agent ag, Environment env) {
-    if (m_envs.contains(env)) {
-      Environment new_env = env.removeAgent(ag);
-      exchangeEnvironments(env, new_env);
-    }
+    if (m_envs.contains(env))
+      env.removeAgent(ag);
     else
       throw new IllegalArgumentException("El entorno no está guardado en el conjunto actual");
   }
