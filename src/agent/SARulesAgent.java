@@ -53,6 +53,7 @@ import agent.rules.parser.SituationActionParser.Sa_ruleContext;
  */
 public class SARulesAgent extends Agent {
   public static final int MINIMUM_WIDTH = 300;
+  public static final int MINIMUM_HEIGHT = 100;
   public static final String DEFAULT_AGENT_SRC =
         "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
       + "// Siempre intenta acercarse a la esquina inferior izquierda\n"
@@ -212,7 +213,7 @@ public class SARulesAgent extends Agent {
     Border margins = BorderFactory.createEmptyBorder(2, 2, 2, 2);
     Border etched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
     config_panel.setBorder(BorderFactory.createCompoundBorder(etched, margins));
-    config_panel.setMinimumSize(new Dimension(MINIMUM_WIDTH, 0));
+    config_panel.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
     return config_panel;
   }
 
