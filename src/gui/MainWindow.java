@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,7 +27,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
@@ -71,6 +71,7 @@ public class MainWindow extends JFrame implements Observer {
     wnd.setTitle(APP_NAME);
     wnd.setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
     wnd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    wnd.setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
     wnd.setVisible(true);
   }
 
@@ -150,7 +151,6 @@ public class MainWindow extends JFrame implements Observer {
     add(global_panel, BorderLayout.CENTER);
 
     closeConfigurationPanel();
-
     pack();
   }
 
@@ -231,7 +231,7 @@ public class MainWindow extends JFrame implements Observer {
     m_toolbar.add(m_step);
     m_toolbar.add(m_pause);
     m_toolbar.add(m_stop);
-    m_toolbar.add(new JSeparator(JSeparator.VERTICAL));
+    m_toolbar.add(Box.createGlue());
     m_toolbar.add(new JLabel("Zoom:"));
     m_toolbar.add(m_zoom);
 
