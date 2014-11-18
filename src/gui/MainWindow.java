@@ -6,7 +6,6 @@ package gui;
 
 import gui.environment.Environment;
 import gui.environment.EnvironmentSet;
-import gui.environment.SimpleEnvironment;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -251,7 +250,7 @@ public class MainWindow extends JFrame implements Observer {
         Maze generated = dialog.showDialog();
 
         if (generated != null)
-          m_environments.addEnvironment(new SimpleEnvironment(generated));
+          m_environments.addEnvironment(new Environment(generated));
       }
     });
 
@@ -278,7 +277,7 @@ public class MainWindow extends JFrame implements Observer {
         try {
           Maze[] mazes = FileDialog.loadMazes();
           for (Maze maze: mazes)
-            m_environments.addEnvironment(new SimpleEnvironment(maze));
+            m_environments.addEnvironment(new Environment(maze));
         }
         catch (IOException exc) {
           JOptionPane.showMessageDialog(null, exc.getMessage(), "File open failed",
@@ -302,7 +301,7 @@ public class MainWindow extends JFrame implements Observer {
       public void actionPerformed (ActionEvent e) {
         Environment env = m_environments.getSelectedEnvironment();
         if (env != null)
-          m_environments.addEnvironment(new SimpleEnvironment(env.getMaze()));
+          m_environments.addEnvironment(new Environment(env.getMaze()));
         else {
           JOptionPane.showMessageDialog(null, "There are no mazes selected",
               "Cloning failed", JOptionPane.WARNING_MESSAGE);
@@ -318,10 +317,10 @@ public class MainWindow extends JFrame implements Observer {
 
           if (maze != null) {
             Environment actual_env = m_environments.getSelectedEnvironment();
-            Environment new_env = new SimpleEnvironment(maze);
+            Environment new_env = new Environment(maze);
 
             for (int i = 0; i < actual_env.getAgentCount(); i++)
-              new_env = new_env.addAgent(actual_env.getAgent(i));
+              new_env.addAgent(actual_env.getAgent(i));
 
             m_environments.exchangeEnvironments(actual_env, new_env);
           }
