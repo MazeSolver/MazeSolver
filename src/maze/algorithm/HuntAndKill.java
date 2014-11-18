@@ -4,6 +4,7 @@
  */
 package maze.algorithm;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import maze.Direction;
@@ -18,7 +19,6 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   private final static short MAX_NEIGHBOUR = 4;
   private short cellVisitedCount = 0;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
-  private ArrayList <ArrayList <MazeCell>> m_maze;
 
   /**
    * @param rows
@@ -26,7 +26,6 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    */
   public HuntAndKill (int rows, int columns) {
     super(rows, columns);
-    m_maze = initializeMaze();
     m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
@@ -46,12 +45,11 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   public ArrayList <ArrayList <MazeCell>> createMaze () {
     int x = (int) Math.round(0 + (Math.random() * (m_rows - 1)));
     int y = (int) Math.round(0 + (Math.random() * (m_columns - 1)));
-    int [] pos = {x, y};
-    while (cellVisitedCount < ((m_columns * m_rows) - 1)) {
-      walk(pos[0], pos[1]);
-      pos = hunt();
+    Point p = new Point(x, y);
+    while (cellVisitedCount < (m_columns * m_rows)) {
+      walk(p);
+      p = hunt();
     }
-    hunt();
     return m_maze;
   }
 
@@ -62,16 +60,17 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    * @param x
    * @param y
    */
-  private void walk (int x, int y) {
+  private void walk (Point p) {
     Pair <Integer, Integer> desp;
-    Direction dir = getRandomDirection(x, y);
-    while (dir.val != 0) {
-      throwWall(x, y, dir);
-      desp = dir.decompose();
-      x = x + desp.second;
-      y = y + desp.first;
-      dir = getRandomDirection(x, y);
+    Direction dir = getRandomDirection(p.x, p.y);
+    while (dir != Direction.NONE) {
+      openPassage(p.x, p.y, dir);
       cellVisitedCount++;
+      desp = dir.decompose();
+      p.x += desp.second;
+      p.y += desp.first;
+      m_included_cells.get(p.x).set(p.y, true);
+      dir = getRandomDirection(p.x, p.y);
     }
   }
 
@@ -83,19 +82,20 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    * @return devuelve una posición por la cual el "cursor" puede seguir
    *         explorando
    */
-  private int [] hunt () {
+  private Point hunt () {
     Pair <Integer, Integer> desp;
-    int pos [] = {0, 0};
+    Point p = new Point();
     for (int i = 0; i < m_rows; i++) {
       for (int j = 0; j < m_columns; j++) {
         Direction dir = getRandomDirection(i, j);
-        if (m_included_cells.get(i).get(j) && dir.val != 0) {
+        if (dir != Direction.NONE) {
           cellVisitedCount++;
           desp = dir.decompose();
-          pos[0] = i + desp.second;
-          pos[1] = j + desp.first;
-          throwWall(i, j, dir);
-          return pos;
+          p.x = i + desp.second;
+          p.y = j + desp.first;
+          openPassage(i, j, dir);
+          m_included_cells.get(p.x).set(p.y, true);
+          return p;
         }
       }
     }
@@ -116,30 +116,15 @@ public class HuntAndKill extends MazeCreationAlgorithm {
       desp = toDir(k).decompose();
       int x = i + desp.second;
       int y = j + desp.first;
-      if (x >= 0 && y >= 0 && x < (m_rows) && y < (m_columns) && !m_included_cells.get(x).get(y)) {
+      if (x >= 0 && y >= 0 && x < m_rows && y < m_columns && !m_included_cells.get(x).get(y)) {
         directions.add(toDir(k));
       }
     }
     if (directions.isEmpty()) {
-      short zero = 0x0000;
-      return Direction.fromValue(zero);
+      return Direction.NONE;
     }
     int nextDir = (int) Math.round(0 + (Math.random() * (directions.size() - 1)));
     return directions.get(nextDir);
-  }
-
-  /**
-   * Elimina la pared colocada en la dirección dir a partir de la celda (i, j).
-   *
-   * @param i
-   * @param j
-   * @param dir
-   */
-  private void throwWall (final int i, final int j, final Direction dir) {
-    m_maze.get(i).get(j).unsetWall(dir);
-    Pair <Integer, Integer> desp = dir.decompose();
-    m_included_cells.get(i + desp.second).set(j + desp.first, true);
-    m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
   }
 
 }
