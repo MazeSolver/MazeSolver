@@ -10,8 +10,10 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -28,6 +30,7 @@ public class LoggingConsole extends JPanel {
   private static final long serialVersionUID = 1L;
 
   private JButton m_clear_button;
+  private JButton m_save_button;
   private JTextPane m_text;
 
   private Style m_error_style;
@@ -46,6 +49,20 @@ public class LoggingConsole extends JPanel {
       }
     });
 
+    m_save_button = new JButton("Save to file...");
+    m_save_button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          FileDialog.saveLog(m_text.getText());
+        }
+        catch (IOException e1) {
+          JOptionPane.showMessageDialog(null, e1.getMessage(), "Log save failed",
+              JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    });
+
     m_text = new JTextPane();
     m_text.setEditable(false);
     m_text.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
@@ -60,6 +77,7 @@ public class LoggingConsole extends JPanel {
 
     JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
     top.add(m_clear_button);
+    top.add(m_save_button);
 
     setLayout(new BorderLayout());
     add(top, BorderLayout.NORTH);

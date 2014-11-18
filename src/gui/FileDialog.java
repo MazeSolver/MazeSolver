@@ -6,6 +6,7 @@ package gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -37,17 +38,13 @@ public class FileDialog {
     int result = chooser.showSaveDialog(null);
 
     if (result == JFileChooser.APPROVE_OPTION) {
-      File file = chooser.getSelectedFile();
+      File f_chosen = chooser.getSelectedFile();
+      File file = new File(f_chosen.getAbsolutePath() +
+                           extension(f_chosen.getName(), "maze"));
 
       // Si va a sobreescribir un archivo preguntamos primero
-      if (file.exists()) {
-        int choice = JOptionPane.showConfirmDialog(null,
-            "The selected file already exists, do you want to overwrite it?",
-            "File already exists", JOptionPane.YES_NO_OPTION);
-        if (choice == JOptionPane.YES_OPTION)
-          maze.saveFile(file.getAbsolutePath() + extension(file.getName()));
-      }
-      maze.saveFile(file.getAbsolutePath() + extension(file.getName()));
+      if (promptOverwrite(file))
+        maze.saveFile(file.getAbsolutePath());
     }
   }
 
@@ -97,6 +94,31 @@ public class FileDialog {
   }
 
   /**
+   * Muestra un diálogo para que el usuario seleccione un fichero en el que
+   * guardar el log del programa.
+   * @param log Cadena de caracteres con el contenido del log.
+   * @throws IOException
+   */
+  public static void saveLog (String log) throws IOException {
+    JFileChooser chooser = new JFileChooser();
+    FileFilter filter = new FileNameExtensionFilter("Log files (*.log)", "log");
+    chooser.setFileFilter(filter);
+
+    int result = chooser.showSaveDialog(null);
+    if (result == JFileChooser.APPROVE_OPTION) {
+      File f_chosen = chooser.getSelectedFile();
+      File file = new File(f_chosen.getAbsolutePath() +
+                           extension(f_chosen.getName(), "log"));
+
+      if (promptOverwrite(file)) {
+        PrintWriter writer = new PrintWriter(file);
+        writer.print(log);
+        writer.close();
+      }
+    }
+  }
+
+  /**
    * @return Un diálogo para seleccionar ficheros con extensión ".maze".
    */
   private static JFileChooser createFileChooser () {
@@ -111,15 +133,32 @@ public class FileDialog {
    * Decide si el nombre del fichero especificado necesita la extensión o no y
    * la devuelve si hace falta.
    * @param name Nombre del fichero que quiere guardar el usuario.
+   * @param extension Extensión esperada del fichero.
    * @return Extensión que habría que añadir al final del nombre para que éste
    * sea correcto.
    */
-  private static String extension (String name) {
+  private static String extension (String name, String extension) {
     String[] parts = name.split("\\.");
-    if (parts.length == 1 || !parts[parts.length-1].equals("maze"))
-      return ".maze";
+    if (parts.length == 1 || !parts[parts.length-1].equals(extension))
+      return "." + extension;
     else
       return "";
+  }
+
+  /**
+   * Muestra al usuario una notificación si va a hacer una sobrescritura de
+   * ficheros y pregunta antes de llevarla a cabo.
+   * @param file Fichero donde se desea realizar el guardado.
+   * @return Si desea el usuario sobrescribir o no.
+   */
+  private static boolean promptOverwrite (File file) {
+    if (file.exists()) {
+      int choice = JOptionPane.showConfirmDialog(null,
+          "The selected file already exists, do you want to overwrite it?",
+          "File already exists", JOptionPane.YES_NO_OPTION);
+      return choice == JOptionPane.YES_OPTION;
+    }
+    return true;
   }
 
 }
