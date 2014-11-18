@@ -18,7 +18,6 @@ public class AldousBroder extends MazeCreationAlgorithm {
   private final static short MAX_NEIGHBOUR = 4;
   private short cellVisitedCount = 0;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
-  private ArrayList <ArrayList <MazeCell>> m_maze;
 
   /**
    * @param rows
@@ -26,7 +25,6 @@ public class AldousBroder extends MazeCreationAlgorithm {
    */
   public AldousBroder (int rows, int columns) {
     super(rows, columns);
-    m_maze = initializeMaze();
     m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
@@ -35,8 +33,6 @@ public class AldousBroder extends MazeCreationAlgorithm {
       for (int j = 0; j < columns; j++)
         m_included_cells.get(i).add(false);
     }
-    m_included_cells.get(0).set(0, true);
-    cellVisitedCount++;
   }
 
   /*
@@ -46,14 +42,18 @@ public class AldousBroder extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
-    int i = 0;
-    int j = 0;
-    while (cellVisitedCount < ((m_columns * m_rows) - 1)) {
+    int i = (int) Math.round(0 + (Math.random() * (m_rows - 1)));
+    int j = (int) Math.round(0 + (Math.random() * (m_columns - 1)));
+    while (cellVisitedCount < (m_columns * m_rows)) {
       Direction dir = getRandomDirection(i, j);
-      throwWall(i, j, dir);
       Pair <Integer, Integer> desp = dir.decompose();
-      i = i + desp.second;
-      j = j + desp.first;
+      if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
+        openPassage(i, j, dir);
+        m_included_cells.get(i + desp.second).set(j + desp.first, true);
+        cellVisitedCount++;
+      }
+      i += desp.second;
+      j += desp.first;
     }
     return m_maze;
   }
@@ -68,34 +68,13 @@ public class AldousBroder extends MazeCreationAlgorithm {
   private Direction getRandomDirection (final int i, final int j) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
     for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      if (i != 0 && toDir(k) == Direction.UP)
-        directions.add(Direction.UP);
-      else if (j != 0 && toDir(k) == Direction.LEFT)
-        directions.add(Direction.LEFT);
-      else if (i != m_rows - 1 && toDir(k) == Direction.DOWN)
-        directions.add(Direction.DOWN);
-      else if (j != m_columns - 1 && toDir(k) == Direction.RIGHT)
-        directions.add(Direction.RIGHT);
+      Pair <Integer, Integer> desp = toDir(k).decompose();
+      if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
+          && (j + desp.first < m_columns))
+        directions.add(toDir(k));
     }
     int nextDir = (int) Math.round(0 + (Math.random() * (directions.size() - 1)));
     return directions.get(nextDir);
-  }
-
-  /**
-   * Elimina la pared colocada en la dirección dir a partir de la celda (i, j).
-   *
-   * @param i
-   * @param j
-   * @param dir
-   */
-  private void throwWall (final int i, final int j, final Direction dir) {
-    Pair <Integer, Integer> desp = dir.decompose();
-    if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
-      m_maze.get(i).get(j).unsetWall(dir);
-      m_included_cells.get(i + desp.second).set(j + desp.first, true);
-      m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
-      cellVisitedCount++;
-    }
   }
 
 }
