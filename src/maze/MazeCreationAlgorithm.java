@@ -53,30 +53,16 @@ public abstract class MazeCreationAlgorithm {
     return maze;
   }
 
-  protected void openPassage (final int i, final int j, final Direction dir) {
-    Pair <Integer, Integer> desp = dir.decompose();
-    m_maze.get(i).get(j).unsetWall(dir);
-    m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
-  }
-
   /**
-   * Convierte un número entre 1 y 4 en una dirección.
-   *
-   * @param number
-   *          Número a convertir.
-   * @return Dirección asociada al número.
+   * Abre un pasillo entre la celda (x,y) y su adyacente en la dirección
+   * indicada.
+   * @param x Posición en el eje X (COLUMNA).
+   * @param y Posición en el eje Y (FILA).
+   * @param dir Dirección hacia la que abrir el camino.
    */
-  protected static Direction toDir (short number) {
-    switch (number) {
-      case 0:
-        return Direction.UP;
-      case 1:
-        return Direction.LEFT;
-      case 2:
-        return Direction.DOWN;
-      case 3:
-        return Direction.RIGHT;
-    }
-    return null;
+  protected void openPassage (int x, int y, final Direction dir) {
+    Pair <Integer, Integer> desp = dir.decompose();
+    m_maze.get(y).get(x).unsetWall(dir);
+    m_maze.get(y + desp.second).get(x + desp.first).unsetWall(dir.getOpposite());
   }
 }

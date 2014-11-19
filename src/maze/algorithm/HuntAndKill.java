@@ -10,14 +10,11 @@ import java.util.ArrayList;
 import maze.Direction;
 import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
-import util.Pair;
 
 /**
  *
  */
 public class HuntAndKill extends MazeCreationAlgorithm {
-  private final static short MAX_NEIGHBOUR = 4;
-  private short cellVisitedCount = 0;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
@@ -43,10 +40,10 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
-    int x = (int) Math.round(0 + (Math.random() * (m_rows - 1)));
-    int y = (int) Math.round(0 + (Math.random() * (m_columns - 1)));
+    int x = (int)(Math.random() * m_rows);
+    int y = (int)(Math.random() * m_columns);
     Point p = new Point(x, y);
-    while (cellVisitedCount < (m_columns * m_rows)) {
+    while (p != null) {
       walk(p);
       p = hunt();
     }
@@ -54,22 +51,18 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   }
 
   /**
-   * Dada una posición de inicio va explorando dicho camino hasta que no
+   * Dada una posición de inicio va explorando dicho camino mientras no
    * encuentre un nuevo camino.
    *
    * @param x
    * @param y
    */
   private void walk (Point p) {
-    Pair <Integer, Integer> desp;
     Direction dir = getRandomDirection(p.x, p.y);
     while (dir != Direction.NONE) {
       openPassage(p.x, p.y, dir);
-      cellVisitedCount++;
-      desp = dir.decompose();
-      p.x += desp.second;
-      p.y += desp.first;
-      m_included_cells.get(p.x).set(p.y, true);
+      p = dir.movePoint(p);
+      m_included_cells.get(p.y).set(p.x, true);
       dir = getRandomDirection(p.x, p.y);
     }
   }
@@ -83,18 +76,13 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    *         explorando
    */
   private Point hunt () {
-    Pair <Integer, Integer> desp;
-    Point p = new Point();
     for (int i = 0; i < m_rows; i++) {
       for (int j = 0; j < m_columns; j++) {
-        Direction dir = getRandomDirection(i, j);
+        Direction dir = getRandomDirection(j, i);
         if (dir != Direction.NONE) {
-          cellVisitedCount++;
-          desp = dir.decompose();
-          p.x = i + desp.second;
-          p.y = j + desp.first;
-          openPassage(i, j, dir);
-          m_included_cells.get(p.x).set(p.y, true);
+          openPassage(j, i, dir);
+          Point p = dir.movePoint(new Point(j, i));
+          m_included_cells.get(p.y).set(p.x, true);
           return p;
         }
       }
@@ -109,22 +97,26 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    * @return retorna una direccion aleatoria dentro de las posibles a las que ir
    *         en la casilla dada por las posiciones i y j
    */
-  private Direction getRandomDirection (final int i, final int j) {
+  private Direction getRandomDirection (final int x, final int y) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
-    Pair <Integer, Integer> desp;
-    for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      desp = toDir(k).decompose();
-      int x = i + desp.second;
-      int y = j + desp.first;
-      if (x >= 0 && y >= 0 && x < m_rows && y < m_columns && !m_included_cells.get(x).get(y)) {
-        directions.add(toDir(k));
-      }
+    Point actual = new Point(x, y);
+
+    // Comprobamos qué posiciones de alrededor son válidas y no se han visitado
+    // Suponemos que la posición proporcionada es válida para empezar
+    for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
+      Direction dir = Direction.fromIndex(i);
+      Point next = dir.movePoint(actual);
+
+      if (next.y >= 0 && next.y < m_rows &&
+          next.x >= 0 && next.x < m_columns &&
+          !m_included_cells.get(next.y).get(next.x))
+        directions.add(dir);
     }
-    if (directions.isEmpty()) {
+
+    if (directions.isEmpty())
       return Direction.NONE;
-    }
-    int nextDir = (int) Math.round(0 + (Math.random() * (directions.size() - 1)));
-    return directions.get(nextDir);
+    else
+      return directions.get((int)(Math.random() * directions.size()));
   }
 
 }

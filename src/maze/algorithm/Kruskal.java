@@ -16,8 +16,6 @@ import util.Pair;
  * laberintos.
  */
 public class Kruskal extends MazeCreationAlgorithm {
-
-  private final static short MAX_NEIGHBOUR = 4;
   private ArrayList <Integer> disjoint_set;
   private ArrayList <short []> walls;
 
@@ -57,7 +55,7 @@ public class Kruskal extends MazeCreationAlgorithm {
       // entonces, la marcamos del mismo conjunto (y a cada elemento del mismo)
       // y abrimos el pasillo por ahi.
       if (value(i, j) != value(i + desp.second, j + desp.first)) {
-        openPassage(i, j, dir);
+        openPassage(j, i, dir);
         union(value(i, j), value(i + desp.second, j + desp.first));
       }
       walls.remove(nextWall);
@@ -71,8 +69,8 @@ public class Kruskal extends MazeCreationAlgorithm {
   private void addAll () {
     for (int i = 0; i < m_rows; i++)
       for (int j = 0; j < m_columns; j++)
-        for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-          Direction dir = toDir(k);
+        for (short k = 1; k < Direction.MAX_DIRECTIONS; k++) {
+          Direction dir = Direction.fromIndex(k);
           Pair <Integer, Integer> desp = dir.decompose();
           if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
               && (j + desp.first < m_columns)) {

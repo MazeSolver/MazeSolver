@@ -11,14 +11,11 @@ import java.util.Stack;
 import maze.Direction;
 import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
-import util.Pair;
 
 /**
  *
  */
 public class RecursiveBacktracking extends MazeCreationAlgorithm {
-
-  private final static short MAX_NEIGHBOUR = 4;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
@@ -45,23 +42,20 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
     Stack<Point> stack = new Stack<Point>();
-    Pair <Integer, Integer> desp;
-    Point p = new Point(0, 0);
-    Direction dir;
-    stack.push(p);
-    m_included_cells.get(p.x).set(p.y, true);
+
+    stack.push(new Point(0, 0));
+    m_included_cells.get(0).set(0, true);
+
     while (!stack.isEmpty()) {
-      p = stack.peek();
-      dir = getDirections(p.x, p.y);
+      Point p = stack.peek();
+      Direction dir = getRandomDirection(p.x, p.y);
       if (dir == Direction.NONE) {
         stack.pop();
       }
       else {
-        desp = dir.decompose();
         openPassage(p.x, p.y, dir);
-        p.x = p.x + desp.second;
-        p.y = p.y + desp.first;
-        m_included_cells.get(p.x).set(p.y, true);
+        p = dir.movePoint(p);
+        m_included_cells.get(p.y).set(p.x, true);
         stack.push(p);
       }
     }
@@ -69,26 +63,30 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
   }
 
   /**
-   *
-   * @param i
-   * @param j
-   * @return retorna una direccion posible a la que ir en la casilla dada por
-   *         las posiciones i y j
+   * @param x Posición en el eje X desde la que se quiere partir (COLUMNA).
+   * @param y Posición en el eje Y desde la que se quiere partir (FILA).
+   * @return Dirección aleatoria hacia la que el agente se puede mover.
    */
-  private Direction getDirections (int i, int j) {
+  private Direction getRandomDirection (int x, int y) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
-    for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      Pair <Integer, Integer> desp = toDir(k).decompose();
-      if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
-          && (j + desp.first < m_columns)
-          && !m_included_cells.get(i + desp.second).get(j + desp.first)) {
-        directions.add(toDir(k));
-      }
+    Point actual = new Point(x, y);
+
+    // Comprobamos qué posiciones de alrededor son válidas y no se han visitado
+    // Suponemos que la posición proporcionada es válida para empezar
+    for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
+      Direction dir = Direction.fromIndex(i);
+      Point next = dir.movePoint(actual);
+
+      if (next.y >= 0 && next.y < m_rows &&
+          next.x >= 0 && next.x < m_columns &&
+          !m_included_cells.get(next.y).get(next.x))
+        directions.add(dir);
     }
-    if (directions.isEmpty()) {
+
+    if (directions.isEmpty())
       return Direction.NONE;
-    }
-    return directions.get((int) Math.round(0 + (Math.random() * (directions.size() - 1))));
+    else
+      return directions.get((int)(Math.random() * directions.size()));
   }
 
 }

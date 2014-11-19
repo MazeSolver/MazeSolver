@@ -4,18 +4,17 @@
  */
 package maze.algorithm;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import maze.Direction;
 import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
-import util.Pair;
 
 /**
  *
  */
 public class AldousBroder extends MazeCreationAlgorithm {
-  private final static short MAX_NEIGHBOUR = 4;
   private short cellVisitedCount = 0;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
@@ -42,18 +41,18 @@ public class AldousBroder extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
-    int i = (int) Math.round(0 + (Math.random() * (m_rows - 1)));
-    int j = (int) Math.round(0 + (Math.random() * (m_columns - 1)));
+    int x = (int)(Math.random() * m_columns);
+    int y = (int)(Math.random() * m_rows);
+    Point p = new Point(x, y);
+
     while (cellVisitedCount < (m_columns * m_rows)) {
-      Direction dir = getRandomDirection(i, j);
-      Pair <Integer, Integer> desp = dir.decompose();
-      if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
-        openPassage(i, j, dir);
-        m_included_cells.get(i + desp.second).set(j + desp.first, true);
+      Direction dir = getRandomDirection(p.x, p.y);
+      p = dir.movePoint(p);
+      if (!m_included_cells.get(p.y).get(p.x)) {
+        openPassage(p.x, p.y, dir.getOpposite());
+        m_included_cells.get(p.y).set(p.x, true);
         cellVisitedCount++;
       }
-      i += desp.second;
-      j += desp.first;
     }
     return m_maze;
   }
@@ -65,16 +64,18 @@ public class AldousBroder extends MazeCreationAlgorithm {
    * @return retorna una direccion aleatoria dentro de las posibles a las que ir
    *         en la casilla dada por las posiciones i y j
    */
-  private Direction getRandomDirection (final int i, final int j) {
-    ArrayList <Direction> directions = new ArrayList <Direction>();
-    for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      Pair <Integer, Integer> desp = toDir(k).decompose();
-      if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
-          && (j + desp.first < m_columns))
-        directions.add(toDir(k));
-    }
-    int nextDir = (int) Math.round(0 + (Math.random() * (directions.size() - 1)));
-    return directions.get(nextDir);
+  private Direction getRandomDirection (int x, int y) {
+    Point p = new Point(x, y);
+    Point next_pos;
+    Direction dir;
+
+    do {
+      dir = Direction.random();
+      next_pos = dir.movePoint(p);
+    } while (next_pos.y < 0 || next_pos.y >= m_rows ||
+             next_pos.x < 0 || next_pos.x >= m_columns);
+
+    return dir;
   }
 
 }

@@ -16,8 +16,6 @@ import util.Pair;
  * laberintos.
  */
 public class Prim extends MazeCreationAlgorithm {
-
-  private final static short MAX_NEIGHBOUR = 4;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
   private ArrayList <short []> walls;
 
@@ -68,7 +66,7 @@ public class Prim extends MazeCreationAlgorithm {
       // eliminamos dicha posicion con dicha direccion para que no vuelva
       // a salir de forma aleatoria
       if (!m_included_cells.get(i + desp.second).get(j + desp.first)) {
-        openPassage(i, j, dir);
+        openPassage(j, i, dir);
         m_included_cells.get(i + desp.second).set(j + desp.first, true);
         addCell(i + desp.second, j + desp.first);
       }
@@ -84,8 +82,8 @@ public class Prim extends MazeCreationAlgorithm {
    * @param j
    */
   private void addCell (final int i, final int j) {
-    for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      Direction dir = toDir(k);
+    for (short k = 1; k < Direction.MAX_DIRECTIONS; k++) {
+      Direction dir = Direction.fromIndex(k);
       Pair <Integer, Integer> desp = dir.decompose();
       if ((i + desp.second >= 0) && (j + desp.first >= 0) && (i + desp.second < m_rows)
           && (j + desp.first < m_columns)
