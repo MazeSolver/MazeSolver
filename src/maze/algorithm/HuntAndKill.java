@@ -4,21 +4,18 @@
  */
 package maze.algorithm;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import maze.Direction;
 import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
-import util.Pair;
 
 /**
  *
  */
 public class HuntAndKill extends MazeCreationAlgorithm {
-  private final static short MAX_NEIGHBOUR = 4;
-  private short cellVisitedCount = 0;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
-  private ArrayList <ArrayList <MazeCell>> m_maze;
 
   /**
    * @param rows
@@ -26,7 +23,6 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    */
   public HuntAndKill (int rows, int columns) {
     super(rows, columns);
-    m_maze = initializeMaze();
     m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
@@ -44,34 +40,30 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
-    int x = (int) Math.round(0 + (Math.random() * (m_rows - 1)));
-    int y = (int) Math.round(0 + (Math.random() * (m_columns - 1)));
-    int [] pos = {x, y};
-    while (cellVisitedCount < ((m_columns * m_rows) - 1)) {
-      walk(pos[0], pos[1]);
-      pos = hunt();
+    int x = (int)(Math.random() * m_rows);
+    int y = (int)(Math.random() * m_columns);
+    Point p = new Point(x, y);
+    while (p != null) {
+      walk(p);
+      p = hunt();
     }
-    hunt();
     return m_maze;
   }
 
   /**
-   * Dada una posición de inicio va explorando dicho camino hasta que no
+   * Dada una posición de inicio va explorando dicho camino mientras no
    * encuentre un nuevo camino.
    *
    * @param x
    * @param y
    */
-  private void walk (int x, int y) {
-    Pair <Integer, Integer> desp;
-    Direction dir = getRandomDirection(x, y);
-    while (dir.val != 0) {
-      throwWall(x, y, dir);
-      desp = dir.decompose();
-      x = x + desp.second;
-      y = y + desp.first;
-      dir = getRandomDirection(x, y);
-      cellVisitedCount++;
+  private void walk (Point p) {
+    Direction dir = getRandomDirection(p.x, p.y);
+    while (dir != Direction.NONE) {
+      openPassage(p.x, p.y, dir);
+      p = dir.movePoint(p);
+      m_included_cells.get(p.y).set(p.x, true);
+      dir = getRandomDirection(p.x, p.y);
     }
   }
 
@@ -83,19 +75,15 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    * @return devuelve una posición por la cual el "cursor" puede seguir
    *         explorando
    */
-  private int [] hunt () {
-    Pair <Integer, Integer> desp;
-    int pos [] = {0, 0};
+  private Point hunt () {
     for (int i = 0; i < m_rows; i++) {
       for (int j = 0; j < m_columns; j++) {
-        Direction dir = getRandomDirection(i, j);
-        if (m_included_cells.get(i).get(j) && dir.val != 0) {
-          cellVisitedCount++;
-          desp = dir.decompose();
-          pos[0] = i + desp.second;
-          pos[1] = j + desp.first;
-          throwWall(i, j, dir);
-          return pos;
+        Direction dir = getRandomDirection(j, i);
+        if (dir != Direction.NONE) {
+          openPassage(j, i, dir);
+          Point p = dir.movePoint(new Point(j, i));
+          m_included_cells.get(p.y).set(p.x, true);
+          return p;
         }
       }
     }
@@ -109,58 +97,26 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    * @return retorna una direccion aleatoria dentro de las posibles a las que ir
    *         en la casilla dada por las posiciones i y j
    */
-  private Direction getRandomDirection (final int i, final int j) {
+  private Direction getRandomDirection (final int x, final int y) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
-    Pair <Integer, Integer> desp;
-    for (short k = 0; k < MAX_NEIGHBOUR; k++) {
-      desp = toDir(k).decompose();
-      int x = i + desp.second;
-      int y = j + desp.first;
-      if (x >= 0 && y >= 0 && x < (m_rows) && y < (m_columns) && !m_included_cells.get(x).get(y)) {
-        directions.add(toDir(k));
-      }
-    }
-    if (directions.isEmpty()) {
-      short zero = 0x0000;
-      return Direction.fromValue(zero);
-    }
-    int nextDir = (int) Math.round(0 + (Math.random() * (directions.size() - 1)));
-    return directions.get(nextDir);
-  }
+    Point actual = new Point(x, y);
 
-  /**
-   * Convierte un número entre 1 y 4 en una dirección.
-   *
-   * @param number
-   *          Número a convertir.
-   * @return Dirección asociada al número.
-   */
-  private static Direction toDir (short number) {
-    switch (number) {
-      case 0:
-        return Direction.UP;
-      case 1:
-        return Direction.LEFT;
-      case 2:
-        return Direction.DOWN;
-      case 3:
-        return Direction.RIGHT;
-    }
-    return null;
-  }
+    // Comprobamos qué posiciones de alrededor son válidas y no se han visitado
+    // Suponemos que la posición proporcionada es válida para empezar
+    for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
+      Direction dir = Direction.fromIndex(i);
+      Point next = dir.movePoint(actual);
 
-  /**
-   * Elimina la pared colocada en la dirección dir a partir de la celda (i, j).
-   *
-   * @param i
-   * @param j
-   * @param dir
-   */
-  private void throwWall (final int i, final int j, final Direction dir) {
-    m_maze.get(i).get(j).unsetWall(dir);
-    Pair <Integer, Integer> desp = dir.decompose();
-    m_included_cells.get(i + desp.second).set(j + desp.first, true);
-    m_maze.get(i + desp.second).get(j + desp.first).unsetWall(dir.getOpposite());
+      if (next.y >= 0 && next.y < m_rows &&
+          next.x >= 0 && next.x < m_columns &&
+          !m_included_cells.get(next.y).get(next.x))
+        directions.add(dir);
+    }
+
+    if (directions.isEmpty())
+      return Direction.NONE;
+    else
+      return directions.get((int)(Math.random() * directions.size()));
   }
 
 }

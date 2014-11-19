@@ -20,6 +20,8 @@ public enum Direction {
   LEFT  ((short) 0x04),
   RIGHT ((short) 0x08);
 
+  public static int MAX_DIRECTIONS = 5;
+
   public short val;
   private static Direction[] values = Direction.values();
 
@@ -38,6 +40,30 @@ public enum Direction {
         return i;
 
     return null;
+  }
+
+  /**
+   * Devuelve la dirección asociada a un índice.
+   * @param index Índice de la dirección. El orden es el siguiente:
+   *              <ol start="0">
+   *                <li>NONE</li>
+   *                <li>UP</li>
+   *                <li>DOWN</li>
+   *                <li>LEFT</li>
+   *                <li>RIGHT</li>
+   *              </ol>
+   * @return Dirección asociada al índice.
+   */
+  public static Direction fromIndex (int index) {
+    return values[index];
+  }
+
+  /**
+   * Crea una dirección de forma aleatoria.
+   * @return Una dirección aleatoria. No va a ser Direction.NONE.
+   */
+  public static Direction random () {
+    return values[1 + (int)(Math.random() * 4.0)];
   }
 
   /**
