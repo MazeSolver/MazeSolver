@@ -6,10 +6,21 @@ package agent;
 
 import gui.environment.Environment;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import maze.Direction;
 import maze.MazeCell.Vision;
@@ -50,6 +61,7 @@ public class PATableAgent extends Agent {
     }
   }
 
+  private static int N_FIELDS = 5; // {U|D|L|R} + {ACTION}
   private static int N_ENTRIES = 16; // 2 {EMPTY|WALL} ^ 4 {U|D|L|R}
   private Map <TableKey, Direction> m_table;
 
@@ -114,8 +126,35 @@ public class PATableAgent extends Agent {
    */
   @Override
   public JPanel getConfigurationPanel () {
-    // TODO Auto-generated method stub
-    return null;
+    JPanel panel = new JPanel(new BorderLayout());
+
+    TableModel model = new PerceptionActionTableModel(this);
+    JTable table = new JTable(model);
+    JComboBox <String> editor = new JComboBox <String>(new String[]{
+        "MOVE " + Direction.UP.toString(),
+        "MOVE " + Direction.DOWN.toString(),
+        "MOVE " + Direction.LEFT.toString(),
+        "MOVE " + Direction.RIGHT.toString(),
+        "MOVE " + Direction.NONE.toString()
+    });
+
+    Enumeration<TableColumn> c = table.getColumnModel().getColumns();
+    while (c.hasMoreElements()) {
+      c.nextElement().setCellEditor(new DefaultCellEditor(editor));
+    }
+
+    JPanel controls = new JPanel(new FlowLayout());
+
+    JButton accept = new JButton("OK");
+    JButton cancel = new JButton("Cancel");
+
+    controls.add(accept);
+    controls.add(cancel);
+
+    panel.add(table, BorderLayout.CENTER);
+    panel.add(controls, BorderLayout.SOUTH);
+
+    return panel;
   }
 
   /* (non-Javadoc)
@@ -128,5 +167,94 @@ public class PATableAgent extends Agent {
       entry.setValue(m_table.get(entry.getKey()));
 
     return ag;
+  }
+
+  /**
+   * Modelo para almacenar los datos de una tabla de percepción-acción.
+   */
+  private static class PerceptionActionTableModel extends AbstractTableModel {
+    private static final long serialVersionUID = 1L;
+    private static final String[] COLUMN_NAMES = {"UP", "DOWN", "LEFT", "RIGHT", "ACTION"};
+
+    private Vector<Vector <String>> m_data;
+
+    /**
+     * Construye el modelo de la tabla y lo rellena con los datos del agente.
+     * @param ag Agente a partir del cual cargar los datos inicialmente.
+     */
+    public PerceptionActionTableModel (PATableAgent ag) {
+      m_data = new Vector <Vector<String>>(N_ENTRIES);
+
+      for (Map.Entry <TableKey, Direction> e: ag.m_table.entrySet()) {
+        Vector<String> row = new Vector<String>(N_FIELDS);
+        TableKey key = e.getKey();
+        row.add(key.up.toString());
+        row.add(key.down.toString());
+        row.add(key.left.toString());
+        row.add(key.right.toString());
+        row.add("MOVE " + e.getValue().toString());
+
+        m_data.add(row);
+      }
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableModel#getRowCount()
+     */
+    @Override
+    public int getRowCount () {
+      return N_ENTRIES;
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableModel#getColumnCount()
+     */
+    @Override
+    public int getColumnCount () {
+      return N_FIELDS;
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.table.AbstractTableModel#getColumnName(int)
+     */
+    @Override
+    public String getColumnName (int column) {
+      return COLUMN_NAMES[column];
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+     */
+    @Override
+    public Class <?> getColumnClass (int columnIndex) {
+      return String.class;
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+     */
+    @Override
+    public boolean isCellEditable (int row, int column) {
+      return column == N_FIELDS-1;
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableModel#getValueAt(int, int)
+     */
+    @Override
+    public Object getValueAt (int row, int column) {
+      return m_data.get(row).get(column);
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+     */
+    @Override
+    public void setValueAt (Object value, int row, int column) {
+      if (column == N_FIELDS-1) {
+        m_data.get(row).set(column, (String) value);
+      }
+    }
+
   }
 }
