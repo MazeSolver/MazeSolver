@@ -119,11 +119,8 @@ public class SARulesAgent extends Agent {
     m_visited[m_pos.y][m_pos.x] = true;
 
     // Si nos podemos mover en la dirección que se nos indica, lo hacemos
-    if (m_env.movementAllowed(m_pos, dir)) {
-      Pair<Integer, Integer> mov = dir.decompose();
-      m_pos.x += mov.first;
-      m_pos.y += mov.second;
-    }
+    if (m_env.movementAllowed(m_pos, dir))
+      m_pos = dir.movePoint(m_pos);
   }
 
   /* (non-Javadoc)
