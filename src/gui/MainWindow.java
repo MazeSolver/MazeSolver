@@ -39,6 +39,8 @@ import util.SimulationManager;
 import util.SimulationResults;
 import agent.Agent;
 
+import com.alee.laf.WebLookAndFeel;
+
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
  * patrón 'singleton'.
@@ -61,7 +63,8 @@ public class MainWindow extends JFrame implements Observer {
    */
   public static void main (String [] args) {
     try {
-      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      UIManager.setLookAndFeel(WebLookAndFeel.class.getCanonicalName());
     }
     catch (Exception e){}
 
