@@ -20,6 +20,7 @@ public class SituationActionRule implements Cloneable {
    *
    * @param ctx
    *          Contexto de una regla dentro del árbol de parseo de una entrada.
+   * @return Regla creada a partir del árbol.
    */
   public static SituationActionRule createFromTree (Sa_ruleContext ctx) {
     return new SituationActionRule(RulePredicate.createFromTree(ctx.situation()),

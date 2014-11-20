@@ -76,7 +76,7 @@ public class SARulesAgent extends Agent {
   private boolean[][] m_visited;
 
   /**
-   * @param maze Laberinto donde se sitúa el agente.
+   * @param env Entorno donde se sitúa el agente.
    */
   public SARulesAgent (Environment env) {
     super(env);

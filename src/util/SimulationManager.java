@@ -34,6 +34,7 @@ public class SimulationManager extends Observable implements Runnable {
 
   /**
    * Constructor por defecto del simulador.
+   * @param env_set Conjunto de entornos que va a manejar.
    */
   public SimulationManager (EnvironmentSet env_set) {
     m_interval = DEFAULT_INTERVAL;

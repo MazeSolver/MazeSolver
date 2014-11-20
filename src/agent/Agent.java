@@ -57,7 +57,7 @@ public abstract class Agent implements Cloneable {
    * Este método debería sobrecargarse en las clases derivadas que contengan
    * información acerca del camino a seguir por el agente (un plan) de forma que
    * éste siga siendo coherente tras el cambio de laberinto.
-   * @param maze Laberinto donde colocar el agente.
+   * @param env Entorno donde colocar el agente.
    */
   public void setEnvironment (Environment env) {
     if (env != null)

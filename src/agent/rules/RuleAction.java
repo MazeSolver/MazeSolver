@@ -17,8 +17,9 @@ public class RuleAction implements Cloneable {
   /**
    * Crea una acción a partir de un nodo de acción del árbol de parseo.
    *
-   * @param action
+   * @param action_ctx
    *          Nodo del árbol de parseo donde se encuentra la acción a realizar.
+   * @return Acción especificada en el subárbol indicado.
    */
   public static RuleAction createFromTree (ActionContext action_ctx) {
     DirectionContext dir_ctx = action_ctx.direction();

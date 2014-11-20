@@ -97,7 +97,7 @@ public class FileDialog {
    * Muestra un diálogo para que el usuario seleccione un fichero en el que
    * guardar el log del programa.
    * @param log Cadena de caracteres con el contenido del log.
-   * @throws IOException
+   * @throws IOException Si hay un problema al leer el fichero seleccionado.
    */
   public static void saveLog (String log) throws IOException {
     JFileChooser chooser = new JFileChooser();

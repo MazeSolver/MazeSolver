@@ -68,7 +68,6 @@ public enum Direction {
 
   /**
    * Descompone la dirección en sus componentes x e y, con una magnitud de 1.
-   * @param dir Dirección que se quiere traducir.
    * @return Pareja con la descomposición de la dirección (x, y).
    */
   public Pair<Integer, Integer> decompose () {

@@ -34,7 +34,7 @@ public abstract class RulePredicate implements Cloneable {
    * @param ctx
    *          Nodo del árbol de parseo con un predicado o situación que se
    *          quiere procesar.
-   * @return
+   * @return Predicado creado a partir del árbol.
    */
   public static RulePredicate createFromTree (SituationContext ctx) {
     // Lo que hay... (v_v)
