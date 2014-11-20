@@ -4,6 +4,8 @@
  */
 package gui;
 
+import gui.environment.Environment;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -21,6 +23,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import agent.Agent;
+import agent.PATableAgent;
 import agent.SARulesAgent;
 
 /**
@@ -90,15 +93,16 @@ public class AgentSelectorDialog extends JDialog {
     ok.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
+        Environment env = MainWindow.getInstance().getEnvironments().getSelectedEnvironment();
         String ag_name = (String) m_agents.getSelectedItem();
         int amount = (Integer) m_amount.getValue();
         m_result = new Agent[amount];
 
         if (ag_name.equals("Perception-Action Tables")) {
-
+          m_result[0] = new PATableAgent(env);
         }
         else if (ag_name.equals("Situation-Action Rules")) {
-          m_result[0] = new SARulesAgent(MainWindow.getInstance().getEnvironments().getSelectedEnvironment());
+          m_result[0] = new SARulesAgent(env);
         }
         else if (ag_name.equals("Logical (Prolog)")) {
 
