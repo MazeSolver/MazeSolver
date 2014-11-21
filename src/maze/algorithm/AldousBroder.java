@@ -12,15 +12,16 @@ import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
 
 /**
- *
+ * Implementación del algoritmo Aldous-Broder para la generación aleatoria de
+ * laberintos perfectos.
  */
 public class AldousBroder extends MazeCreationAlgorithm {
   private short cellVisitedCount = 0;
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
-   * @param rows
-   * @param columns
+   * @param rows Número de filas del laberinto.
+   * @param columns Número de columnas del laberinto.
    */
   public AldousBroder (int rows, int columns) {
     super(rows, columns);
@@ -41,8 +42,8 @@ public class AldousBroder extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
-    int x = (int)(Math.random() * m_columns);
-    int y = (int)(Math.random() * m_rows);
+    int x = (int) (Math.random() * m_columns);
+    int y = (int) (Math.random() * m_rows);
     Point p = new Point(x, y);
 
     while (cellVisitedCount < (m_columns * m_rows)) {
@@ -58,11 +59,9 @@ public class AldousBroder extends MazeCreationAlgorithm {
   }
 
   /**
-   *
-   * @param i
-   * @param j
-   * @return retorna una direccion aleatoria dentro de las posibles a las que ir
-   *         en la casilla dada por las posiciones i y j
+   * @param x Posición en el eje X desde la que se quiere partir.
+   * @param y Posición en el eje Y desde la que se quiere partir.
+   * @return Dirección aleatoria hacia la que el agente se puede mover.
    */
   private Direction getRandomDirection (int x, int y) {
     Point p = new Point(x, y);
@@ -72,8 +71,8 @@ public class AldousBroder extends MazeCreationAlgorithm {
     do {
       dir = Direction.random();
       next_pos = dir.movePoint(p);
-    } while (next_pos.y < 0 || next_pos.y >= m_rows ||
-             next_pos.x < 0 || next_pos.x >= m_columns);
+    }
+    while (next_pos.y < 0 || next_pos.y >= m_rows || next_pos.x < 0 || next_pos.x >= m_columns);
 
     return dir;
   }

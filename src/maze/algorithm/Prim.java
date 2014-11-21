@@ -13,17 +13,15 @@ import util.Pair;
 
 /**
  * Implementación del algoritmo de Prim para la generación aleatoria de
- * laberintos.
+ * laberintos perfectos.
  */
 public class Prim extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
   private ArrayList <short []> walls;
 
   /**
-   * @param rows
-   *          Filas en el laberinto resultado.
-   * @param columns
-   *          Columnas en el laberinto resultado.
+   * @param rows Número de filas del laberinto.
+   * @param columns Número de columnas del laberinto.
    */
   public Prim (int rows, int columns) {
     super(rows, columns);
@@ -76,10 +74,8 @@ public class Prim extends MazeCreationAlgorithm {
   }
 
   /**
-   * Añade a la lista de muros, los muros disponibles de la celda i,j
-   *
-   * @param i
-   * @param j
+   * @param x Posición en el eje X desde la que se quiere partir.
+   * @param y Posición en el eje Y desde la que se quiere partir.
    */
   private void addCell (final int i, final int j) {
     for (short k = 1; k < Direction.MAX_DIRECTIONS; k++) {

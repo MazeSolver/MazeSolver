@@ -12,14 +12,15 @@ import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
 
 /**
- *
+ * Implementación del algoritmo de Hunt And Kill para la generación aleatoria de
+ * laberintos perfectos.
  */
 public class HuntAndKill extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
-   * @param rows
-   * @param columns
+   * @param rows Número de filas del laberinto.
+   * @param columns Número de columnas del laberinto.
    */
   public HuntAndKill (int rows, int columns) {
     super(rows, columns);
@@ -40,8 +41,8 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
-    int x = (int)(Math.random() * m_rows);
-    int y = (int)(Math.random() * m_columns);
+    int x = (int) (Math.random() * m_rows);
+    int y = (int) (Math.random() * m_columns);
     Point p = new Point(x, y);
     while (p != null) {
       walk(p);
@@ -54,8 +55,8 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    * Dada una posición de inicio va explorando dicho camino mientras no
    * encuentre un nuevo camino.
    *
-   * @param x
-   * @param y
+   * @param p punto con las coordenadas x e y de las cuales se quiere empezar a
+   *          buscar un nuevo camino nuevo
    */
   private void walk (Point p) {
     Direction dir = getRandomDirection(p.x, p.y);
@@ -91,9 +92,8 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   }
 
   /**
-   *
-   * @param i
-   * @param j
+   * @param x Posición en el eje X desde la que se quiere partir.
+   * @param y Posición en el eje Y desde la que se quiere partir.
    * @return retorna una direccion aleatoria dentro de las posibles a las que ir
    *         en la casilla dada por las posiciones i y j
    */
@@ -107,16 +107,15 @@ public class HuntAndKill extends MazeCreationAlgorithm {
       Direction dir = Direction.fromIndex(i);
       Point next = dir.movePoint(actual);
 
-      if (next.y >= 0 && next.y < m_rows &&
-          next.x >= 0 && next.x < m_columns &&
-          !m_included_cells.get(next.y).get(next.x))
+      if (next.y >= 0 && next.y < m_rows && next.x >= 0 && next.x < m_columns
+          && !m_included_cells.get(next.y).get(next.x))
         directions.add(dir);
     }
 
     if (directions.isEmpty())
       return Direction.NONE;
     else
-      return directions.get((int)(Math.random() * directions.size()));
+      return directions.get((int) (Math.random() * directions.size()));
   }
 
 }

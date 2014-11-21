@@ -13,14 +13,15 @@ import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
 
 /**
- *
+ * Implementación de algoritmo recursivo con backtracking para la generación
+ * aleatoria de laberintos perfectos. (implementado de forma iterativa)
  */
 public class RecursiveBacktracking extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
-   * @param rows
-   * @param columns
+   * @param rows Número de filas del laberinto.
+   * @param columns Número de columnas del laberinto.
    */
   public RecursiveBacktracking (int rows, int columns) {
     super(rows, columns);
@@ -41,7 +42,7 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
    */
   @Override
   public ArrayList <ArrayList <MazeCell>> createMaze () {
-    Stack<Point> stack = new Stack<Point>();
+    Stack <Point> stack = new Stack <Point>();
 
     stack.push(new Point(0, 0));
     m_included_cells.get(0).set(0, true);
@@ -63,8 +64,8 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
   }
 
   /**
-   * @param x Posición en el eje X desde la que se quiere partir (COLUMNA).
-   * @param y Posición en el eje Y desde la que se quiere partir (FILA).
+   * @param x Posición en el eje X desde la que se quiere partir.
+   * @param y Posición en el eje Y desde la que se quiere partir.
    * @return Dirección aleatoria hacia la que el agente se puede mover.
    */
   private Direction getRandomDirection (int x, int y) {
@@ -77,16 +78,15 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
       Direction dir = Direction.fromIndex(i);
       Point next = dir.movePoint(actual);
 
-      if (next.y >= 0 && next.y < m_rows &&
-          next.x >= 0 && next.x < m_columns &&
-          !m_included_cells.get(next.y).get(next.x))
+      if (next.y >= 0 && next.y < m_rows && next.x >= 0 && next.x < m_columns
+          && !m_included_cells.get(next.y).get(next.x))
         directions.add(dir);
     }
 
     if (directions.isEmpty())
       return Direction.NONE;
     else
-      return directions.get((int)(Math.random() * directions.size()));
+      return directions.get((int) (Math.random() * directions.size()));
   }
 
 }

@@ -20,8 +20,8 @@ public class Kruskal extends MazeCreationAlgorithm {
   private ArrayList <short []> walls;
 
   /**
-   * @param rows
-   * @param columns
+   * @param rows Número de filas del laberinto.
+   * @param columns Número de columnas del laberinto.
    */
   public Kruskal (int rows, int columns) {
     super(rows, columns);
@@ -81,11 +81,9 @@ public class Kruskal extends MazeCreationAlgorithm {
   }
 
   /**
-   *
-   * @param i
-   * @param j
-   * @return la posicion del vector dado por los parametros i y j que
-   *         seleccionan la fila y columna
+   * @param x Posición en el eje X.
+   * @param y Posición en el eje Y.
+   * @return la posicion del vector dado por el punto x,y
    */
   private int pos (final int i, final int j) {
     return (i * m_columns) + j;
@@ -93,14 +91,18 @@ public class Kruskal extends MazeCreationAlgorithm {
 
   /**
    *
-   * @param value_from
-   * @param value_to
+   * @param value_from valor representativo del conjunto que se va a ser unido
+   *                   al otro conjunto
+   * @param value_to   valor representativo del conjunto al que se va a unir el
+   *                   otro conjunto
    *
-   *          Une dos conjuntos-disjuntos, de la forma siguiente, todo conjunto
-   *          que tenga como valor representativo value_from, lo mueve al
-   *          conjunto de valor value_to
    */
   private void union (final int value_from, final int value_to) {
+    /*
+     * Une dos conjuntos-disjuntos, de la forma siguiente, todo conjunto que
+     * tenga como valor representativo value_from, lo mueve al conjunto de valor
+     * value_to
+     */
     for (int k = 0; k < disjoint_set.size(); k++)
       if (disjoint_set.get(k) == value_from)
         disjoint_set.set(k, value_to);
@@ -108,8 +110,8 @@ public class Kruskal extends MazeCreationAlgorithm {
 
   /**
    *
-   * @param i
-   * @param j
+   * @param x Posición en el eje X.
+   * @param y Posición en el eje Y.
    * @return valor, del conjunto del elemento i,j. Esta función es simple y
    *         llanamente para hacer el código mas corto y mas fácil de leer.
    */
