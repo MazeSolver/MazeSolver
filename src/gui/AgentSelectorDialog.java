@@ -12,6 +12,8 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -34,6 +36,16 @@ public class AgentSelectorDialog extends JDialog {
   private static final long serialVersionUID = 1L;
 
   private static final int MAX_AGENTS_AMOUNT = 10;
+  private static final TreeMap <String, Class<? extends Agent>> ALGORITHMS = new TreeMap<>();
+  static {
+    ALGORITHMS.put("Perception-Action Tables", PATableAgent.class);
+    ALGORITHMS.put("Situation-Action Rules", SARulesAgent.class);
+    ALGORITHMS.put("Logical (Prolog)", null);
+    ALGORITHMS.put("A*", null);
+    ALGORITHMS.put("RTA*", null);
+    ALGORITHMS.put("Hill Climbing", null);
+    ALGORITHMS.put("Simulated Annealing", null);
+  }
 
   private JComboBox<String> m_agents;
   private JSpinner m_amount;
@@ -43,11 +55,7 @@ public class AgentSelectorDialog extends JDialog {
   public AgentSelectorDialog (Window parent) {
     super(parent,"Create a new agent");
 
-    String[] agents = {"Perception-Action Tables", "Situation-Action Rules",
-                       "Logical (Prolog)", "A*", "RTA*", "Hill Climbing",
-                       "Simulated Annealing"};
-    m_agents = new JComboBox<String>(agents);
-
+    m_agents = new JComboBox<String>(ALGORITHMS.keySet().toArray(new String[ALGORITHMS.size()]));
     m_amount = new JSpinner(new SpinnerNumberModel(1, 1, MAX_AGENTS_AMOUNT, 1));
 
     buildInterface();
@@ -98,26 +106,13 @@ public class AgentSelectorDialog extends JDialog {
         int amount = (Integer) m_amount.getValue();
         m_result = new Agent[amount];
 
-        if (ag_name.equals("Perception-Action Tables")) {
-          m_result[0] = new PATableAgent(env);
+        try {
+          m_result[0] = ALGORITHMS.get(ag_name).getConstructor(env.getClass()).newInstance(env);
         }
-        else if (ag_name.equals("Situation-Action Rules")) {
-          m_result[0] = new SARulesAgent(env);
-        }
-        else if (ag_name.equals("Logical (Prolog)")) {
-
-        }
-        else if (ag_name.equals("A*")) {
-
-        }
-        else if (ag_name.equals("RTA*")) {
-
-        }
-        else if (ag_name.equals("Hill Climbing")) {
-
-        }
-        else if (ag_name.equals("Simulated Annealing")) {
-
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+            | InvocationTargetException | NoSuchMethodException | SecurityException e2) {
+          e2.printStackTrace();
+          return;
         }
 
         // Clonamos el agente en todas las posiciones (todos serán iguales)
