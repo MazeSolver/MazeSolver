@@ -4,11 +4,10 @@
  */
 package agent;
 
+import gui.AgentConfigurationPanel;
 import gui.environment.Environment;
 
 import java.awt.Point;
-
-import javax.swing.JPanel;
 
 import maze.Direction;
 import maze.MazeCell;
@@ -124,7 +123,7 @@ public abstract class Agent implements Cloneable {
   /**
    * @return Un panel de configuración para el agente.
    */
-  public abstract JPanel getConfigurationPanel ();
+  public abstract AgentConfigurationPanel getConfigurationPanel ();
 
   /* (non-Javadoc)
    * @see java.lang.Object#clone()
