@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -218,24 +217,33 @@ public class MainWindow extends JFrame implements Observer {
   private void createToolbar () {
     m_toolbar = new JToolBar();
     m_toolbar.setFloatable(false);
+    m_toolbar.setLayout(new BorderLayout());
 
     m_run = new JButton("Run");
     m_step = new JButton("Step");
     m_pause = new JButton("Pause");
     m_stop = new JButton("Stop");
+
+    JPanel west = new JPanel();
+    west.setOpaque(false);
+    west.add(m_run);
+    west.add(m_step);
+    west.add(m_pause);
+    west.add(m_stop);
+
     m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
     m_zoom.setValue(MINIMUM_ZOOM_VAL);
+
+    JPanel east = new JPanel();
+    east.setOpaque(false);
+    east.add(new JLabel("Zoom:"));
+    east.add(m_zoom);
 
     m_pause.setEnabled(false);
     m_stop.setEnabled(false);
 
-    m_toolbar.add(m_run);
-    m_toolbar.add(m_step);
-    m_toolbar.add(m_pause);
-    m_toolbar.add(m_stop);
-    m_toolbar.add(Box.createGlue());
-    m_toolbar.add(new JLabel("Zoom:"));
-    m_toolbar.add(m_zoom);
+    m_toolbar.add(west, BorderLayout.WEST);
+    m_toolbar.add(east, BorderLayout.EAST);
 
     setupToolbarListeners();
   }
