@@ -133,9 +133,7 @@ public class PATableAgent extends Agent {
   @Override
   public Object clone () throws CloneNotSupportedException {
     PATableAgent ag = new PATableAgent(m_env);
-    ag.m_table = m_table.clone(); // FIXME Esto es incorrecto, no se está
-                                  // haciendo una copia profunda del array
-
+    ag.m_table = deepDataCopy(m_table);
     return ag;
   }
 
@@ -158,6 +156,32 @@ public class PATableAgent extends Agent {
   }
 
   /**
+   * Traduce un valor de índice en la visión asociada.
+   * @param index Índice a traducir.
+   * @return Visión asociada al índice.
+   */
+  private static Vision indexToVision (int index) {
+    return index == 0? Vision.EMPTY : Vision.WALL;
+  }
+
+  /**
+   * Hace una copia profunda de la configuración de un agente.
+   * @param data Array tetra-dimensional con las direcciones asociadas a cada
+   *        percepción del agente.
+   * @return Copia profunda del array de datos de entrada.
+   */
+  private static Direction[][][][] deepDataCopy (Direction[][][][] data) {
+    Direction [][][][] result = new Direction[2][2][2][2];
+    for (int i = 0; i < 2; i++)
+      for (int j = 0; j < 2; j++)
+        for (int k = 0; k < 2; k++)
+          for (int l = 0; l < 2; l++)
+            result[i][j][k][l] = data[i][j][k][l];
+
+    return result;
+  }
+
+  /**
    * Modelo para almacenar los datos de una tabla de percepción-acción.
    */
   private static class PerceptionActionTableModel extends AbstractTableModel {
@@ -171,7 +195,7 @@ public class PATableAgent extends Agent {
      * @param ag Agente a partir del cual cargar los datos inicialmente.
      */
     public PerceptionActionTableModel (PATableAgent ag) {
-      m_data = ag.m_table.clone(); // FIXME Copia no profunda
+      m_data = deepDataCopy(ag.m_table);
     }
 
     /* (non-Javadoc)
@@ -222,7 +246,7 @@ public class PATableAgent extends Agent {
       int[] dec = decodeRow(row);
 
       if (column != N_FIELDS-1)
-        return dec[column] == 0? Vision.EMPTY : Vision.WALL;
+        return indexToVision(dec[column]);
       else
         return m_data[dec[0]][dec[1]][dec[2]][dec[3]];
     }
