@@ -4,10 +4,13 @@
  */
 package agent;
 
+import gui.MainWindow;
 import gui.environment.Environment;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
 import javax.swing.DefaultCellEditor;
@@ -100,7 +103,7 @@ public class PATableAgent extends Agent {
   public JPanel getConfigurationPanel () {
     JPanel panel = new JPanel(new BorderLayout());
 
-    PerceptionActionTableModel model = new PerceptionActionTableModel(this);
+    final PerceptionActionTableModel model = new PerceptionActionTableModel(this);
     JTable table = new JTable(model);
     JComboBox <Direction> editor = new JComboBox<Direction>(new Direction[]{
         Direction.UP, Direction.DOWN, Direction.LEFT,
@@ -123,6 +126,24 @@ public class PATableAgent extends Agent {
     panel.add(table.getTableHeader(), BorderLayout.NORTH);
     panel.add(table, BorderLayout.CENTER);
     panel.add(controls, BorderLayout.SOUTH);
+
+    accept.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        m_table = model.getData();
+
+        MainWindow wnd = MainWindow.getInstance();
+        wnd.getConsole().writeInfo("Perception-action table saved");
+        wnd.closeConfigurationPanel();
+      }
+    });
+
+    cancel.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        MainWindow.getInstance().closeConfigurationPanel();
+      }
+    });
 
     return panel;
   }
@@ -196,6 +217,16 @@ public class PATableAgent extends Agent {
      */
     public PerceptionActionTableModel (PATableAgent ag) {
       m_data = deepDataCopy(ag.m_table);
+    }
+
+    /**
+     * Accede a los datos almacenados en la tabla, listos para su uso por el
+     * agente.
+     * @return Array tetra-dimensional con las acciones asociadas a cada
+     *         percepción
+     */
+    public Direction[][][][] getData () {
+      return m_data;
     }
 
     /* (non-Javadoc)
