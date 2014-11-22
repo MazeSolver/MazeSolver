@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import agent.Agent;
-
 /**
  * Se trata de un panel de configuración de agentes, que permite al usuario
  * configurar un agente dependiendo del tipo que sea.
@@ -21,18 +19,33 @@ import agent.Agent;
 public abstract class AgentConfigurationPanel extends JPanel {
   private static final long serialVersionUID = 1L;
 
-  protected Agent m_agent;
+  protected ArrayList<String> m_errors;
+  protected ArrayList<String> m_success;
 
   /**
-   * Construye el panel de configuración de agentes y lo enlaza permanentemente
-   * a un agente, que es el que se va a configurar.
-   * @param agent Agente que se quiere configurar.
+   * Construye la interfaz del panel de configuración de agentes.
    */
-  public AgentConfigurationPanel (Agent agent) {
-    if (agent == null)
-      throw new IllegalArgumentException("El agente especificado es inválido");
+  public AgentConfigurationPanel () {
+    m_errors = new ArrayList<String>();
+    m_success = new ArrayList<String>();
 
-    m_agent = agent;
+    createGUI();
+  }
+
+  /**
+   * Tras un intento fallido de aceptar la configuración, se puede consultar en
+   * esta función cuál o cuáles fueron los errores que impidieron el guardado
+   * de la nueva configuración en el agente.
+   * @return Una lista con las cadenas que describen al usuario los distintos
+   *         errores que han sucedido. Estará vacía si no se llama tras una
+   *         salida con error de la función {@link accept()}.
+   */
+  public ArrayList<String> getErrorMessages () {
+    return m_errors;
+  }
+
+  public ArrayList<String> getSuccessMessages () {
+    return m_success;
   }
 
   /**
@@ -52,12 +65,7 @@ public abstract class AgentConfigurationPanel extends JPanel {
   public abstract void cancel ();
 
   /**
-   * Tras un intento fallido de aceptar la configuración, se puede consultar en
-   * esta función cuál o cuáles fueron los errores que impidieron el guardado
-   * de la nueva configuración en el agente.
-   * @return Una lista con las cadenas que describen al usuario los distintos
-   *         errores que han sucedido. Estará vacía si no se llama tras una
-   *         salida con error de la función {@link accept()}.
+   * Crea la interfaz gráfica de usuario, que es la que se mostrará al mismo.
    */
-  public abstract ArrayList<String> getErrors ();
+  protected abstract void createGUI ();
 }

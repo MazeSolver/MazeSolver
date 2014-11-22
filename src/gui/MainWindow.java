@@ -9,6 +9,7 @@ import gui.environment.EnvironmentSet;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -95,7 +96,7 @@ public class MainWindow extends JFrame implements Observer {
 
   // Panel de configuración. Por defecto está oculto, pero cuando el usuario
   // vaya a configurar un agente la interfaz adecuada aparecerá en su lugar.
-  private AgentConfigurationPanel m_config_panel;
+  private JPanel m_config_panel;
 
   // Otros elementos en la interfaz
   private JButton m_run, m_step, m_pause, m_stop;
@@ -465,19 +466,6 @@ public class MainWindow extends JFrame implements Observer {
   }
 
   /**
-   * Cierra el panel de configuración.
-   */
-  public void closeConfigurationPanel () {
-    ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(false);
-    if (m_config_panel != null) {
-      m_split_panel.remove(m_config_panel);
-      m_config_panel = null;
-      revalidate();
-      repaint();
-    }
-  }
-
-  /**
    * Devuelve una referencia a la consola.
    * @return Referencia a la consola de la ventana.
    */
@@ -497,15 +485,62 @@ public class MainWindow extends JFrame implements Observer {
    * Abre el panel de configuración.
    * @param panel Panel de configuración que se quiere abrir.
    */
-  public void setConfigurationPanel (AgentConfigurationPanel panel) {
+  public void setConfigurationPanel (final AgentConfigurationPanel ag_panel) {
     if (m_config_panel != null)
       closeConfigurationPanel();
 
-    if (panel != null) {
+    if (ag_panel != null) {
       ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(true);
 
-      m_config_panel = panel;
+      m_config_panel = new JPanel(new BorderLayout());
+
+      JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER));
+      JButton accept = new JButton("OK");
+      JButton cancel = new JButton("Cancel");
+
+      accept.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed (ActionEvent e) {
+          if (ag_panel.accept()) {
+            for (String s: ag_panel.getSuccessMessages())
+              m_console.writeInfo(s);
+            closeConfigurationPanel();
+          }
+          else {
+            for (String s: ag_panel.getErrorMessages())
+              m_console.writeError(s);
+          }
+        }
+      });
+
+      cancel.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed (ActionEvent e) {
+          ag_panel.cancel();
+          closeConfigurationPanel();
+        }
+      });
+
+      controls.add(accept);
+      controls.add(cancel);
+
+      m_config_panel.add(ag_panel, BorderLayout.CENTER);
+      m_config_panel.add(controls, BorderLayout.SOUTH);
+
       m_split_panel.add(m_config_panel);
+      revalidate();
+      repaint();
+    }
+  }
+
+  /**
+   * Cierra el panel de configuración.
+   */
+  public void closeConfigurationPanel () {
+    ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(false);
+    if (m_config_panel != null) {
+      m_split_panel.remove(m_config_panel);
+      m_config_panel = null;
       revalidate();
       repaint();
     }

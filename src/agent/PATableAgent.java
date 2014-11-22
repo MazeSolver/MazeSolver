@@ -5,19 +5,13 @@
 package agent;
 
 import gui.AgentConfigurationPanel;
-import gui.MainWindow;
 import gui.environment.Environment;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Enumeration;
 
 import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -93,51 +87,42 @@ public class PATableAgent extends Agent {
    */
   @Override
   public AgentConfigurationPanel getConfigurationPanel () {
-    JPanel panel = new JPanel(new BorderLayout());
+    return new AgentConfigurationPanel() {
+      private static final long serialVersionUID = 1L;
 
-    final PerceptionActionTableModel model = new PerceptionActionTableModel(this);
-    JTable table = new JTable(model);
-    JComboBox <Direction> editor = new JComboBox<Direction>(new Direction[]{
-        Direction.UP, Direction.DOWN, Direction.LEFT,
-        Direction.RIGHT, Direction.NONE
-    });
+      private PerceptionActionTableModel m_model;
 
-    Enumeration<TableColumn> c = table.getColumnModel().getColumns();
-    while (c.hasMoreElements())
-      c.nextElement().setCellEditor(new DefaultCellEditor(editor));
-
-    table.setMinimumSize(table.getPreferredSize());
-
-    JPanel controls = new JPanel(new FlowLayout());
-    JButton accept = new JButton("OK");
-    JButton cancel = new JButton("Cancel");
-
-    controls.add(accept);
-    controls.add(cancel);
-
-    panel.add(table.getTableHeader(), BorderLayout.NORTH);
-    panel.add(table, BorderLayout.CENTER);
-    panel.add(controls, BorderLayout.SOUTH);
-
-    accept.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed (ActionEvent e) {
-        m_table = model.getData();
+      protected void createGUI () {
+        setLayout(new BorderLayout());
 
-        MainWindow wnd = MainWindow.getInstance();
-        wnd.getConsole().writeInfo("Perception-action table saved");
-        wnd.closeConfigurationPanel();
+        m_model = new PerceptionActionTableModel(PATableAgent.this);
+        JTable table = new JTable(m_model);
+        JComboBox <Direction> editor = new JComboBox<Direction>(new Direction[]{
+            Direction.UP, Direction.DOWN, Direction.LEFT,
+            Direction.RIGHT, Direction.NONE
+        });
+
+        Enumeration<TableColumn> c = table.getColumnModel().getColumns();
+        while (c.hasMoreElements())
+          c.nextElement().setCellEditor(new DefaultCellEditor(editor));
+
+        table.setMinimumSize(table.getPreferredSize());
+
+        add(table.getTableHeader(), BorderLayout.NORTH);
+        add(table, BorderLayout.CENTER);
       }
-    });
 
-    cancel.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed (ActionEvent e) {
-        MainWindow.getInstance().closeConfigurationPanel();
-      }
-    });
+      public void cancel () {}
 
-    return panel;
+      @Override
+      public boolean accept () {
+        m_table = m_model.getData();
+        m_success.add("Perception-action table saved");
+        return true;
+      }
+    };
   }
 
   /* (non-Javadoc)
