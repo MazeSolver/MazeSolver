@@ -9,9 +9,6 @@ import gui.environment.Environment;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -20,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 
 import maze.Direction;
 import maze.MazeCell.Vision;
@@ -29,65 +25,40 @@ import maze.MazeCell.Vision;
  * Clase que representa a un agente basado en una tabla de percepción-acción.
  */
 public class PATableAgent extends Agent {
-
-  private class TableKey {
-    public Vision up, down, left, right;
-    public TableKey (Vision up, Vision down, Vision left, Vision right) {
-      this.up = up;
-      this.down = down;
-      this.left = left;
-      this.right = right;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode () {
-      return up.hashCode() + down.hashCode() +
-             left.hashCode() + right.hashCode();
-    }
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals (Object obj) {
-      if (obj instanceof TableKey) {
-        TableKey k = (TableKey) obj;
-        return up.equals(k.up) && down.equals(k.down) &&
-               left.equals(k.left) && right.equals(k.right);
-      }
-      return false;
-    }
-  }
-
   private static int N_FIELDS = 5; // {U|D|L|R} + {ACTION}
   private static int N_ENTRIES = 16; // 2 {EMPTY|WALL} ^ 4 {U|D|L|R}
-  private Map <TableKey, Direction> m_table;
+
+  private Direction [][][][] m_table;
 
   /**
    * Crea el agente a partir de un entorno, con la configuración por defecto.
+   * @param env Entorno en el que crear el agente.
    */
   public PATableAgent (Environment env) {
     super(env);
 
-    m_table = new HashMap <PATableAgent.TableKey, Direction>(N_ENTRIES);
-    m_table.put(new TableKey(Vision.EMPTY, Vision.EMPTY, Vision.EMPTY, Vision.EMPTY), Direction.DOWN);
-    m_table.put(new TableKey(Vision.EMPTY, Vision.EMPTY, Vision.EMPTY, Vision.WALL), Direction.LEFT);
-    m_table.put(new TableKey(Vision.EMPTY, Vision.EMPTY, Vision.WALL, Vision.EMPTY), Direction.RIGHT);
-    m_table.put(new TableKey(Vision.EMPTY, Vision.EMPTY, Vision.WALL, Vision.WALL), Direction.DOWN);
-    m_table.put(new TableKey(Vision.EMPTY, Vision.WALL, Vision.EMPTY, Vision.EMPTY), Direction.UP);
-    m_table.put(new TableKey(Vision.EMPTY, Vision.WALL, Vision.EMPTY, Vision.WALL), Direction.LEFT);
-    m_table.put(new TableKey(Vision.EMPTY, Vision.WALL, Vision.WALL, Vision.EMPTY), Direction.RIGHT);
-    m_table.put(new TableKey(Vision.EMPTY, Vision.WALL, Vision.WALL, Vision.WALL), Direction.UP);
-    m_table.put(new TableKey(Vision.WALL, Vision.EMPTY, Vision.EMPTY, Vision.EMPTY), Direction.DOWN);
-    m_table.put(new TableKey(Vision.WALL, Vision.EMPTY, Vision.EMPTY, Vision.WALL), Direction.LEFT);
-    m_table.put(new TableKey(Vision.WALL, Vision.EMPTY, Vision.WALL, Vision.EMPTY), Direction.RIGHT);
-    m_table.put(new TableKey(Vision.WALL, Vision.EMPTY, Vision.WALL, Vision.WALL), Direction.DOWN);
-    m_table.put(new TableKey(Vision.WALL, Vision.WALL, Vision.EMPTY, Vision.EMPTY), Direction.RIGHT);
-    m_table.put(new TableKey(Vision.WALL, Vision.WALL, Vision.EMPTY, Vision.WALL), Direction.LEFT);
-    m_table.put(new TableKey(Vision.WALL, Vision.WALL, Vision.WALL, Vision.EMPTY), Direction.RIGHT);
-    m_table.put(new TableKey(Vision.WALL, Vision.WALL, Vision.WALL, Vision.WALL), Direction.NONE);
+    m_table = new Direction[][][][]{
+      {
+        {
+          {Direction.DOWN, Direction.LEFT}, // 0,0,0,0 - 0,0,0,1
+          {Direction.RIGHT, Direction.DOWN} // 0,0,1,0 - 0,0,1,1
+        },
+        {
+          {Direction.UP, Direction.LEFT},   // 0,1,0,0 - 0,1,0,1
+          {Direction.RIGHT, Direction.UP}   // 0,1,1,0 - 0,1,1,1
+        }
+      },
+      {
+        {
+          {Direction.DOWN, Direction.LEFT}, // 1,0,0,0 - 1,0,0,1
+          {Direction.RIGHT, Direction.DOWN} // 1,0,1,0 - 1,0,1,1
+        },
+        {
+          {Direction.RIGHT, Direction.LEFT},  // 1,1,0,0 - 1,1,0,1
+          {Direction.RIGHT, Direction.NONE}   // 1,1,1,0 - 1,1,1,1
+        }
+      }
+    };
   }
 
   /* (non-Javadoc)
@@ -101,7 +72,8 @@ public class PATableAgent extends Agent {
     Vision left = m_env.movementAllowed(m_pos, Direction.LEFT)? Vision.EMPTY : Vision.WALL;
     Vision right = m_env.movementAllowed(m_pos, Direction.RIGHT)? Vision.EMPTY : Vision.WALL;
 
-    return m_table.getOrDefault(new TableKey(up, down, left, right), Direction.NONE);
+    return m_table[visionToIndex(up)][visionToIndex(down)]
+                  [visionToIndex(left)][visionToIndex(right)];
   }
 
   /* (non-Javadoc)
@@ -128,29 +100,27 @@ public class PATableAgent extends Agent {
   public JPanel getConfigurationPanel () {
     JPanel panel = new JPanel(new BorderLayout());
 
-    TableModel model = new PerceptionActionTableModel(this);
+    PerceptionActionTableModel model = new PerceptionActionTableModel(this);
     JTable table = new JTable(model);
-    JComboBox <String> editor = new JComboBox <String>(new String[]{
-        "MOVE " + Direction.UP.toString(),
-        "MOVE " + Direction.DOWN.toString(),
-        "MOVE " + Direction.LEFT.toString(),
-        "MOVE " + Direction.RIGHT.toString(),
-        "MOVE " + Direction.NONE.toString()
+    JComboBox <Direction> editor = new JComboBox<Direction>(new Direction[]{
+        Direction.UP, Direction.DOWN, Direction.LEFT,
+        Direction.RIGHT, Direction.NONE
     });
 
     Enumeration<TableColumn> c = table.getColumnModel().getColumns();
-    while (c.hasMoreElements()) {
+    while (c.hasMoreElements())
       c.nextElement().setCellEditor(new DefaultCellEditor(editor));
-    }
+
+    table.setMinimumSize(table.getPreferredSize());
 
     JPanel controls = new JPanel(new FlowLayout());
-
     JButton accept = new JButton("OK");
     JButton cancel = new JButton("Cancel");
 
     controls.add(accept);
     controls.add(cancel);
 
+    panel.add(table.getTableHeader(), BorderLayout.NORTH);
     panel.add(table, BorderLayout.CENTER);
     panel.add(controls, BorderLayout.SOUTH);
 
@@ -163,10 +133,28 @@ public class PATableAgent extends Agent {
   @Override
   public Object clone () throws CloneNotSupportedException {
     PATableAgent ag = new PATableAgent(m_env);
-    for (Map.Entry <TableKey, Direction> entry: ag.m_table.entrySet())
-      entry.setValue(m_table.get(entry.getKey()));
+    ag.m_table = m_table.clone(); // FIXME Esto es incorrecto, no se está
+                                  // haciendo una copia profunda del array
 
     return ag;
+  }
+
+  /**
+   * Traduce una visión a índice entre 0 y 1.
+   * @param vision Visión a traducir.
+   * @return Índice asociado a la visión.
+   */
+  private static int visionToIndex (Vision vision) {
+    switch (vision) {
+      case EMPTY:
+      case OFFLIMITS:
+        return 0;
+      case WALL:
+      case AGENT:
+        return 1;
+      default:
+        return -1;
+    }
   }
 
   /**
@@ -176,26 +164,14 @@ public class PATableAgent extends Agent {
     private static final long serialVersionUID = 1L;
     private static final String[] COLUMN_NAMES = {"UP", "DOWN", "LEFT", "RIGHT", "ACTION"};
 
-    private Vector<Vector <String>> m_data;
+    private Direction [][][][] m_data;
 
     /**
      * Construye el modelo de la tabla y lo rellena con los datos del agente.
      * @param ag Agente a partir del cual cargar los datos inicialmente.
      */
     public PerceptionActionTableModel (PATableAgent ag) {
-      m_data = new Vector <Vector<String>>(N_ENTRIES);
-
-      for (Map.Entry <TableKey, Direction> e: ag.m_table.entrySet()) {
-        Vector<String> row = new Vector<String>(N_FIELDS);
-        TableKey key = e.getKey();
-        row.add(key.up.toString());
-        row.add(key.down.toString());
-        row.add(key.left.toString());
-        row.add(key.right.toString());
-        row.add("MOVE " + e.getValue().toString());
-
-        m_data.add(row);
-      }
+      m_data = ag.m_table.clone(); // FIXME Copia no profunda
     }
 
     /* (non-Javadoc)
@@ -226,8 +202,8 @@ public class PATableAgent extends Agent {
      * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
      */
     @Override
-    public Class <?> getColumnClass (int columnIndex) {
-      return String.class;
+    public Class <?> getColumnClass (int column) {
+      return column != N_FIELDS - 1? Vision.class : Direction.class;
     }
 
     /* (non-Javadoc)
@@ -243,7 +219,12 @@ public class PATableAgent extends Agent {
      */
     @Override
     public Object getValueAt (int row, int column) {
-      return m_data.get(row).get(column);
+      int[] dec = decodeRow(row);
+
+      if (column != N_FIELDS-1)
+        return dec[column] == 0? Vision.EMPTY : Vision.WALL;
+      else
+        return m_data[dec[0]][dec[1]][dec[2]][dec[3]];
     }
 
     /* (non-Javadoc)
@@ -252,9 +233,24 @@ public class PATableAgent extends Agent {
     @Override
     public void setValueAt (Object value, int row, int column) {
       if (column == N_FIELDS-1) {
-        m_data.get(row).set(column, (String) value);
+        int[] dec = decodeRow(row);
+        m_data[dec[0]][dec[1]][dec[2]][dec[3]] = (Direction) value;
       }
     }
 
+    /**
+     * Calcula a partir de la fila la asignación de visiones (U,D,L,R)
+     * que le corresponde.
+     * @param row Fila que decodificar.
+     * @return Array con la asignación para cada dirección. Un valor de 1
+     *         significa que en esa dirección se ve un obstáculo. Un 0 significa
+     *         que en esa dirección se ve una celda vacía.
+     */
+    private static int[] decodeRow (int row) {
+      int[] assignation = new int[4];
+      for (int column = 0; column < N_FIELDS-1; column++)
+        assignation[column] = (row / (int) Math.pow(2, N_FIELDS-2 - column)) % 2;
+      return assignation;
+    }
   }
 }
