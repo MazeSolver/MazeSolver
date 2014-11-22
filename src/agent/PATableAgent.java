@@ -4,6 +4,7 @@
  */
 package agent;
 
+import gui.AgentConfigurationPanel;
 import gui.MainWindow;
 import gui.environment.Environment;
 
@@ -91,7 +92,7 @@ public class PATableAgent extends Agent {
    * @see agent.Agent#getConfigurationPanel()
    */
   @Override
-  public JPanel getConfigurationPanel () {
+  public AgentConfigurationPanel getConfigurationPanel () {
     JPanel panel = new JPanel(new BorderLayout());
 
     final PerceptionActionTableModel model = new PerceptionActionTableModel(this);

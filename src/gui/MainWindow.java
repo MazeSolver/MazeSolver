@@ -95,7 +95,7 @@ public class MainWindow extends JFrame implements Observer {
 
   // Panel de configuración. Por defecto está oculto, pero cuando el usuario
   // vaya a configurar un agente la interfaz adecuada aparecerá en su lugar.
-  private JPanel m_config_panel;
+  private AgentConfigurationPanel m_config_panel;
 
   // Otros elementos en la interfaz
   private JButton m_run, m_step, m_pause, m_stop;
@@ -497,7 +497,7 @@ public class MainWindow extends JFrame implements Observer {
    * Abre el panel de configuración.
    * @param panel Panel de configuración que se quiere abrir.
    */
-  public void setConfigurationPanel (JPanel panel) {
+  public void setConfigurationPanel (AgentConfigurationPanel panel) {
     if (m_config_panel != null)
       closeConfigurationPanel();
 

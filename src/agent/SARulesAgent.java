@@ -4,6 +4,7 @@
  */
 package agent;
 
+import gui.AgentConfigurationPanel;
 import gui.MainWindow;
 import gui.environment.Environment;
 
@@ -133,7 +134,7 @@ public class SARulesAgent extends Agent {
    * @see agent.Agent#getConfigurationPanel()
    */
   @Override
-  public JPanel getConfigurationPanel () {
+  public AgentConfigurationPanel getConfigurationPanel () {
     JPanel config_panel = new JPanel(new BorderLayout());
     JLabel title = new JLabel("Write your rules here:");
 
