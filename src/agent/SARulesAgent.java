@@ -117,10 +117,7 @@ public class SARulesAgent extends Agent {
   public void doMovement (Direction dir) {
     // Marcamos la celda actual como visitada
     m_visited[m_pos.y][m_pos.x] = true;
-
-    // Si nos podemos mover en la dirección que se nos indica, lo hacemos
-    if (m_env.movementAllowed(m_pos, dir))
-      m_pos = dir.movePoint(m_pos);
+    super.doMovement(dir);
   }
 
   /* (non-Javadoc)

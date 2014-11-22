@@ -80,15 +80,6 @@ public class PATableAgent extends Agent {
   }
 
   /* (non-Javadoc)
-   * @see agent.Agent#doMovement(maze.Direction)
-   */
-  @Override
-  public void doMovement (Direction dir) {
-    if (m_env.movementAllowed(m_pos, dir))
-      m_pos = dir.movePoint(m_pos);
-  }
-
-  /* (non-Javadoc)
    * @see agent.Agent#resetMemory()
    */
   @Override
