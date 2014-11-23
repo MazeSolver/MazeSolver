@@ -4,11 +4,10 @@
  */
 package agent;
 
+import gui.AgentConfigurationPanel;
 import gui.environment.Environment;
 
 import java.awt.Point;
-
-import javax.swing.JPanel;
 
 import maze.Direction;
 import maze.MazeCell;
@@ -98,15 +97,22 @@ public abstract class Agent implements Cloneable {
   }
 
   /**
+   * Hace que el agente realice el movimiento especificado, sin comprobar que se
+   * trata de un movimiento válido.
+   *
+   * La clase base sólo cambia la posición del agente, si se desea más
+   * funcionalidad, se debe sobrecargar en las clases derivadas.
+   * @param dir Dirección hacia la que mover el agente.
+   */
+  public void doMovement (Direction dir) {
+    m_pos = dir.movePoint(m_pos);
+  }
+
+  /**
    * @return La dirección en la que el agente quiere realizar el siguiente
    *         movimiento.
    */
   public abstract Direction getNextMovement ();
-
-  /**
-   * @param dir Dirección hacia la que mover el agente.
-   */
-  public abstract void doMovement (Direction dir);
 
   /**
    * Elimina la memoria que el agente tenga sobre el entorno. No elimina su
@@ -117,7 +123,7 @@ public abstract class Agent implements Cloneable {
   /**
    * @return Un panel de configuración para el agente.
    */
-  public abstract JPanel getConfigurationPanel ();
+  public abstract AgentConfigurationPanel getConfigurationPanel ();
 
   /* (non-Javadoc)
    * @see java.lang.Object#clone()

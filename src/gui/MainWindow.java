@@ -95,7 +95,7 @@ public class MainWindow extends JFrame implements Observer {
 
   // Panel de configuración. Por defecto está oculto, pero cuando el usuario
   // vaya a configurar un agente la interfaz adecuada aparecerá en su lugar.
-  private JPanel m_config_panel;
+  private AgentConfigurationPanel m_config_panel;
 
   // Otros elementos en la interfaz
   private JButton m_run, m_step, m_pause, m_stop;
@@ -465,22 +465,6 @@ public class MainWindow extends JFrame implements Observer {
   }
 
   /**
-   * Cierra el panel de configuración.
-   */
-  public void closeConfigurationPanel () {
-    ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(false);
-    m_itm_maze_close.setEnabled(true);
-    m_itm_agent_remove.setEnabled(true);
-
-    if (m_config_panel != null) {
-      m_split_panel.remove(m_config_panel);
-      m_config_panel = null;
-      revalidate();
-      repaint();
-    }
-  }
-
-  /**
    * Devuelve una referencia a la consola.
    * @return Referencia a la consola de la ventana.
    */
@@ -500,20 +484,54 @@ public class MainWindow extends JFrame implements Observer {
    * Abre el panel de configuración.
    * @param panel Panel de configuración que se quiere abrir.
    */
-  public void setConfigurationPanel (JPanel panel) {
+  public void setConfigurationPanel (final AgentConfigurationPanel ag_panel) {
     if (m_config_panel != null)
       closeConfigurationPanel();
 
-    if (panel != null) {
+    if (ag_panel != null) {
       ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(true);
 
-      m_config_panel = panel;
+      m_config_panel = ag_panel;
+
+      ag_panel.addEventListener(new AgentConfigurationPanel.EventListener() {
+        @Override
+        public void onSuccess (ArrayList <String> msgs) {
+          for (String msg: msgs)
+            m_console.writeInfo(msg);
+          closeConfigurationPanel();
+        }
+
+        @Override
+        public void onError (ArrayList <String> errors) {
+          for (String error: errors)
+            m_console.writeError(error);
+        }
+
+        @Override
+        public void onCancel () {
+          closeConfigurationPanel();
+        }
+      });
+
       m_split_panel.add(m_config_panel);
       revalidate();
       repaint();
 
       m_itm_maze_close.setEnabled(false);
       m_itm_agent_remove.setEnabled(false);
+    }
+  }
+
+  /**
+   * Cierra el panel de configuración.
+   */
+  public void closeConfigurationPanel () {
+    ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(false);
+    if (m_config_panel != null) {
+      m_split_panel.remove(m_config_panel);
+      m_config_panel = null;
+      revalidate();
+      repaint();
     }
   }
 

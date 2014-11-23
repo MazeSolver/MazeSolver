@@ -305,7 +305,10 @@ public class Environment extends BaseInternalFrame {
     boolean ended = true;
 
     for (Agent i: m_agents) {
-      i.doMovement(i.getNextMovement());
+      Direction dir = i.getNextMovement();
+      if (movementAllowed(new Point(i.getX(),  i.getY()), dir))
+        i.doMovement(dir);
+
       if (i.getX() >= 0 && i.getY() >= 0 && i.getX() < m_maze.getWidth() &&
           i.getY() < m_maze.getHeight())
         ended = false;

@@ -4,15 +4,12 @@
  */
 package agent;
 
-import gui.MainWindow;
+import gui.AgentConfigurationPanel;
 import gui.environment.Environment;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
@@ -22,14 +19,11 @@ import java.util.ArrayList;
 
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
 import javax.swing.text.DefaultEditorKit;
 
 import maze.Direction;
@@ -117,13 +111,7 @@ public class SARulesAgent extends Agent {
   public void doMovement (Direction dir) {
     // Marcamos la celda actual como visitada
     m_visited[m_pos.y][m_pos.x] = true;
-
-    // Si nos podemos mover en la dirección que se nos indica, lo hacemos
-    if (m_env.movementAllowed(m_pos, dir)) {
-      Pair<Integer, Integer> mov = dir.decompose();
-      m_pos.x += mov.first;
-      m_pos.y += mov.second;
-    }
+    super.doMovement(dir);
   }
 
   /* (non-Javadoc)
@@ -139,82 +127,75 @@ public class SARulesAgent extends Agent {
    * @see agent.Agent#getConfigurationPanel()
    */
   @Override
-  public JPanel getConfigurationPanel () {
-    JPanel config_panel = new JPanel(new BorderLayout());
-    JLabel title = new JLabel("Write your rules here:");
+  public AgentConfigurationPanel getConfigurationPanel () {
+    return new AgentConfigurationPanel() {
+      private static final long serialVersionUID = 1L;
 
-    final JTextArea text = new JTextArea(m_code);
-    JScrollPane scroll = new JScrollPane(text);
+      private JTextArea m_text;
 
-    // Añadimos un popup para cortar, copiar, pegar y seleccionar todo
-    final JPopupMenu popup = new JPopupMenu();
-    ActionMap actions = text.getActionMap();
-    popup.add(actions.get(DefaultEditorKit.cutAction));
-    popup.add(actions.get(DefaultEditorKit.copyAction));
-    popup.add(actions.get(DefaultEditorKit.pasteAction));
-    popup.addSeparator();
-    popup.add(actions.get(DefaultEditorKit.selectAllAction));
-
-    text.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
-        maybeShowPopup(e);
-      }
-
-      public void mouseReleased(MouseEvent e) {
-        maybeShowPopup(e);
-      }
-
-      private void maybeShowPopup(MouseEvent e) {
-        if (e.isPopupTrigger()) {
-          popup.show(e.getComponent(), e.getX(), e.getY());
-        }
-      }
-    });
-
-    JPanel buttons = new JPanel(new FlowLayout());
-    JButton accept = new JButton("OK");
-    JButton cancel = new JButton("Cancel");
-
-    buttons.add(accept);
-    buttons.add(cancel);
-    config_panel.add(title, BorderLayout.NORTH);
-    config_panel.add(scroll, BorderLayout.CENTER);
-    config_panel.add(buttons, BorderLayout.SOUTH);
-
-    accept.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed (ActionEvent e) {
+      protected void createGUI (JPanel root) {
+        root.setLayout(new BorderLayout());
+        JLabel title = new JLabel("Write your rules here:");
+
+        m_text = new JTextArea(m_code);
+        JScrollPane scroll = new JScrollPane(m_text);
+
+        // Añadimos un popup para cortar, copiar, pegar y seleccionar todo
+        final JPopupMenu popup = new JPopupMenu();
+        ActionMap actions = m_text.getActionMap();
+        popup.add(actions.get(DefaultEditorKit.cutAction));
+        popup.add(actions.get(DefaultEditorKit.copyAction));
+        popup.add(actions.get(DefaultEditorKit.pasteAction));
+        popup.addSeparator();
+        popup.add(actions.get(DefaultEditorKit.selectAllAction));
+
+        m_text.addMouseListener(new MouseAdapter() {
+          public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+          }
+
+          public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+          }
+
+          private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+              popup.show(e.getComponent(), e.getX(), e.getY());
+            }
+          }
+        });
+
+        root.add(title, BorderLayout.NORTH);
+        root.add(scroll, BorderLayout.CENTER);
+
+        root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        root.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
+      }
+
+      @Override
+      public void cancel () {}
+
+      @Override
+      public boolean accept () {
+        // Cargamos el código nuevo en el agente y guardamos una copia del
+        // anterior
         String prev_code = m_code;
-        m_code = text.getText();
+        m_code = m_text.getText();
 
+        // Intentamos compilar el código, y si no es válido restauramos el
+        // anterior y guardamos los errores.
         if (!compileCode()) {
-          String error_msg = "";
-          for (String error: m_error_handler.getErrors())
-            error_msg += error + "\n";
-
-          MainWindow.getInstance().getConsole().writeError(error_msg);
           m_code = prev_code;
+          m_errors = m_error_handler.getErrors();
+          return false;
         }
         else {
-          MainWindow wnd = MainWindow.getInstance();
-          wnd.getConsole().writeInfo("Code compiled successfully.");
-          wnd.closeConfigurationPanel();
+          m_success.add("Code compiled successfully.");
+          return true;
         }
       }
-    });
-
-    cancel.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        MainWindow.getInstance().closeConfigurationPanel();
-      }
-    });
-
-    Border margins = BorderFactory.createEmptyBorder(2, 2, 2, 2);
-    Border etched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-    config_panel.setBorder(BorderFactory.createCompoundBorder(etched, margins));
-    config_panel.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
-    return config_panel;
+    };
   }
 
   /**
