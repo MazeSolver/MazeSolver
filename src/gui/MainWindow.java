@@ -27,7 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
-import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -39,6 +38,7 @@ import util.SimulationResults;
 import agent.Agent;
 
 import com.alee.laf.WebLookAndFeel;
+import com.alee.laf.toolbar.WebToolBar;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -93,7 +93,7 @@ public class MainWindow extends JFrame implements Observer {
   private JMenuBar m_menu_bar;
 
   // Barra de acciones
-  private JToolBar m_toolbar;
+  private WebToolBar m_toolbar;
 
   // Panel de configuración. Por defecto está oculto, pero cuando el usuario
   // vaya a configurar un agente la interfaz adecuada aparecerá en su lugar.
@@ -215,35 +215,25 @@ public class MainWindow extends JFrame implements Observer {
    * Crea la barra de acciones.
    */
   private void createToolbar () {
-    m_toolbar = new JToolBar();
+    m_toolbar = new WebToolBar();
     m_toolbar.setFloatable(false);
-    m_toolbar.setLayout(new BorderLayout());
 
     m_run = new JButton("Run");
     m_step = new JButton("Step");
     m_pause = new JButton("Pause");
     m_stop = new JButton("Stop");
-
-    JPanel west = new JPanel();
-    west.setOpaque(false);
-    west.add(m_run);
-    west.add(m_step);
-    west.add(m_pause);
-    west.add(m_stop);
-
     m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
-    m_zoom.setValue(MINIMUM_ZOOM_VAL);
-
-    JPanel east = new JPanel();
-    east.setOpaque(false);
-    east.add(new JLabel("Zoom:"));
-    east.add(m_zoom);
 
     m_pause.setEnabled(false);
     m_stop.setEnabled(false);
+    m_zoom.setValue(MINIMUM_ZOOM_VAL);
 
-    m_toolbar.add(west, BorderLayout.WEST);
-    m_toolbar.add(east, BorderLayout.EAST);
+    m_toolbar.add(m_run);
+    m_toolbar.add(m_step);
+    m_toolbar.add(m_pause);
+    m_toolbar.add(m_stop);
+    m_toolbar.addToEnd(new JLabel("Zoom:"));
+    m_toolbar.addToEnd(m_zoom);
 
     setupToolbarListeners();
   }
