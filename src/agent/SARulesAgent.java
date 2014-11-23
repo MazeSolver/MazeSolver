@@ -18,7 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -132,8 +134,8 @@ public class SARulesAgent extends Agent {
       private JTextArea m_text;
 
       @Override
-      protected void createGUI () {
-        setLayout(new BorderLayout());
+      protected void createGUI (JPanel root) {
+        root.setLayout(new BorderLayout());
         JLabel title = new JLabel("Write your rules here:");
 
         m_text = new JTextArea(m_code);
@@ -164,10 +166,11 @@ public class SARulesAgent extends Agent {
           }
         });
 
-        add(title, BorderLayout.NORTH);
-        add(scroll, BorderLayout.CENTER);
+        root.add(title, BorderLayout.NORTH);
+        root.add(scroll, BorderLayout.CENTER);
 
-        setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
+        root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        root.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
       }
 
       @Override

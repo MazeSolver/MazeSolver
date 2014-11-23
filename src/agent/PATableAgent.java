@@ -12,6 +12,7 @@ import java.util.Enumeration;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -93,8 +94,8 @@ public class PATableAgent extends Agent {
       private PerceptionActionTableModel m_model;
 
       @Override
-      protected void createGUI () {
-        setLayout(new BorderLayout());
+      protected void createGUI (JPanel root) {
+        root.setLayout(new BorderLayout());
 
         m_model = new PerceptionActionTableModel(PATableAgent.this);
         JTable table = new JTable(m_model);
@@ -109,8 +110,8 @@ public class PATableAgent extends Agent {
 
         table.setMinimumSize(table.getPreferredSize());
 
-        add(table.getTableHeader(), BorderLayout.NORTH);
-        add(table, BorderLayout.CENTER);
+        root.add(table.getTableHeader(), BorderLayout.NORTH);
+        root.add(table, BorderLayout.CENTER);
       }
 
       @Override

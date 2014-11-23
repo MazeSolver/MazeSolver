@@ -9,7 +9,6 @@ import gui.environment.EnvironmentSet;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -96,7 +95,7 @@ public class MainWindow extends JFrame implements Observer {
 
   // Panel de configuración. Por defecto está oculto, pero cuando el usuario
   // vaya a configurar un agente la interfaz adecuada aparecerá en su lugar.
-  private JPanel m_config_panel;
+  private AgentConfigurationPanel m_config_panel;
 
   // Otros elementos en la interfaz
   private JButton m_run, m_step, m_pause, m_stop;
@@ -492,40 +491,27 @@ public class MainWindow extends JFrame implements Observer {
     if (ag_panel != null) {
       ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(true);
 
-      m_config_panel = new JPanel(new BorderLayout());
+      m_config_panel = ag_panel;
 
-      JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER));
-      JButton accept = new JButton("OK");
-      JButton cancel = new JButton("Cancel");
-
-      accept.addActionListener(new ActionListener() {
+      ag_panel.addEventListener(new AgentConfigurationPanel.EventListener() {
         @Override
-        public void actionPerformed (ActionEvent e) {
-          if (ag_panel.accept()) {
-            for (String s: ag_panel.getSuccessMessages())
-              m_console.writeInfo(s);
-            closeConfigurationPanel();
-          }
-          else {
-            for (String s: ag_panel.getErrorMessages())
-              m_console.writeError(s);
-          }
+        public void onSuccess (ArrayList <String> msgs) {
+          for (String msg: msgs)
+            m_console.writeInfo(msg);
+          closeConfigurationPanel();
         }
-      });
 
-      cancel.addActionListener(new ActionListener() {
         @Override
-        public void actionPerformed (ActionEvent e) {
-          ag_panel.cancel();
+        public void onError (ArrayList <String> errors) {
+          for (String error: errors)
+            m_console.writeError(error);
+        }
+
+        @Override
+        public void onCancel () {
           closeConfigurationPanel();
         }
       });
-
-      controls.add(accept);
-      controls.add(cancel);
-
-      m_config_panel.add(ag_panel, BorderLayout.CENTER);
-      m_config_panel.add(controls, BorderLayout.SOUTH);
 
       m_split_panel.add(m_config_panel);
       revalidate();
