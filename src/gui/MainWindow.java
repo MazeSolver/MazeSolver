@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,7 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
-import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -38,6 +36,9 @@ import maze.Maze;
 import util.SimulationManager;
 import util.SimulationResults;
 import agent.Agent;
+
+import com.alee.laf.WebLookAndFeel;
+import com.alee.laf.toolbar.WebToolBar;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -61,7 +62,8 @@ public class MainWindow extends JFrame implements Observer {
    */
   public static void main (String [] args) {
     try {
-      UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      UIManager.setLookAndFeel(WebLookAndFeel.class.getCanonicalName());
     }
     catch (Exception e){}
 
@@ -92,7 +94,7 @@ public class MainWindow extends JFrame implements Observer {
   private JMenuBar m_menu_bar;
 
   // Barra de acciones
-  private JToolBar m_toolbar;
+  private WebToolBar m_toolbar;
 
   // Panel de configuración. Por defecto está oculto, pero cuando el usuario
   // vaya a configurar un agente la interfaz adecuada aparecerá en su lugar.
@@ -214,7 +216,7 @@ public class MainWindow extends JFrame implements Observer {
    * Crea la barra de acciones.
    */
   private void createToolbar () {
-    m_toolbar = new JToolBar();
+    m_toolbar = new WebToolBar();
     m_toolbar.setFloatable(false);
 
     m_run = new JButton("Run");
@@ -222,18 +224,17 @@ public class MainWindow extends JFrame implements Observer {
     m_pause = new JButton("Pause");
     m_stop = new JButton("Stop");
     m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
-    m_zoom.setValue(MINIMUM_ZOOM_VAL);
 
     m_pause.setEnabled(false);
     m_stop.setEnabled(false);
+    m_zoom.setValue(MINIMUM_ZOOM_VAL);
 
     m_toolbar.add(m_run);
     m_toolbar.add(m_step);
     m_toolbar.add(m_pause);
     m_toolbar.add(m_stop);
-    m_toolbar.add(Box.createGlue());
-    m_toolbar.add(new JLabel("Zoom:"));
-    m_toolbar.add(m_zoom);
+    m_toolbar.addToEnd(new JLabel("Zoom:"));
+    m_toolbar.addToEnd(m_zoom);
 
     setupToolbarListeners();
   }
