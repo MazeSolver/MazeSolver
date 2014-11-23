@@ -484,7 +484,7 @@ public class MainWindow extends JFrame implements Observer {
 
   /**
    * Abre el panel de configuración.
-   * @param panel Panel de configuración que se quiere abrir.
+   * @param ag_panel Panel de configuración que se quiere abrir.
    */
   public void setConfigurationPanel (final AgentConfigurationPanel ag_panel) {
     if (m_config_panel != null)
