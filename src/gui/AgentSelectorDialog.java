@@ -21,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -168,19 +169,31 @@ public class AgentSelectorDialog extends JDialog {
         config_panel.addEventListener(new AgentConfigurationPanel.EventListener () {
           @Override
           public void onSuccess (ArrayList <String> msgs) {
-            d.setVisible(false);
+            String all_msgs = "";
+            for (String msg: msgs)
+              all_msgs += msg + "\n";
+
+            if (!all_msgs.isEmpty())
+              JOptionPane.showMessageDialog(null, all_msgs, "Operation succeeded",
+                  JOptionPane.INFORMATION_MESSAGE);
+
             d.dispose();
           }
 
           @Override
           public void onCancel () {
-            d.setVisible(false);
             d.dispose();
           }
 
           @Override
           public void onError (ArrayList <String> errors) {
-            // TODO Mostrar mensaje de error
+            String all_errors = "";
+            for (String error: errors)
+              all_errors += error + "\n";
+
+            if (!all_errors.isEmpty())
+              JOptionPane.showMessageDialog(null, all_errors, "Operation failed",
+                  JOptionPane.ERROR_MESSAGE);
           }
         });
 
