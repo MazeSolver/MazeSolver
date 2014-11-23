@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
+import util.SimulationResults;
 import agent.Agent;
 
 import com.tomtessier.scrollabledesktop.BaseInternalFrame;
@@ -161,6 +162,13 @@ public class Environment extends BaseInternalFrame {
    * @return true si se puede y false si no.
    */
   public boolean movementAllowed (Point pos, Direction dir) {
+    // Si el agente está fuera del laberinto, no dejamos que se mueva. De esta
+    // forma, cuando un agente sale del laberinto se queda quieto fuera del
+    // mismo y no vuelve a entrar ni se va lejos de la salida.
+    if (pos.x < 0 || pos.x >= m_maze.getWidth() ||
+        pos.y < 0 || pos.y >= m_maze.getHeight())
+      return false;
+
     MazeCell.Vision vision = look (pos, dir);
     return vision == MazeCell.Vision.EMPTY ||
            vision == MazeCell.Vision.OFFLIMITS;
@@ -299,19 +307,26 @@ public class Environment extends BaseInternalFrame {
   /**
    * Ejecuta un paso de la simulación de ejecución de los agentes en el entorno
    * y devuelve el resultado de la ejecución.
+   * @param results Objeto que representa el resultado de la simulación, que
+   *        será actualizado en este método para notificar de agentes que han
+   *        llegado a la salida y para contar los pasos que han dado.
    * @return true si todos los agentes han salido del laberinto y false en otro caso.
    */
-  public boolean runStep () {
+  public boolean runStep (SimulationResults results) {
     boolean ended = true;
 
     for (Agent i: m_agents) {
       Direction dir = i.getNextMovement();
-      if (movementAllowed(new Point(i.getX(),  i.getY()), dir))
+      if (movementAllowed(new Point(i.getX(),  i.getY()), dir)) {
         i.doMovement(dir);
+        results.agentWalked(i);
+      }
 
       if (i.getX() >= 0 && i.getY() >= 0 && i.getX() < m_maze.getWidth() &&
           i.getY() < m_maze.getHeight())
         ended = false;
+      else
+        results.agentFinished(i);
     }
 
     repaint();
