@@ -71,6 +71,7 @@ public class MainWindow extends JFrame implements Observer {
     wnd.setSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
     wnd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     wnd.setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+    wnd.setLocationRelativeTo(null);
     wnd.setVisible(true);
   }
 
@@ -247,6 +248,7 @@ public class MainWindow extends JFrame implements Observer {
       @Override
       public void actionPerformed (ActionEvent e) {
         MazeSelectorDialog dialog = new MazeSelectorDialog(MainWindow.getInstance());
+        dialog.setLocationRelativeTo(MainWindow.this);
         Maze generated = dialog.showDialog();
 
         if (generated != null)
@@ -354,7 +356,8 @@ public class MainWindow extends JFrame implements Observer {
           return;
         }
 
-        AgentSelectorDialog dialog = new AgentSelectorDialog(MainWindow.getInstance());
+        AgentSelectorDialog dialog = new AgentSelectorDialog(MainWindow.this);
+        dialog.setLocationRelativeTo(MainWindow.this);
         Agent[] agents = dialog.showDialog();
 
         if (agents != null) {

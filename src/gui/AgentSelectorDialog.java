@@ -164,6 +164,7 @@ public class AgentSelectorDialog extends JDialog {
 
         final AgentConfigurationPanel config_panel = m_template_agent.getConfigurationPanel();
         final JDialog d = new JDialog(AgentSelectorDialog.this, "Configure agent", true);
+        d.setLocationRelativeTo(AgentSelectorDialog.this);
         d.add(config_panel);
 
         config_panel.addEventListener(new AgentConfigurationPanel.EventListener () {
