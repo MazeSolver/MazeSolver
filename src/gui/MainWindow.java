@@ -469,6 +469,9 @@ public class MainWindow extends JFrame implements Observer {
    */
   public void closeConfigurationPanel () {
     ((BasicSplitPaneUI) m_split_panel.getUI()).getDivider().setVisible(false);
+    m_itm_maze_close.setEnabled(true);
+    m_itm_agent_remove.setEnabled(true);
+
     if (m_config_panel != null) {
       m_split_panel.remove(m_config_panel);
       m_config_panel = null;
@@ -508,6 +511,9 @@ public class MainWindow extends JFrame implements Observer {
       m_split_panel.add(m_config_panel);
       revalidate();
       repaint();
+
+      m_itm_maze_close.setEnabled(false);
+      m_itm_agent_remove.setEnabled(false);
     }
   }
 
