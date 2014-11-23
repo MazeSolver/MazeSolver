@@ -9,16 +9,17 @@ import gui.environment.Environment;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -51,23 +52,33 @@ public class AgentSelectorDialog extends JDialog {
   private JSpinner m_amount;
 
   private Agent[] m_result;
+  private Agent m_template_agent = null;
 
-  public AgentSelectorDialog (Window parent) {
-    super(parent,"Create a new agent");
-
-    m_agents = new JComboBox<String>(ALGORITHMS.keySet().toArray(new String[ALGORITHMS.size()]));
-    m_amount = new JSpinner(new SpinnerNumberModel(1, 1, MAX_AGENTS_AMOUNT, 1));
-
+  /**
+   * Crea el diálogo de creación de agentes.
+   * @param parent Ventana padre del diálogo.
+   */
+  public AgentSelectorDialog (JFrame parent) {
+    super(parent, "Create a new agent", true);
     buildInterface();
+
     setResizable(false);
-    setModal(true);
   }
 
+  /**
+   * Muestra el diálogo por pantalla y devuelve la lista de agentes que se
+   * deben crear como consecuencia de la selección del usuario.
+   * @return Lista de agentes que se quieren añadir al entorno o null si no se
+   *         quiere añadir ninguno.
+   */
   public Agent[] showDialog () {
     setVisible(true);
     return m_result;
   }
 
+  /**
+   * Construye la interfaz gráfica y configura los listeners.
+   */
   private void buildInterface () {
     setLayout(new BorderLayout());
 
@@ -77,6 +88,9 @@ public class AgentSelectorDialog extends JDialog {
     JPanel global = new JPanel(new BorderLayout(5, 5));
     JPanel labels = new JPanel(new GridLayout(2, 1, 5, 5));
     JPanel controls = new JPanel(new GridLayout(2, 1, 5, 5));
+
+    m_agents = new JComboBox<String>(ALGORITHMS.keySet().toArray(new String[ALGORITHMS.size()]));
+    m_amount = new JSpinner(new SpinnerNumberModel(1, 1, MAX_AGENTS_AMOUNT, 1));
 
     labels.add(ags);
     controls.add(m_agents);
@@ -89,31 +103,36 @@ public class AgentSelectorDialog extends JDialog {
 
     JButton ok = new JButton("OK");
     JButton cancel = new JButton("Cancel");
+    JButton config = new JButton("Configure...");
 
     JPanel button_panel = new JPanel(new FlowLayout());
     button_panel.add(ok);
     button_panel.add(cancel);
+    button_panel.add(config);
 
     add(global, BorderLayout.CENTER);
     add(button_panel, BorderLayout.SOUTH);
     pack();
 
+    // Cuando se cambia la clase del combobox hay que actualizar el agente
+    // plantilla
+    m_agents.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        m_template_agent = createSelectedAgent();
+      }
+    });
+
     ok.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        Environment env = MainWindow.getInstance().getEnvironments().getSelectedEnvironment();
-        String ag_name = (String) m_agents.getSelectedItem();
         int amount = (Integer) m_amount.getValue();
-        m_result = new Agent[amount];
 
-        try {
-          m_result[0] = ALGORITHMS.get(ag_name).getConstructor(env.getClass()).newInstance(env);
-        }
-        catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-            | InvocationTargetException | NoSuchMethodException | SecurityException e2) {
-          e2.printStackTrace();
-          return;
-        }
+        if (m_template_agent == null)
+          m_template_agent = createSelectedAgent();
+
+        m_result = new Agent[amount];
+        m_result[0] = m_template_agent;
 
         // Clonamos el agente en todas las posiciones (todos serán iguales)
         for (int i = 1; i < amount; i++) {
@@ -135,6 +154,58 @@ public class AgentSelectorDialog extends JDialog {
         dispose();
       }
     });
+
+    config.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        if (m_template_agent == null)
+          m_template_agent = createSelectedAgent();
+
+        final AgentConfigurationPanel config_panel = m_template_agent.getConfigurationPanel();
+        final JDialog d = new JDialog(AgentSelectorDialog.this, "Configure agent", true);
+        d.add(config_panel);
+
+        config_panel.addEventListener(new AgentConfigurationPanel.EventListener () {
+          @Override
+          public void onSuccess (ArrayList <String> msgs) {
+            d.setVisible(false);
+            d.dispose();
+          }
+
+          @Override
+          public void onCancel () {
+            d.setVisible(false);
+            d.dispose();
+          }
+
+          @Override
+          public void onError (ArrayList <String> errors) {
+            // TODO Mostrar mensaje de error
+          }
+        });
+
+        d.pack();
+        d.setVisible(true);
+      }
+    });
+  }
+
+  /**
+   * Crea una instancia del agente seleccionado actualmente en el ComboBox.
+   * @return Instancia del agente seleccionado.
+   */
+  private Agent createSelectedAgent () {
+    Environment env = MainWindow.getInstance().getEnvironments().getSelectedEnvironment();
+    String name = (String) m_agents.getSelectedItem();
+    try {
+      Agent ag = ALGORITHMS.get(name).getConstructor(env.getClass()).newInstance(env);
+      return ag;
+    }
+    catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+        | InvocationTargetException | NoSuchMethodException | SecurityException e2) {
+      e2.printStackTrace();
+      return null;
+    }
   }
 
 }
