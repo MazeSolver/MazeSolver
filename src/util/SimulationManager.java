@@ -13,9 +13,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import maze.Maze;
-import agent.Agent;
-
 /**
  * Gestor de la simulación.
  */
@@ -157,36 +154,16 @@ public class SimulationManager extends Observable implements Runnable {
     // donde no haya acabado algún agente
     ArrayList <Environment> envs = m_environments.getEnvironmentList();
     for (int i = 0; i < envs.size(); i++) {
-      if (!m_finished[i]) {
-        m_finished[i] = envs.get(i).runStep();
-
-        // Actualizamos la información de la simulación
-        for (int j = 0; j < envs.get(i).getAgentCount(); j++) {
-          Agent ag = envs.get(i).getAgent(j);
-          Maze mz = envs.get(i).getMaze();
-
-          // Todos los agentes del entorno han caminado
-          m_results.agentWalked(ag);
-          // Si acaba de terminar algún agente, lo buscamos para decir que
-          // ha llegado
-          if (m_finished[i] && (ag.getX() < 0 || ag.getY() < 0 ||
-              ag.getX() >= mz.getWidth() || ag.getY() >= mz.getHeight()))
-            m_results.agentFinished(ag);
-        }
-      }
+      if (!m_finished[i])
+        m_finished[i] = envs.get(i).runStep(m_results);
       else
         amount_finished++;
     }
 
     // Si todos los agentes han terminado de ejecutar, paramos la simulación
     if (amount_finished == m_environments.getEnvironmentCount()) {
-      stopSimulation();
       m_sim_finished = true;
-
-      // Avisamos a los observadores que la simulación ha terminado
-      setChanged();
-      notifyObservers(m_results);
+      stopSimulation();
     }
   }
-
 }

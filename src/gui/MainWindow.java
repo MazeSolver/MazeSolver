@@ -434,8 +434,7 @@ public class MainWindow extends JFrame implements Observer {
     m_step.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        for (Environment env: m_environments.getEnvironmentList())
-          env.runStep();
+        m_simulation.run();
       }
     });
 
@@ -603,6 +602,7 @@ public class MainWindow extends JFrame implements Observer {
   public void update (Observable obs, Object obj) {
     // Esto sucede cuando todos los entornos han terminado de ejecutarse o se ha
     // parado la simulación.
+    stopSimulation();
     SimulationResults results = (SimulationResults) obj;
 
     ArrayList <Environment> envs = m_environments.getEnvironmentList();
