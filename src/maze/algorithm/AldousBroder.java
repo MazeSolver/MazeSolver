@@ -55,6 +55,7 @@ public class AldousBroder extends MazeCreationAlgorithm {
         cellVisitedCount++;
       }
     }
+    createExit();
     return m_maze;
   }
 

@@ -60,6 +60,7 @@ public class Kruskal extends MazeCreationAlgorithm {
       }
       walls.remove(nextWall);
     }
+    createExit();
     return m_maze;
   }
 

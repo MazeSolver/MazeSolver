@@ -70,6 +70,7 @@ public class Prim extends MazeCreationAlgorithm {
       }
       walls.remove(nextWall);
     }
+    createExit();
     return m_maze;
   }
 
