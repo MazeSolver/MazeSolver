@@ -16,6 +16,10 @@ import maze.MazeCell;
  * Clase que representa un agente abstracto que se encuentra en algún laberinto.
  */
 public abstract class Agent implements Cloneable {
+  private static int s_agent_count = 0;
+
+  private int m_agent_id;
+
   protected Point m_pos;
   protected Environment m_env;
 
@@ -23,6 +27,7 @@ public abstract class Agent implements Cloneable {
    * @param maze
    */
   protected Agent (Environment env) {
+    m_agent_id = s_agent_count++;
     m_pos = new Point();
     setEnvironment(env);
   }
@@ -107,6 +112,21 @@ public abstract class Agent implements Cloneable {
   public void doMovement (Direction dir) {
     m_pos = dir.movePoint(m_pos);
   }
+
+  /**
+   * Pregunta al agente el nombre que le identifica.
+   * @return Nombre identificador del agente. Incluye el nombre del algoritmo
+   *         que implementa.
+   */
+  public String getName () {
+    return getAlgorithmName() + " " + String.valueOf(m_agent_id);
+  }
+
+  /**
+   * Pregunta al agente el nombre del algoritmo que implementa.
+   * @return Nombre del algoritmo que implementa.
+   */
+  public abstract String getAlgorithmName ();
 
   /**
    * @return La dirección en la que el agente quiere realizar el siguiente

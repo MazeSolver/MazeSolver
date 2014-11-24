@@ -89,6 +89,14 @@ public class SARulesAgent extends Agent {
   }
 
   /* (non-Javadoc)
+   * @see agent.Agent#getAlgorithmName()
+   */
+  @Override
+  public String getAlgorithmName () {
+    return "Situation-Action Rules";
+  }
+
+  /* (non-Javadoc)
    * @see agent.Agent#getNextMovement()
    */
   @Override
@@ -205,7 +213,7 @@ public class SARulesAgent extends Agent {
     Point p = dir.movePoint(m_pos);
     Maze maze = m_env.getMaze();
 
-    if (p.x < 0 || p.y < 0 || p.x >= maze.getWidth() || p.y >= maze.getHeight())
+    if (!maze.containsPoint(p))
       return false;
 
     return m_visited[p.y][p.x];

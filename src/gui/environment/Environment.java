@@ -81,8 +81,7 @@ public class Environment extends BaseInternalFrame {
         Agent ag = getSelectedAgent();
         if (ag != null) {
           Point grid_pos = EnvironmentPanel.screenCoordToGrid(e.getPoint());
-          if (grid_pos.x >= 0 && grid_pos.x < m_maze.getWidth() &&
-              grid_pos.y >= 0 && grid_pos.y < m_maze.getHeight()) {
+          if (m_maze.containsPoint(grid_pos)) {
             ag.setPosition(grid_pos);
             repaint();
           }
@@ -141,14 +140,11 @@ public class Environment extends BaseInternalFrame {
     // Si el agente está fuera del laberinto, no dejamos que se mueva. De esta
     // forma, cuando un agente sale del laberinto se queda quieto fuera del
     // mismo y no vuelve a entrar ni se va lejos de la salida.
-    if (pos.x < 0 || pos.x >= m_maze.getWidth() ||
-        pos.y < 0 || pos.y >= m_maze.getHeight() ||
-        m_maze.get(pos.y, pos.x).hasWall(dir))
+    if (!m_maze.containsPoint(pos) || m_maze.get(pos.y, pos.x).hasWall(dir))
       return MazeCell.Vision.WALL;
 
     Point n_pos = dir.movePoint(pos);
-    if (n_pos.x < 0 || n_pos.y < 0 || n_pos.x >= m_maze.getWidth() ||
-        n_pos.y >= m_maze.getHeight())
+    if (!m_maze.containsPoint(n_pos))
       return MazeCell.Vision.OFFLIMITS;
 
     for (Agent ag: m_agents) {

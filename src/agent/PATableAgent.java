@@ -61,6 +61,14 @@ public class PATableAgent extends Agent {
   }
 
   /* (non-Javadoc)
+   * @see agent.Agent#getAlgorithmName()
+   */
+  @Override
+  public String getAlgorithmName () {
+    return "Perception-Action Table";
+  }
+
+  /* (non-Javadoc)
    * @see agent.Agent#getNextMovement()
    */
   @Override

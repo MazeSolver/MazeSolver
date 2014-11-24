@@ -4,6 +4,7 @@
  */
 package maze;
 
+import java.awt.Point;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -67,6 +68,15 @@ public class Maze {
    */
   public int getHeight () {
     return m_maze.size();
+  }
+
+  /**
+   * Determina si el punto se encuentra dentro del laberinto o no.
+   * @param p Punto a testear.
+   * @return Si el punto está dentro del laberinto o no.
+   */
+  public boolean containsPoint (Point p) {
+    return p.x >= 0 && p.y >= 0 && p.x < getWidth() && p.y < getHeight();
   }
 
   /**
