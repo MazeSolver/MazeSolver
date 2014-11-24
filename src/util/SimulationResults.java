@@ -153,7 +153,13 @@ public class SimulationResults {
     EnvironmentSimulationInfo info = m_info.get(env);
 
     if (info != null) {
-      int[] steps = new int[info.steps.size()];
+      int size = info.steps.size();
+
+      for (int i = 0; i < env.getAgentCount(); i++)
+        if (!info.steps.containsKey(env.getAgent(i)))
+          size++;
+
+      int[] steps = new int[size];
 
       int i = 0;
       for (Agent ag: info.steps.keySet())
