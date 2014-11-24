@@ -32,7 +32,6 @@ import maze.Maze;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import util.Pair;
 import agent.rules.RuleAction;
 import agent.rules.SituationActionRule;
 import agent.rules.parser.SituationActionErrorHandler;
@@ -203,8 +202,7 @@ public class SARulesAgent extends Agent {
    * @return Si la celda adyacente en esa dirección ha sido visitada o no.
    */
   public boolean hasVisited (Direction dir) {
-    Pair <Integer, Integer> desp = dir.decompose();
-    Point p = new Point(m_pos.x + desp.first, m_pos.y + desp.second);
+    Point p = dir.movePoint(m_pos);
     Maze maze = m_env.getMaze();
 
     if (p.x < 0 || p.y < 0 || p.x >= maze.getWidth() || p.y >= maze.getHeight())

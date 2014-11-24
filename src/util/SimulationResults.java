@@ -130,10 +130,10 @@ public class SimulationResults {
         if (info != null) {
           Agent other_winner = info.winner_agent;
           if (other_winner != null) {
-            int other_steps = info.steps.get(other_winner);
-            if (winner == null || other_steps < winner_steps) {
+            Integer other_steps = info.steps.get(other_winner);
+            if (other_steps == null || winner == null || other_steps < winner_steps) {
               winner = other_winner;
-              winner_steps = other_steps;
+              winner_steps = other_steps == null? 0 : other_steps.intValue();
             }
           }
         }
@@ -153,7 +153,13 @@ public class SimulationResults {
     EnvironmentSimulationInfo info = m_info.get(env);
 
     if (info != null) {
-      int[] steps = new int[info.steps.size()];
+      int size = info.steps.size();
+
+      for (int i = 0; i < env.getAgentCount(); i++)
+        if (!info.steps.containsKey(env.getAgent(i)))
+          size++;
+
+      int[] steps = new int[size];
 
       int i = 0;
       for (Agent ag: info.steps.keySet())

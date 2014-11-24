@@ -536,6 +536,8 @@ public class MainWindow extends JFrame implements Observer {
       revalidate();
       repaint();
     }
+    m_itm_maze_close.setEnabled(true);
+    m_itm_agent_remove.setEnabled(true);
   }
 
   /**
