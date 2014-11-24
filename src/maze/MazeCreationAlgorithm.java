@@ -18,7 +18,7 @@ public abstract class MazeCreationAlgorithm {
 
   protected int m_rows, m_columns;
   protected ArrayList <ArrayList <MazeCell>> m_maze;
-  protected Point maze_exit;
+  protected Point m_maze_exit;
 
   /**
    * @param rows
@@ -32,6 +32,14 @@ public abstract class MazeCreationAlgorithm {
     m_rows = rows;
     m_columns = columns;
     m_maze = initializeMaze();
+  }
+
+  /**
+   * Devuelve la posición de la salida del laberinto.
+   * @return La posición de la salida del laberinto.
+   */
+  public Point getExit () {
+    return new Point(m_maze_exit);
   }
 
   /**
@@ -90,24 +98,27 @@ public abstract class MazeCreationAlgorithm {
       pos = (int) (Math.random() * m_rows);
 
     // Cogemos la celda de salida y abrimos el hueco
-    maze_exit = new Point();
-    if (dir == Direction.UP) {
-      maze_exit.x = pos;
-      maze_exit.y = 0;
+    m_maze_exit = new Point();
+    switch (dir) {
+      case UP:
+        m_maze_exit.x = pos;
+        m_maze_exit.y = 0;
+        break;
+      case DOWN:
+        m_maze_exit.x = pos;
+        m_maze_exit.y = m_rows - 1;
+        break;
+      case LEFT:
+        m_maze_exit.x = 0;
+        m_maze_exit.y = pos;
+        break;
+      case RIGHT:
+        m_maze_exit.x = m_columns - 1;
+        m_maze_exit.y = pos;
+        break;
+      default: break;
     }
-    else if (dir == Direction.DOWN) {
-      maze_exit.x = pos;
-      maze_exit.y = m_rows - 1;
-    }
-    else if (dir == Direction.LEFT) {
-      maze_exit.x = 0;
-      maze_exit.y = pos;
-    }
-    else {
-      // Direction.RIGHT
-      maze_exit.x = m_columns - 1;
-      maze_exit.y = pos;
-    }
-    m_maze.get(maze_exit.y).get(maze_exit.x).unsetWall(dir);
+
+    m_maze.get(m_maze_exit.y).get(m_maze_exit.x).unsetWall(dir);
   }
 }
