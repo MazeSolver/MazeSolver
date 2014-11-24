@@ -181,20 +181,7 @@ public abstract class RulePredicate implements Cloneable {
         result = ag.hasVisited(m_direction);
       else {
         MazeCell.Vision vision = ag.look(m_direction);
-        switch (m_vision) {
-          case AGENT:
-            result = vision == MazeCell.Vision.AGENT;
-            break;
-          case EMPTY:
-            result = vision == MazeCell.Vision.EMPTY;
-            break;
-          case OFFLIMITS:
-            result = vision == MazeCell.Vision.OFFLIMITS;
-            break;
-          case WALL:
-            result = vision == MazeCell.Vision.WALL;
-            break;
-        }
+        result = vision == m_vision;
       }
 
       return result ^ m_negated;

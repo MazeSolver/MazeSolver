@@ -138,7 +138,12 @@ public class Environment extends BaseInternalFrame {
    * la dirección indicada.
    */
   public MazeCell.Vision look (Point pos, Direction dir) {
-    if (m_maze.get(pos.y, pos.x).hasWall(dir))
+    // Si el agente está fuera del laberinto, no dejamos que se mueva. De esta
+    // forma, cuando un agente sale del laberinto se queda quieto fuera del
+    // mismo y no vuelve a entrar ni se va lejos de la salida.
+    if (pos.x < 0 || pos.x >= m_maze.getWidth() ||
+        pos.y < 0 || pos.y >= m_maze.getHeight() ||
+        m_maze.get(pos.y, pos.x).hasWall(dir))
       return MazeCell.Vision.WALL;
 
     Point n_pos = dir.movePoint(pos);
@@ -162,13 +167,6 @@ public class Environment extends BaseInternalFrame {
    * @return true si se puede y false si no.
    */
   public boolean movementAllowed (Point pos, Direction dir) {
-    // Si el agente está fuera del laberinto, no dejamos que se mueva. De esta
-    // forma, cuando un agente sale del laberinto se queda quieto fuera del
-    // mismo y no vuelve a entrar ni se va lejos de la salida.
-    if (pos.x < 0 || pos.x >= m_maze.getWidth() ||
-        pos.y < 0 || pos.y >= m_maze.getHeight())
-      return false;
-
     MazeCell.Vision vision = look (pos, dir);
     return vision == MazeCell.Vision.EMPTY ||
            vision == MazeCell.Vision.OFFLIMITS;
