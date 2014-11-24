@@ -60,6 +60,7 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
         stack.push(p);
       }
     }
+    createExit();
     return m_maze;
   }
 
