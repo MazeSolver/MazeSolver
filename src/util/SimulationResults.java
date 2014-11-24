@@ -130,10 +130,10 @@ public class SimulationResults {
         if (info != null) {
           Agent other_winner = info.winner_agent;
           if (other_winner != null) {
-            int other_steps = info.steps.get(other_winner);
-            if (winner == null || other_steps < winner_steps) {
+            Integer other_steps = info.steps.get(other_winner);
+            if (other_steps == null || winner == null || other_steps < winner_steps) {
               winner = other_winner;
-              winner_steps = other_steps;
+              winner_steps = other_steps == null? 0 : other_steps.intValue();
             }
           }
         }
