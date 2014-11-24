@@ -9,11 +9,13 @@ import gui.environment.EnvironmentSet;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -618,25 +620,30 @@ public class MainWindow extends JFrame implements Observer {
     m_console.writeInfo("==================");
     for (int i = 0; i < mazes.size(); i++) {
       Maze maze = mazes.get(i);
+      Agent maze_winner = results.getWinner(maze);
       m_console.writeInfo("=== Maze " + (i+1) + " (" + maze.getWidth() + "x" + maze.getHeight() + ") ===");
       m_console.writeInfo("* Time taken first: " + results.timeTakenFirst(maze));
       m_console.writeInfo("* Time taken last: " + results.timeTakenLast(maze));
-      m_console.writeInfo("* Winner: " + results.getWinner(maze));
+      m_console.writeInfo("* Winner: " + (maze_winner != null? maze_winner.getName() : "None"));
       m_console.writeInfo("");
 
       for (int j = 0; j < envs.size(); j++) {
         Environment env = envs.get(j);
         if (env.getMaze() == maze) {
+          Agent env_winner = results.getWinner(env);
           m_console.writeInfo("  == " + env.getTitle() + " ==");
           m_console.writeInfo("  * Time taken first: " + results.timeTakenFirst(env));
           m_console.writeInfo("  * Time taken last: " + results.timeTakenLast(env));
-          m_console.writeInfo("  * Winner: " + results.getWinner(env));
+          m_console.writeInfo("  * Winner: " + (env_winner != null? env_winner.getName() : "None"));
           m_console.writeInfo("");
-          m_console.writeInfo("  * Steps made:");
+          m_console.writeInfo("  * Agents detail:");
 
-          int[] steps = results.getSteps(env);
-          for (int k = 0; k < steps.length; k++)
-            m_console.writeInfo("    - Agent " + (k+1) + ": " + steps[k] + " steps");
+          for (Map.Entry<Agent, Integer> entry: results.getSteps(env).entrySet()) {
+            Agent ag = entry.getKey();
+            String finished = maze.containsPoint(new Point(ag.getX(), ag.getY()))? "NOT FINISHED" : "FINISHED";
+            m_console.writeInfo("    - " + ag.getName() + ": "+
+                                entry.getValue() + " steps [" + finished + "]");
+          }
         }
       }
     }
