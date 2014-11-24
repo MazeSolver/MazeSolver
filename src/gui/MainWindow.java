@@ -62,7 +62,6 @@ public class MainWindow extends JFrame implements Observer {
    */
   public static void main (String [] args) {
     try {
-      //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
       UIManager.setLookAndFeel(WebLookAndFeel.class.getCanonicalName());
     }
     catch (Exception e){}

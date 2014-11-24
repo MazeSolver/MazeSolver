@@ -12,15 +12,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import com.alee.laf.button.WebButton;
 
 /**
  * Clase que representa un panel de logging donde se pueden mostrar errores,
@@ -75,13 +79,36 @@ public class LoggingConsole extends JPanel {
     StyleConstants.setForeground(m_info_style, Color.BLACK);
     StyleConstants.setForeground(m_warning_style, Color.YELLOW);
 
+    final JScrollPane text_scroll = new JScrollPane(m_text);
+
     JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
     top.add(m_clear_button);
     top.add(m_save_button);
 
+    final WebButton collapser = new WebButton();
+    collapser.setUndecorated(true);
+    collapser.setIcon(UIManager.getIcon("Tree.expandedIcon"));
+
+    collapser.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        if (text_scroll.isVisible())
+          collapser.setIcon(UIManager.getIcon("Tree.collapsedIcon"));
+        else
+          collapser.setIcon(UIManager.getIcon("Tree.expandedIcon"));
+
+        text_scroll.setVisible(!text_scroll.isVisible());
+        revalidate();
+        repaint();
+      }
+    });
+
+    top.add(Box.createGlue());
+    top.add(collapser);
+
     setLayout(new BorderLayout());
     add(top, BorderLayout.NORTH);
-    add(new JScrollPane(m_text), BorderLayout.CENTER);
+    add(text_scroll, BorderLayout.CENTER);
   }
 
   /**
