@@ -119,8 +119,7 @@ public class LoggingConsole extends JPanel {
           collapser.setIcon(UIManager.getIcon("Tree.expandedIcon"));
 
         text_scroll.setVisible(!text_scroll.isVisible());
-        revalidate();
-        repaint();
+        firePropertyChange("ConsoleDisplay", !text_scroll.isVisible(), text_scroll.isVisible());
       }
     });
 
