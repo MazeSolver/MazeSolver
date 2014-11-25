@@ -45,6 +45,7 @@ import maze.MazeCell.Vision;
  * Clase que representa a un agente basado en una tabla de percepción-acción.
  */
 public class PATableAgent extends Agent {
+  private static final long serialVersionUID = -4993197615980679396L;
   private static int N_FIELDS = 5; // {U|D|L|R} + {ACTION}
   private static int N_ENTRIES = 16; // 2 {EMPTY|WALL} ^ 4 {U|D|L|R}
 

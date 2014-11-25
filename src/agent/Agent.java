@@ -29,20 +29,28 @@ import gui.AgentConfigurationPanel;
 import gui.environment.Environment;
 
 import java.awt.Point;
+import java.io.IOException;
+import java.io.Serializable;
 
 import maze.Direction;
 import maze.MazeCell;
 
 /**
  * Clase que representa un agente abstracto que se encuentra en algún laberinto.
+ * Sus subclases implementan los distintos algoritmos para resolver laberintos.
+ *
+ * Cada agente debe implementar los métodos de serialización para poder guardarse
+ * y cargarse correctamente, en caso de que requiriesen configuración adicional
+ * a la genérica.
  */
-public abstract class Agent implements Cloneable {
+public abstract class Agent implements Cloneable, Serializable {
+  private static final long serialVersionUID = 1L;
   private static int s_agent_count = 0;
 
-  private int m_agent_id;
+  private transient int m_agent_id;
 
+  protected transient Environment m_env;
   protected Point m_pos;
-  protected Environment m_env;
 
   /**
    * @param maze
@@ -141,6 +149,30 @@ public abstract class Agent implements Cloneable {
    */
   public String getName () {
     return getAlgorithmName() + " " + String.valueOf(m_agent_id);
+  }
+
+  /**
+   * Carga la descripción serializada del agente de un fichero, lo crea y lo
+   * devuelve.
+   * @param fileName Nombre del fichero de entrada.
+   * @param env Entorno en el que cargar el agente.
+   * @throws IOException Si no es posible leer el fichero.
+   */
+  public static Agent loadFile (String fileName, Environment env) throws IOException {
+    // TODO Cargar fichero y des-serializar
+    // TODO Comprobar que es instanceof(Agent)
+    // TODO Asignar ID y entorno
+    // TODO Devolver
+    return null;
+  }
+
+  /**
+   * Guarda la instancia del agente en un fichero utilizando su serialización.
+   * @param fileName Nombre del fichero de salida.
+   * @throws IOException Si no es posible guardar el fichero.
+   */
+  public void saveFile (String fileName) throws IOException {
+    // TODO Serializar 'this'
   }
 
   /**
