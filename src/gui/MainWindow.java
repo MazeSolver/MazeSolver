@@ -132,7 +132,7 @@ public class MainWindow extends JFrame implements Observer {
                     m_itm_exit;
   private JMenuItem m_itm_maze_clone, m_itm_maze_change, m_itm_maze_close;
   private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_clone,
-                    m_itm_agent_remove;
+                    m_itm_agent_remove, m_itm_agent_save, m_itm_agent_load;
   private JMenuItem m_itm_about;
 
   // Representación del modelo
@@ -205,14 +205,14 @@ public class MainWindow extends JFrame implements Observer {
 
     // Menú "File"
     m_itm_maze_new = new JMenuItem("New maze...");
-    m_itm_maze_save = new JMenuItem("Save maze...");
     m_itm_maze_open = new JMenuItem("Open maze...");
+    m_itm_maze_save = new JMenuItem("Save maze...");
     m_itm_exit = new JMenuItem("Exit");
 
     m_menu_file.add(m_itm_maze_new);
     m_menu_file.addSeparator();
-    m_menu_file.add(m_itm_maze_save);
     m_menu_file.add(m_itm_maze_open);
+    m_menu_file.add(m_itm_maze_save);
     m_menu_file.addSeparator();
     m_menu_file.add(m_itm_exit);
 
@@ -223,17 +223,25 @@ public class MainWindow extends JFrame implements Observer {
 
     m_menu_maze.add(m_itm_maze_clone);
     m_menu_maze.add(m_itm_maze_change);
+    m_menu_maze.addSeparator();
     m_menu_maze.add(m_itm_maze_close);
 
     // Menú "Agent"
-    m_itm_agent_add = new JMenuItem("Add agent...");
-    m_itm_agent_config = new JMenuItem("Configure agent...");
+    m_itm_agent_add = new JMenuItem("New agent...");
     m_itm_agent_clone = new JMenuItem("Clone agent");
+    m_itm_agent_config = new JMenuItem("Configure agent...");
+    m_itm_agent_load = new JMenuItem("Load agent...");
+    m_itm_agent_save = new JMenuItem("Save agent...");
     m_itm_agent_remove = new JMenuItem("Remove agent");
 
     m_menu_agent.add(m_itm_agent_add);
-    m_menu_agent.add(m_itm_agent_config);
+    m_menu_agent.addSeparator();
     m_menu_agent.add(m_itm_agent_clone);
+    m_menu_agent.add(m_itm_agent_config);
+    m_menu_agent.addSeparator();
+    m_menu_agent.add(m_itm_agent_load);
+    m_menu_agent.add(m_itm_agent_save);
+    m_menu_agent.addSeparator();
     m_menu_agent.add(m_itm_agent_remove);
 
     // Menú "Help"
@@ -442,6 +450,44 @@ public class MainWindow extends JFrame implements Observer {
         catch (Exception exc) {
           JOptionPane.showMessageDialog(null, "There are no agents selected",
               "Agent removing failed", JOptionPane.WARNING_MESSAGE);
+        }
+      }
+    });
+
+    m_itm_agent_load.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Environment env = m_environments.getSelectedEnvironment();
+          Agent ag = FileDialog.loadAgent(env);
+
+          m_environments.addAgentToSelectedEnvironment(ag);
+        }
+        catch (IOException exc) {
+          JOptionPane.showMessageDialog(null, exc.getMessage(), "File load failed",
+              JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception exc) {
+          JOptionPane.showMessageDialog(null, "There is no environment selected",
+              "File load failed", JOptionPane.WARNING_MESSAGE);
+        }
+      }
+    });
+
+    m_itm_agent_save.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Environment env = m_environments.getSelectedEnvironment();
+          FileDialog.saveAgent(env.getSelectedAgent());
+        }
+        catch (IOException exc) {
+          JOptionPane.showMessageDialog(null, exc.getMessage(), "File save failed",
+              JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception exc) {
+          JOptionPane.showMessageDialog(null, "There is no environment selected",
+              "File save failed", JOptionPane.WARNING_MESSAGE);
         }
       }
     });

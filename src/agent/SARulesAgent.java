@@ -34,7 +34,9 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -299,5 +301,18 @@ public class SARulesAgent extends Agent {
       ag.m_rules.add((SituationActionRule) r.clone());
 
     return ag;
+  }
+
+  /**
+   * @param input
+   * @throws ClassNotFoundException
+   * @throws IOException
+   */
+  private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+    input.defaultReadObject();
+
+    m_error_handler = new SituationActionErrorHandler();
+    m_rules = new ArrayList <SituationActionRule>();
+    compileCode();
   }
 }

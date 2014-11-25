@@ -25,6 +25,8 @@
  */
 package gui;
 
+import gui.environment.Environment;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,6 +37,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import maze.Maze;
+import agent.Agent;
 
 /**
  * Clase que contiene los métodos estáticos para mostrar los diálogos para
@@ -55,7 +58,7 @@ public class FileDialog {
     if (maze == null)
       throw new IllegalArgumentException("El laberinto especificado es inválido.");
 
-    JFileChooser chooser = createFileChooser();
+    JFileChooser chooser = createFileChooser("Maze files (*.maze)", "maze");
     int result = chooser.showSaveDialog(null);
 
     if (result == JFileChooser.APPROVE_OPTION) {
@@ -76,7 +79,7 @@ public class FileDialog {
    * @throws IOException Si hay un problema al leer el fichero seleccionado.
    */
   public static Maze[] loadMazes () throws IOException {
-    JFileChooser chooser = createFileChooser();
+    JFileChooser chooser = createFileChooser("Maze files (*.maze)", "maze");
     chooser.setMultiSelectionEnabled(true);
     int result = chooser.showOpenDialog(null);
 
@@ -102,7 +105,7 @@ public class FileDialog {
    * @throws IOException Si hay un problema al leer el fichero seleccionado.
    */
   public static Maze loadMaze () throws IOException {
-    JFileChooser chooser = createFileChooser();
+    JFileChooser chooser = createFileChooser("Maze files (*.maze)", "maze");
     int result = chooser.showOpenDialog(null);
 
     Maze maze = null;
@@ -121,11 +124,9 @@ public class FileDialog {
    * @throws IOException Si hay un problema al leer el fichero seleccionado.
    */
   public static void saveLog (String log) throws IOException {
-    JFileChooser chooser = new JFileChooser();
-    FileFilter filter = new FileNameExtensionFilter("Log files (*.log)", "log");
-    chooser.setFileFilter(filter);
-
+    JFileChooser chooser = createFileChooser("Log files (*.log)", "log");
     int result = chooser.showSaveDialog(null);
+
     if (result == JFileChooser.APPROVE_OPTION) {
       File f_chosen = chooser.getSelectedFile();
       File file = new File(f_chosen.getAbsolutePath() +
@@ -140,11 +141,53 @@ public class FileDialog {
   }
 
   /**
+   * Muestra un diálogo para que el usuario seleccione un fichero del que cargar
+   * un agente.
+   * @param env Entorno en el que colocar al agente.
+   * @return El agente cargado.
+   * @throws IOException Si hay un problema al leer el fichero seleccionado.
+   */
+  public static Agent loadAgent (Environment env) throws IOException {
+    JFileChooser chooser = createFileChooser("Agent files (*.agent)", "agent");
+    int result = chooser.showOpenDialog(null);
+
+    Agent ag = null;
+    if (result == JFileChooser.APPROVE_OPTION) {
+      File file = chooser.getSelectedFile();
+      ag = Agent.loadFile(file.getAbsolutePath(), env);
+    }
+
+    return ag;
+  }
+
+  /**
+   * Muestra un diálogo para que el usuario seleccione un fichero donde guardar
+   * una configuración de agente.
+   * @return Agente cargado o null si no era un fichero válido.
+   * @throws IOException Si no se puede leer el fichero.
+   */
+  public static void saveAgent (Agent agent) throws IOException {
+    JFileChooser chooser = createFileChooser("Agent files (*.agent)", "agent");
+    int result = chooser.showSaveDialog(null);
+
+    if (result == JFileChooser.APPROVE_OPTION) {
+      File f_chosen = chooser.getSelectedFile();
+      File file = new File(f_chosen.getAbsolutePath() +
+                           extension(f_chosen.getName(), "agent"));
+
+      if (promptOverwrite(file))
+        agent.saveFile(file.getAbsolutePath());
+    }
+  }
+
+  /**
+   * @param description
+   * @param extension
    * @return Un diálogo para seleccionar ficheros con extensión ".maze".
    */
-  private static JFileChooser createFileChooser () {
+  private static JFileChooser createFileChooser (String description, String extension) {
     JFileChooser chooser = new JFileChooser();
-    FileFilter filter = new FileNameExtensionFilter("Maze files (*.maze)", "maze");
+    FileFilter filter = new FileNameExtensionFilter(description, extension);
     chooser.setFileFilter(filter);
 
     return chooser;
