@@ -26,6 +26,7 @@
 package maze;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import util.Pair;
 
@@ -34,7 +35,7 @@ import util.Pair;
  * un flag, por lo que se pueden hacer operaciones de bit para representar
  * varias direcciones en la misma variable simultáneamente.
  */
-public enum Direction {
+public enum Direction implements Serializable {
   NONE  ((short) 0x00),
   UP    ((short) 0x01),
   DOWN  ((short) 0x02),
@@ -42,9 +43,9 @@ public enum Direction {
   RIGHT ((short) 0x08);
 
   public static int MAX_DIRECTIONS = 5;
+  private static Direction[] values = Direction.values();
 
   public short val;
-  private static Direction[] values = Direction.values();
 
   private Direction (short val) {
     this.val = val;

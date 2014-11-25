@@ -34,7 +34,9 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -66,15 +68,23 @@ import agent.rules.parser.SituationActionParser.Sa_ruleContext;
  * para la cual la situación se cumple.
  */
 public class SARulesAgent extends Agent {
+  private static final long serialVersionUID = -6154538349034427858L;
   public static final int MINIMUM_WIDTH = 300;
   public static final int MINIMUM_HEIGHT = 100;
   public static final String DEFAULT_AGENT_SRC =
-        "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
+        "// Reglas de máxima prioridad para salir del laberinto\n"
+      + "DOWN OFFLIMITS -> MOVE DOWN.\n"
+      + "RIGHT OFFLIMITS -> MOVE RIGHT.\n"
+      + "LEFT OFFLIMITS -> MOVE LEFT.\n"
+      + "UP OFFLIMITS -> MOVE UP.\n\n"
+
+      + "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
       + "// Siempre intenta acercarse a la esquina inferior izquierda\n"
       + "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
       + "RIGHT FREE & RIGHT ~VISITED => GO RIGHT.\n"
       + "LEFT FREE & LEFT ~VISITED => GO LEFT.\n"
       + "UP FREE & UP ~VISITED => GO UP.\n\n"
+
       + "// Reglas para mover al agente si todo alrededor está visitado u\n"
       + "// ocupado. Utilizamos varias operaciones lógicas para demostrar\n"
       + "// la flexibilidad del lenguaje. Se pueden traducir como:\n"
@@ -84,10 +94,10 @@ public class SARulesAgent extends Agent {
       + "right !wall And right !agent -> move right.\n"
       + "!(down wall or down agent) -> move down.\n";
 
-  private SituationActionErrorHandler m_error_handler;
-  private ArrayList <SituationActionRule> m_rules;
   private String m_code;
-  private boolean[][] m_visited;
+  private transient SituationActionErrorHandler m_error_handler;
+  private transient ArrayList <SituationActionRule> m_rules;
+  private transient boolean[][] m_visited;
 
   /**
    * @param env Entorno donde se sitúa el agente.
@@ -293,4 +303,16 @@ public class SARulesAgent extends Agent {
     return ag;
   }
 
+  /**
+   * @param input
+   * @throws ClassNotFoundException
+   * @throws IOException
+   */
+  private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+    input.defaultReadObject();
+
+    m_error_handler = new SituationActionErrorHandler();
+    m_rules = new ArrayList <SituationActionRule>();
+    compileCode();
+  }
 }
