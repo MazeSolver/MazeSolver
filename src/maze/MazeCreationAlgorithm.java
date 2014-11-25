@@ -57,6 +57,7 @@ public abstract class MazeCreationAlgorithm {
 
   /**
    * Devuelve la posición de la salida del laberinto.
+   *
    * @return La posición de la salida del laberinto.
    */
   public Point getExit () {
@@ -137,9 +138,65 @@ public abstract class MazeCreationAlgorithm {
         m_maze_exit.x = m_columns - 1;
         m_maze_exit.y = pos;
         break;
-      default: break;
+      default:
+        break;
     }
 
     m_maze.get(m_maze_exit.y).get(m_maze_exit.x).unsetWall(dir);
   }
+
+  /**
+   * Modifica el laberinto para hacer un laberinto no perfecto
+   * @param n número de paredes a quitar
+   */
+  public void addCycles (int n) {
+    int k = 0;
+    Direction dir;
+    while (k < n) {
+      int x = (int) (Math.random() * m_columns);
+      int y = (int) (Math.random() * m_rows);
+      ArrayList <Direction> directions = new ArrayList <Direction>();
+      Point actual = new Point(x, y);
+      for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
+        dir = Direction.fromIndex(i);
+        Point next = dir.movePoint(actual);
+        if (next.y >= 0 && next.y < m_rows && next.x >= 0 && next.x < m_columns
+            && !m_maze.get(x).get(y).hasWall(dir))
+          directions.add(dir);
+      }
+      if (!directions.isEmpty()) {
+        dir = directions.get((int) (Math.random() * directions.size()));
+        k++;
+        m_maze.get(x).get(y).setWall(dir);
+      }
+    }
+  }
+
+  /**
+   * Modifica el laberinto para hacer un laberinto no perfecto
+   * @param n número de paredes a añadir
+   */
+  public void setConnectedComponents (int n) {
+    int k = 0;
+    Direction dir;
+    while (k < n) {
+      int x = (int) (Math.random() * m_columns);
+      int y = (int) (Math.random() * m_rows);
+      ArrayList <Direction> directions = new ArrayList <Direction>();
+      Point actual = new Point(x, y);
+      for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
+        dir = Direction.fromIndex(i);
+        Point next = dir.movePoint(actual);
+        if (next.y >= 0 && next.y < m_rows && next.x >= 0 && next.x < m_columns
+            && m_maze.get(x).get(y).hasWall(dir))
+          directions.add(dir);
+      }
+      if (!directions.isEmpty()) {
+        dir = directions.get((int) (Math.random() * directions.size()));
+        k++;
+        m_maze.get(x).get(y).setWall(dir);
+      }
+    }
+  }
+
 }
