@@ -34,6 +34,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -166,9 +168,21 @@ public class MainWindow extends JFrame implements Observer {
     m_split_panel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, null, m_environments);
 
     m_console = new LoggingConsole();
-    JSplitPane console_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, m_split_panel, m_console);
+    final JSplitPane console_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, m_split_panel, m_console);
+    m_console.addPropertyChangeListener("ConsoleDisplay", new PropertyChangeListener() {
+      @Override
+      public void propertyChange (PropertyChangeEvent e) {
+        // Si antes estaba visible, ahora no lo está, así que ajustamos el
+        // separador para que se minimice la consola
+        if ((Boolean) e.getOldValue())
+          console_split.resetToPreferredSizes();
+        // Si no, redimensionamos el panel para mostrar la consola
+        else
+          console_split.setDividerLocation(0.75);
+      }
+    });
 
-    console_split.setResizeWeight(0.75);
+    console_split.setResizeWeight(1);
 
     global_panel.add(console_split, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
