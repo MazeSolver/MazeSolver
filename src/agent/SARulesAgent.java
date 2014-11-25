@@ -71,10 +71,10 @@ public class SARulesAgent extends Agent {
   public static final int MINIMUM_HEIGHT = 100;
   public static final String DEFAULT_AGENT_SRC =
         "// Reglas de máxima prioridad para salir del laberinto\n"
-      + "DOWN OFFLIMITS -> MOVE DOWN\n"
-      + "RIGHT OFFLIMITS -> MOVE RIGHT\n"
-      + "LEFT OFFLIMITS -> MOVE LEFT\n"
-      + "UP OFFLIMITS -> MOVE UP\n\n"
+      + "DOWN OFFLIMITS -> MOVE DOWN.\n"
+      + "RIGHT OFFLIMITS -> MOVE RIGHT.\n"
+      + "LEFT OFFLIMITS -> MOVE LEFT.\n"
+      + "UP OFFLIMITS -> MOVE UP.\n\n"
 
       + "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
       + "// Siempre intenta acercarse a la esquina inferior izquierda\n"
