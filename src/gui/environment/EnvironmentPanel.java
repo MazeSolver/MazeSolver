@@ -27,9 +27,14 @@ package gui.environment;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
 import java.awt.Point;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 
 import maze.Direction;
 import maze.Maze;
@@ -45,6 +50,8 @@ public class EnvironmentPanel extends JPanel {
 
   private static double s_zoom = 1.0;
   private Environment m_env;
+  private Popup m_popup;
+  private Agent m_last_hovered;
 
   /**
    * @param env
@@ -149,13 +156,35 @@ public class EnvironmentPanel extends JPanel {
     if (selected != null)
       drawAgent(selected, Color.RED, g, cell_size);
 
-    // Dibujamos un marcador al agente sobre el que se encuentra el ratón.
+    // Dibujamos un marcador al agente sobre el que se encuentra el ratón y un
+    // popup con su nombre.
     Agent hovered = m_env.getHoveredAgent();
-    if (hovered != null) {
+    if (hovered != null && m_last_hovered != hovered) {
       g.setColor(Color.GREEN);
       g.drawOval((int) Math.round((hovered.getX()+1) * cell_size),
           (int) Math.round((hovered.getY()+1) * cell_size), (int) Math.round(cell_size - 1),
           (int) Math.round(cell_size - 1));
+
+      String name = hovered.getName();
+      Point p = MouseInfo.getPointerInfo().getLocation();
+
+      JTextArea name_label = new JTextArea(name);
+      name_label.setForeground(Color.WHITE);
+      name_label.setBackground(new Color(64, 64, 64));
+      name_label.setEditable(false);
+      name_label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
+      if (m_popup != null)
+        m_popup.hide();
+
+      m_popup = PopupFactory.getSharedInstance().getPopup(this, name_label, p.x + 15, p.y);
+      m_popup.show();
+      m_last_hovered = hovered;
+    }
+    else if (m_last_hovered != hovered && m_popup != null) {
+      m_popup.hide();
+      m_popup = null;
+      m_last_hovered = null;
     }
   }
 
