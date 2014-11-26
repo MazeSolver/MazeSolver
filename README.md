@@ -3,6 +3,8 @@ MazeSolver
 
 Proyecto de la asignatura de Sistemas Inteligentes de la Universidad de La Laguna (Computación).
 
+![Screenshot](prototype/gui.png)
+
 ##Descripción
 Nuestro objetivo es crear una interfaz gráfica para la creación y visualización de laberintos, la configuración y creación de agentes y la ejecución de simulaciones. Permitiendo así que el usuario tenga un control total. Las funcionalidades que proporcionará este programa serán:
 * Creación de laberintos con distintos algoritmos y parámetros.
