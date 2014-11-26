@@ -150,17 +150,49 @@ public abstract class MazeCreationAlgorithm {
    * @param n número de paredes a quitar
    */
   public void addCycles (int n) {
+    if ( n > (m_columns-1)*(m_rows-1))
+      throw new IllegalArgumentException("El número aristas es superior al posible");
     int k = 0;
     Direction dir;
     while (k < n) {
       int x = (int) (Math.random() * m_columns);
       int y = (int) (Math.random() * m_rows);
+      Point p = new Point(x, y);
       ArrayList <Direction> directions = new ArrayList <Direction>();
-      Point actual = new Point(x, y);
       for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
         dir = Direction.fromIndex(i);
-        Point next = dir.movePoint(actual);
-        if (next.y >= 0 && next.y < m_rows && next.x >= 0 && next.x < m_columns
+        p = dir.movePoint(p);
+        if (p.y >= 0 && p.y < m_rows && p.x >= 0 && p.x < m_columns
+            && m_maze.get(x).get(y).hasWall(dir))
+          directions.add(dir);
+      }
+      if (!directions.isEmpty()) {
+        dir = directions.get((int) (Math.random() * directions.size()));
+        k++;
+        m_maze.get(x).get(y).unsetWall(dir);
+        m_maze.get(p.x).get(p.y).unsetWall(dir.getOpposite());
+      }
+    }
+  }
+
+  /**
+   * Modifica el laberinto para hacer un laberinto no perfecto
+   * @param n número de paredes para añadir
+   */
+  public void setConnectedComponents (int n) {
+    if ( n > (m_columns*m_rows)-1)
+      throw new IllegalArgumentException("El número aristas es superior al posible");
+    int k = 0;
+    Direction dir;
+    while (k < n) {
+      int x = (int) (Math.random() * m_columns);
+      int y = (int) (Math.random() * m_rows);
+      Point p = new Point(x, y);
+      ArrayList <Direction> directions = new ArrayList <Direction>();
+      for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
+        dir = Direction.fromIndex(i);
+        p = dir.movePoint(p);
+        if (p.y >= 0 && p.y < m_rows && p.x >= 0 && p.x < m_columns
             && !m_maze.get(x).get(y).hasWall(dir))
           directions.add(dir);
       }
@@ -168,33 +200,7 @@ public abstract class MazeCreationAlgorithm {
         dir = directions.get((int) (Math.random() * directions.size()));
         k++;
         m_maze.get(x).get(y).setWall(dir);
-      }
-    }
-  }
-
-  /**
-   * Modifica el laberinto para hacer un laberinto no perfecto
-   * @param n número de paredes a añadir
-   */
-  public void setConnectedComponents (int n) {
-    int k = 0;
-    Direction dir;
-    while (k < n) {
-      int x = (int) (Math.random() * m_columns);
-      int y = (int) (Math.random() * m_rows);
-      ArrayList <Direction> directions = new ArrayList <Direction>();
-      Point actual = new Point(x, y);
-      for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
-        dir = Direction.fromIndex(i);
-        Point next = dir.movePoint(actual);
-        if (next.y >= 0 && next.y < m_rows && next.x >= 0 && next.x < m_columns
-            && m_maze.get(x).get(y).hasWall(dir))
-          directions.add(dir);
-      }
-      if (!directions.isEmpty()) {
-        dir = directions.get((int) (Math.random() * directions.size()));
-        k++;
-        m_maze.get(x).get(y).setWall(dir);
+        m_maze.get(p.x).get(p.y).setWall(dir.getOpposite());
       }
     }
   }
