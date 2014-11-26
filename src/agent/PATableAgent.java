@@ -312,7 +312,7 @@ public class PATableAgent extends Agent {
     private static int[] decodeRow (int row) {
       int[] assignation = new int[4];
       for (int column = 0; column < N_FIELDS-1; column++)
-        assignation[column] = (row / (int) Math.pow(2, N_FIELDS-2 - column)) % 2;
+        assignation[column] = (row / (1 << N_FIELDS-2 - column)) % 2;
       return assignation;
     }
   }
