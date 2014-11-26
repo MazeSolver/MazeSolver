@@ -43,7 +43,7 @@ import javax.swing.PopupFactory;
  * interfaz.
  */
 public class PopupTip {
-  private static int DEFAULT_POPUP_DURATION_MS = 100;
+  private static int DEFAULT_POPUP_DURATION_MS = 1000;
 
   private static ScheduledExecutorService s_executor = Executors.newSingleThreadScheduledExecutor();
   private static ScheduledFuture <?> s_timeout;
@@ -89,7 +89,7 @@ public class PopupTip {
    * @param y Posición absoluta en Y.
    * @param time_ms Tiempo en milisegundos que el popup va a estar mostrándose.
    */
-  public synchronized static void show (Component owner, String msg, int x, int y, int time_ms) {
+  public static void show (Component owner, String msg, int x, int y, int time_ms) {
     if (s_popup != null) {
       s_popup.hide();
       s_timeout.cancel(true);
@@ -124,7 +124,7 @@ public class PopupTip {
    * que se elimine automáticamente una vez haya pasado el tiempo que se le
    * indicó.
    */
-  public synchronized static void hide () {
+  public static void hide () {
     if (s_popup != null) {
       s_popup.hide();
       s_popup = null;
