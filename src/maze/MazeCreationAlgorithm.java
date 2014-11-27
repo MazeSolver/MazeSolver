@@ -41,6 +41,8 @@ public abstract class MazeCreationAlgorithm {
   protected ArrayList <ArrayList <MazeCell>> m_maze;
   protected Point m_maze_exit;
 
+  private int m_cycles, m_walls;
+
   /**
    * @param rows
    *          Número de filas del laberinto.
@@ -50,6 +52,7 @@ public abstract class MazeCreationAlgorithm {
   public MazeCreationAlgorithm (int rows, int columns) {
     if (rows <= MIN_ROWS || columns <= MIN_COLUMNS)
       throw new IllegalArgumentException("El número de filas o columnas es demasiado pequeño");
+
     m_rows = rows;
     m_columns = columns;
     m_maze = initializeMaze();
@@ -57,7 +60,6 @@ public abstract class MazeCreationAlgorithm {
 
   /**
    * Devuelve la posición de la salida del laberinto.
-   *
    * @return La posición de la salida del laberinto.
    */
   public Point getExit () {
@@ -67,7 +69,41 @@ public abstract class MazeCreationAlgorithm {
   /**
    * @return La matriz que contiene las celdas del laberinto.
    */
-  public abstract ArrayList <ArrayList <MazeCell>> createMaze ();
+  public ArrayList <ArrayList <MazeCell>> createMaze () {
+    runCreationAlgorithm();
+    createExit();
+    addRandomCycles(m_cycles);
+    addRandomWalls(m_walls);
+
+    return m_maze;
+  }
+
+  /**
+   * Establece el número de ciclos que se quiere que genere el algoritmo.
+   * @param n_cycles Número de ciclos.
+   */
+  public void setCycles (int n_cycles) {
+    m_cycles = n_cycles;
+  }
+
+  /**
+   * Establece el número de componentes separadas que se quiere tener al
+   * generar el laberinto. Si se especifica 1, no se modifica el laberinto
+   * perfecto.
+   * @param n_components Número de componentes.
+   */
+  public void setComponents (int n_components) {
+    m_walls = n_components - 1;
+  }
+
+  /**
+   * Ejecuta el algoritmo de creación del laberinto, dejando el resultado en la
+   * variable miembro {@code m_maze}.
+   *
+   * Cuando se llama a este método, la variable está inicializada con un mapa
+   * en el que todas las celdas están rodeadas de paredes.
+   */
+  protected abstract void runCreationAlgorithm ();
 
   /**
    * Este método crea un laberinto vacío a partir del número de filas y columnas
@@ -105,9 +141,9 @@ public abstract class MazeCreationAlgorithm {
   }
 
   /**
-   * Abre una salida en una casilla aleatoria por los bordes del laberinto
+   * Abre una salida en una casilla aleatoria por los bordes del laberinto.
    */
-  protected void createExit () {
+  private void createExit () {
     // Decidimos en qué borde vamos a crear la salida
     Direction dir = Direction.random();
 
@@ -146,12 +182,14 @@ public abstract class MazeCreationAlgorithm {
   }
 
   /**
-   * Modifica el laberinto para hacer un laberinto no perfecto
-   * @param n número de paredes a quitar
+   * Elimina paredes de un laberinto perfecto ya creado para crear ciclos y
+   * hacer que deje de serlo.
+   * @param n Número de paredes a quitar.
    */
-  public void addCycles (int n) {
-    if ( n > (m_columns-1)*(m_rows-1))
+  private void addRandomCycles (int n) {
+    if (n > (m_columns-1) * (m_rows-1))
       throw new IllegalArgumentException("El número aristas es superior al posible");
+
     int k = 0;
     Direction dir;
     while (k < n) {
@@ -176,12 +214,14 @@ public abstract class MazeCreationAlgorithm {
   }
 
   /**
-   * Modifica el laberinto para hacer un laberinto no perfecto
-   * @param n número de paredes para añadir
+   * Añade paredes al laberinto perfecto ya creado para que esté compuesto por
+   * distintas componentes inaccesibles entre sí y deje de ser perfecto.
+   * @param n Número de paredes para añadir.
    */
-  public void setConnectedComponents (int n) {
+  private void addRandomWalls (int n) {
     if ( n > (m_columns*m_rows)-1)
       throw new IllegalArgumentException("El número aristas es superior al posible");
+
     int k = 0;
     Direction dir;
     while (k < n) {

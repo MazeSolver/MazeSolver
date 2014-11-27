@@ -28,7 +28,6 @@ package maze.algorithm;
 import java.util.ArrayList;
 
 import maze.Direction;
-import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
 import util.Pair;
 
@@ -47,22 +46,22 @@ public class Kruskal extends MazeCreationAlgorithm {
   public Kruskal (int rows, int columns) {
     super(rows, columns);
     walls = new ArrayList <short []>();
-    disjoint_set = new ArrayList <Integer>();
 
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
+    disjoint_set = new ArrayList <Integer>();
+
     for (int i = 0; i < m_rows * m_columns; i++)
       disjoint_set.add(i);
+
     addAll();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see maze.MazeCreationAlgorithm#createMaze()
+  /* (non-Javadoc)
+   * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
    */
   @Override
-  public ArrayList <ArrayList <MazeCell>> createMaze () {
+  public void runCreationAlgorithm () {
     int nextWall, i, j;
     while (!walls.isEmpty()) {
       // Seleccionamos una celda y una direccion de dentro de las posibles que
@@ -72,6 +71,7 @@ public class Kruskal extends MazeCreationAlgorithm {
       j = walls.get(nextWall)[1];
       Direction dir = Direction.fromValue(walls.get(nextWall)[2]);
       Pair <Integer, Integer> desp = dir.decompose();
+
       // Si la celda vecina a la posicion i,j +dir pertenece a otro conjunto
       // entonces, la marcamos del mismo conjunto (y a cada elemento del mismo)
       // y abrimos el pasillo por ahi.
@@ -81,16 +81,14 @@ public class Kruskal extends MazeCreationAlgorithm {
       }
       walls.remove(nextWall);
     }
-    createExit();
-    return m_maze;
   }
 
   /**
-   * Añade todos los muros a la lista de muros a elegir aleatoriamente
+   * Añade todos los muros a la lista de muros a elegir aleatoriamente.
    */
   private void addAll () {
-    for (int i = 0; i < m_rows; i++)
-      for (int j = 0; j < m_columns; j++)
+    for (int i = 0; i < m_rows; i++) {
+      for (int j = 0; j < m_columns; j++) {
         for (short k = 1; k < Direction.MAX_DIRECTIONS; k++) {
           Direction dir = Direction.fromIndex(k);
           Pair <Integer, Integer> desp = dir.decompose();
@@ -100,6 +98,8 @@ public class Kruskal extends MazeCreationAlgorithm {
             walls.add(aux);
           }
         }
+      }
+    }
   }
 
   /**

@@ -28,7 +28,6 @@ package maze.algorithm;
 import java.util.ArrayList;
 
 import maze.Direction;
-import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
 import util.Pair;
 
@@ -58,13 +57,11 @@ public class Prim extends MazeCreationAlgorithm {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see maze.MazeCreationAlgorithm#createMaze()
+  /* (non-Javadoc)
+   * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
    */
   @Override
-  public ArrayList <ArrayList <MazeCell>> createMaze () {
+  public void runCreationAlgorithm () {
     short i = 0;
     short j = 0;
     // Empezar el laberinto con todo lleno de paredes y selecionar una celda.
@@ -80,6 +77,7 @@ public class Prim extends MazeCreationAlgorithm {
       j = walls.get(nextWall)[1];
       Direction dir = Direction.fromValue(walls.get(nextWall)[2]);
       Pair <Integer, Integer> desp = dir.decompose();
+
       // Si la celda vecina a la posicion i,j +dir sigue estando disponible
       // la elegimos y agregamos las celdas vecinas a esta al conjunto, si no
       // eliminamos dicha posicion con dicha direccion para que no vuelva
@@ -91,8 +89,6 @@ public class Prim extends MazeCreationAlgorithm {
       }
       walls.remove(nextWall);
     }
-    createExit();
-    return m_maze;
   }
 
   /**
