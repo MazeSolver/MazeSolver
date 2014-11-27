@@ -33,13 +33,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import maze.Maze;
 import maze.MazeCreationAlgorithm;
@@ -59,9 +65,13 @@ public class MazeSelectorDialog extends JDialog {
   private static final int MIN_MAZE_SIZE = 10;
   private static final int MAX_MAZE_SIZE = 100;
 
+  private JButton m_ok, m_cancel;
   private JComboBox<String> m_algorithms;
-  private JSpinner m_rows;
-  private JSpinner m_columns;
+  private JSpinner m_rows, m_columns;
+
+  private ButtonGroup m_type;
+  private JRadioButton m_perfect, m_add_cycles, m_add_components;
+  private JSpinner m_cycles, m_components;
 
   private Maze m_result;
 
@@ -72,12 +82,8 @@ public class MazeSelectorDialog extends JDialog {
                       "Recursive Backtracking"};
     m_algorithms = new JComboBox<String>(algos);
 
-    m_rows = new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE, MIN_MAZE_SIZE,
-        MAX_MAZE_SIZE, 1));
-    m_columns = new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE,
-        MIN_MAZE_SIZE, MAX_MAZE_SIZE, 1));
-
     buildInterface();
+    setupListeners();
     setResizable(false);
     setModal(true);
   }
@@ -90,37 +96,136 @@ public class MazeSelectorDialog extends JDialog {
   private void buildInterface () {
     setLayout(new BorderLayout());
 
-    JLabel alg = new JLabel("Algorithm:");
-    JLabel row = new JLabel("Rows:");
-    JLabel col = new JLabel("Columns:");
+    JPanel basic_global = new JPanel(new BorderLayout(5, 5));
+    JPanel basic_labels = new JPanel(new GridLayout(3, 1, 5, 5));
+    JPanel basic_controls = new JPanel(new GridLayout(3, 1, 5, 5));
 
-    JPanel global = new JPanel(new BorderLayout(5, 5));
-    JPanel labels = new JPanel(new GridLayout(3, 1, 5, 5));
-    JPanel controls = new JPanel(new GridLayout(3, 1, 5, 5));
+    m_rows = new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE, MIN_MAZE_SIZE,
+        MAX_MAZE_SIZE, 1));
+    m_columns = new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE,
+        MIN_MAZE_SIZE, MAX_MAZE_SIZE, 1));
 
-    labels.add(alg);
-    controls.add(m_algorithms);
-    labels.add(row);
-    controls.add(m_rows);
-    labels.add(col);
-    controls.add(m_columns);
+    basic_labels.add(new JLabel("Algorithm:"));
+    basic_controls.add(m_algorithms);
+    basic_labels.add(new JLabel("Rows:"));
+    basic_controls.add(m_rows);
+    basic_labels.add(new JLabel("Columns:"));
+    basic_controls.add(m_columns);
 
-    global.add(labels, BorderLayout.WEST);
-    global.add(controls, BorderLayout.CENTER);
-    global.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    basic_global.add(basic_labels, BorderLayout.WEST);
+    basic_global.add(basic_controls, BorderLayout.CENTER);
+    basic_global.setBorder(BorderFactory.createCompoundBorder(
+      BorderFactory.createEmptyBorder(2, 5, 0, 5),
+      BorderFactory.createTitledBorder(
+        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+        "Basic configuration"
+      )
+    ));
 
-    JButton ok = new JButton("OK");
-    JButton cancel = new JButton("Cancel");
+    JPanel adv_global = new JPanel(new BorderLayout());
+    JPanel adv_labels = new JPanel(new GridLayout(3, 1));
+    JPanel adv_controls = new JPanel(new GridLayout(3, 1));
+
+    m_type = new ButtonGroup();
+    m_perfect = new JRadioButton("Perfect maze", true);
+    m_perfect.setActionCommand("Perfect");
+    m_add_cycles = new JRadioButton("Add cycles:");
+    m_add_cycles.setActionCommand("Cycles");
+    m_add_components = new JRadioButton("Add walls:");
+    m_add_components.setActionCommand("Walls");
+
+    m_type.add(m_perfect);
+    m_type.add(m_add_cycles);
+    m_type.add(m_add_components);
+
+    m_cycles = new JSpinner(new SpinnerNumberModel(0, 0,
+        (int) Math.round(Maze.perfectMazeEdges(MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
+    m_components = new JSpinner(new SpinnerNumberModel(0, 0,
+        (int) Math.round(Maze.perfectMazeWalls(MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
+
+    m_cycles.setEnabled(false);
+    m_components.setEnabled(false);
+
+    adv_labels.add(m_perfect);
+    adv_controls.add(Box.createGlue());
+    adv_labels.add(m_add_cycles);
+    adv_controls.add(m_cycles);
+    adv_labels.add(m_add_components);
+    adv_controls.add(m_components);
+
+    adv_global.add(adv_labels, BorderLayout.WEST);
+    adv_global.add(adv_controls, BorderLayout.CENTER);
+    adv_global.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createEmptyBorder(2, 5, 0, 5),
+        BorderFactory.createTitledBorder(
+          BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+          "Maze type"
+        )
+      ));
+
+    m_ok = new JButton("OK");
+    m_cancel = new JButton("Cancel");
 
     JPanel button_panel = new JPanel(new FlowLayout());
-    button_panel.add(ok);
-    button_panel.add(cancel);
+    button_panel.add(m_ok);
+    button_panel.add(m_cancel);
+
+    JPanel global = new JPanel(new BorderLayout());
+    global.add(basic_global, BorderLayout.CENTER);
+    global.add(adv_global, BorderLayout.SOUTH);
 
     add(global, BorderLayout.CENTER);
     add(button_panel, BorderLayout.SOUTH);
     pack();
+  }
 
-    ok.addActionListener(new ActionListener() {
+  private void setupListeners () {
+    ChangeListener dim_change_listener = new ChangeListener() {
+      @Override
+      public void stateChanged (ChangeEvent e) {
+        int rows = (Integer) m_rows.getValue();
+        int columns = (Integer) m_columns.getValue();
+
+        int max_cycles = (int) Math.round(Maze.perfectMazeEdges(rows, columns) * 0.75);
+        int max_components = (int) Math.round(Maze.perfectMazeWalls(rows, columns) * 0.75);
+
+        SpinnerNumberModel cycles_model = (SpinnerNumberModel)m_cycles.getModel();
+        SpinnerNumberModel components_model = (SpinnerNumberModel)m_components.getModel();
+
+        cycles_model.setMaximum(max_cycles);
+        components_model.setMaximum(max_components);
+
+        cycles_model.setValue(Math.min((Integer) cycles_model.getValue(), max_cycles));
+        components_model.setValue(Math.min((Integer) components_model.getValue(), max_components));
+      }
+    };
+
+    m_rows.addChangeListener(dim_change_listener);
+    m_columns.addChangeListener(dim_change_listener);
+
+    ActionListener types_listener = new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        if (e.getSource() == m_perfect) {
+          m_cycles.setEnabled(false);
+          m_components.setEnabled(false);
+        }
+        else if (e.getSource() == m_add_cycles) {
+          m_cycles.setEnabled(true);
+          m_components.setEnabled(false);
+        }
+        else if (e.getSource() == m_add_components) {
+          m_cycles.setEnabled(false);
+          m_components.setEnabled(true);
+        }
+      }
+    };
+
+    m_perfect.addActionListener(types_listener);
+    m_add_cycles.addActionListener(types_listener);
+    m_add_components.addActionListener(types_listener);
+
+    m_ok.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         String alg_name = (String) m_algorithms.getSelectedItem();
@@ -129,31 +234,40 @@ public class MazeSelectorDialog extends JDialog {
 
         MazeCreationAlgorithm alg = null;
 
-        if (alg_name.equals("Aldous Broder")) {
-          alg = new AldousBroder(rows, columns);
-        }
-        else if (alg_name.equals("Hunt and Kill")) {
-          alg = new HuntAndKill(rows, columns);
-        }
-        else if (alg_name.equals("Kruskal")) {
-          alg = new Kruskal(rows, columns);
-        }
-        else if (alg_name.equals("Prim")) {
-          alg = new Prim(rows, columns);
-        }
-        else if (alg_name.equals("Recursive Backtracking")) {
-          alg = new RecursiveBacktracking(rows, columns);
+        switch (alg_name) {
+          case "Aldous Broder":
+            alg = new AldousBroder(rows, columns);
+            break;
+          case "Hunt and Kill":
+            alg = new HuntAndKill(rows, columns);
+            break;
+          case "Kruskal":
+            alg = new Kruskal(rows, columns);
+            break;
+          case "Prim":
+            alg = new Prim(rows, columns);
+            break;
+          case "Recursive Backtracking":
+            alg = new RecursiveBacktracking(rows, columns);
+            break;
         }
 
-        if (alg != null)
+        if (alg != null) {
+          String command = m_type.getSelection().getActionCommand();
+          if (command.equals(m_add_cycles.getActionCommand()))
+            alg.setCycles((Integer) m_cycles.getValue());
+          else if (command.equals(m_add_components.getActionCommand()))
+            alg.setComponents((Integer) m_components.getValue());
+
           m_result = new Maze(alg);
+        }
 
         setVisible(false);
         dispose();
       }
     });
 
-    cancel.addActionListener(new ActionListener() {
+    m_cancel.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         setVisible(false);
