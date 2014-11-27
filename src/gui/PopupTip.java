@@ -27,15 +27,14 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
+import javax.swing.Timer;
 
 /**
  * Una clase que implementa la funcionalidad de JToolTip pero utilizando como
@@ -43,10 +42,9 @@ import javax.swing.PopupFactory;
  * interfaz.
  */
 public class PopupTip {
-  private static int DEFAULT_POPUP_DURATION_MS = 1000;
+  private static int DEFAULT_POPUP_DURATION_MS = 2000;
 
-  private static ScheduledExecutorService s_executor = Executors.newSingleThreadScheduledExecutor();
-  private static ScheduledFuture <?> s_timeout;
+  private static Timer s_timer = new Timer(0, null);
 
   private static PopupFactory s_factory = PopupFactory.getSharedInstance();
   private static JTextArea s_text_label;
@@ -54,6 +52,15 @@ public class PopupTip {
   private static CloseOperationListener s_listener;
 
   static {
+    s_timer.setRepeats(false);
+    s_timer.setCoalesce(true);
+    // Configuramos un hilo que cierre el popup una vez haya transcurrido su
+    // tiempo de visualización
+    s_timer.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) { hide(); }
+    });
+
     s_text_label = new JTextArea();
     s_text_label.setForeground(Color.WHITE);
     s_text_label.setBackground(new Color(64, 64, 64));
@@ -92,19 +99,17 @@ public class PopupTip {
   public static void show (Component owner, String msg, int x, int y, int time_ms) {
     if (s_popup != null) {
       s_popup.hide();
-      s_timeout.cancel(true);
+      s_timer.stop();
     }
 
     s_text_label.setText(msg);
     s_popup = s_factory.getPopup(owner, s_text_label, x, y);
     s_popup.show();
 
-    // Configuramos un hilo que cierre el popup una vez haya transcurrido su
-    // tiempo de visualización
-    s_timeout = s_executor.schedule(new Runnable() {
-      @Override
-      public void run () { hide(); }
-    }, time_ms, TimeUnit.MILLISECONDS);
+    // Lanza el temporizador que se encarga de cerrar el popup tras un cierto
+    // tiempo
+    s_timer.setInitialDelay(time_ms);
+    s_timer.start();
   }
 
   /**
@@ -125,6 +130,8 @@ public class PopupTip {
    * indicó.
    */
   public static void hide () {
+    s_timer.stop();
+
     if (s_popup != null) {
       s_popup.hide();
       s_popup = null;
