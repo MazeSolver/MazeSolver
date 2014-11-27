@@ -29,7 +29,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import maze.Direction;
-import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
 
 /**
@@ -46,9 +45,11 @@ public class AldousBroder extends MazeCreationAlgorithm {
    */
   public AldousBroder (int rows, int columns) {
     super(rows, columns);
-    m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
+
     // Creamos una matriz de visitados para saber en cada momento cuáles son
     // las celdas que no se han visitado todavía.
+    m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
+
     for (int i = 0; i < rows; i++) {
       m_included_cells.add(new ArrayList <Boolean>(columns));
       for (int j = 0; j < columns; j++)
@@ -56,13 +57,11 @@ public class AldousBroder extends MazeCreationAlgorithm {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see maze.MazeCreationAlgorithm#createMaze()
+  /* (non-Javadoc)
+   * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
    */
   @Override
-  public ArrayList <ArrayList <MazeCell>> createMaze () {
+  public void runCreationAlgorithm () {
     int x = (int) (Math.random() * m_columns);
     int y = (int) (Math.random() * m_rows);
     Point p = new Point(x, y);
@@ -76,8 +75,6 @@ public class AldousBroder extends MazeCreationAlgorithm {
         cellVisitedCount++;
       }
     }
-    createExit();
-    return m_maze;
   }
 
   /**
@@ -98,5 +95,4 @@ public class AldousBroder extends MazeCreationAlgorithm {
 
     return dir;
   }
-
 }

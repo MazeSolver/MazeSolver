@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import maze.Direction;
-import maze.MazeCell;
 import maze.MazeCreationAlgorithm;
 
 /**
@@ -56,13 +55,11 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see maze.MazeCreationAlgorithm#createMaze()
+  /* (non-Javadoc)
+   * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
    */
   @Override
-  public ArrayList <ArrayList <MazeCell>> createMaze () {
+  public void runCreationAlgorithm () {
     Stack <Point> stack = new Stack <Point>();
 
     stack.push(new Point(0, 0));
@@ -81,8 +78,6 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
         stack.push(p);
       }
     }
-    createExit();
-    return m_maze;
   }
 
   /**
