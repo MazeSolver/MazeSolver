@@ -134,4 +134,27 @@ public class Maze {
     fileOut.close();
   }
 
+  /**
+   * Calcula el número máximo de aristas que se pueden añadir en un laberinto
+   * del tamaño dado. Cada arista se refiere a un pasillo abierto entre 2
+   * celdas. Se puede ver como el número de paredes que tiene en su interior un
+   * laberinto perfecto, sin contar el contorno.
+   * @param rows Número de filas.
+   * @param columns Número de columnas.
+   * @return Número de paredes en el interior del laberinto.
+   */
+  public static int perfectMazeWalls (int rows, int columns) {
+    return (rows-1) * (columns-1);
+  }
+
+  /**
+   * Calcula el número de aristas que tiene un laberinto perfecto de las
+   * dimensiones dadas. Las aristas representan pasillos entre 2 celdas.
+   * @param rows Númnero de filas.
+   * @param columns Número de columnas.
+   * @return Número de aristas del laberinto perfecto.
+   */
+  public static int perfectMazeEdges (int rows, int columns) {
+    return (rows * columns) - 1;
+  }
 }
