@@ -217,7 +217,7 @@ public class MainWindow extends JFrame implements Observer {
     m_menu_file.add(m_itm_exit);
 
     // Menú "Maze"
-    m_itm_maze_clone = new JMenuItem("Clone maze");
+    m_itm_maze_clone = new JMenuItem("Copy maze");
     m_itm_maze_change = new JMenuItem("Change maze...");
     m_itm_maze_close = new JMenuItem("Close maze");
 
