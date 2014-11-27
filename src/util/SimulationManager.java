@@ -28,21 +28,21 @@ package util;
 import gui.environment.Environment;
 import gui.environment.EnvironmentSet;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Observable;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+
+import javax.swing.Timer;
 
 /**
  * Gestor de la simulación.
  */
-public class SimulationManager extends Observable implements Runnable {
+public class SimulationManager extends Observable {
   private static int DEFAULT_INTERVAL = 200;
 
-  private int m_interval;
-  private ScheduledThreadPoolExecutor m_executor;
-  private ScheduledFuture <?> m_future;
+  private Timer m_timer;
+  private boolean m_paused;
 
   private EnvironmentSet m_environments;
   private boolean[] m_finished;
@@ -55,10 +55,17 @@ public class SimulationManager extends Observable implements Runnable {
    * @param env_set Conjunto de entornos que va a manejar.
    */
   public SimulationManager (EnvironmentSet env_set) {
-    m_interval = DEFAULT_INTERVAL;
-    m_executor = new ScheduledThreadPoolExecutor(1);
     m_results = new SimulationResults();
     setEnvironments(env_set);
+
+    m_timer = new Timer(0, new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        stepSimulation();
+      }
+    });
+    m_timer.setRepeats(true);
+    m_timer.setDelay(DEFAULT_INTERVAL);
   }
 
   /**
@@ -66,7 +73,7 @@ public class SimulationManager extends Observable implements Runnable {
    */
   public void setInterval (int msec) {
     if (msec > 0)
-      m_interval = msec;
+      m_timer.setDelay(msec);
   }
 
   /**
@@ -86,7 +93,7 @@ public class SimulationManager extends Observable implements Runnable {
    * está ejecutando.
    */
   public void startSimulation () {
-    m_sim_finished = false;
+    m_sim_finished = m_paused = false;
 
     // Actualizamos el tamaño de la lista de entornos finalizados por si hay un
     // número diferente de entornos que en la última ejecución
@@ -97,8 +104,7 @@ public class SimulationManager extends Observable implements Runnable {
 
     // Lanzamos un hilo sólo si no se está ejecutando todavía
     if (!isRunning()) {
-      m_future = m_executor.scheduleAtFixedRate(this, 0, m_interval,
-        TimeUnit.MILLISECONDS);
+      m_timer.start();
       m_results.startTimer();
     }
   }
@@ -108,8 +114,9 @@ public class SimulationManager extends Observable implements Runnable {
    */
   public void pauseSimulation () {
     if (isRunning()) {
-      m_future.cancel(false);
+      m_timer.stop();
       m_results.pauseTimer();
+      m_paused = true;
     }
   }
 
@@ -117,10 +124,10 @@ public class SimulationManager extends Observable implements Runnable {
    * Para la simulación actual si se está ejecutando.
    */
   public void stopSimulation () {
-    if (m_future != null) {
-      m_future.cancel(false);
-      m_future = null;
+    if (isRunning() || isPaused()) {
+      m_timer.stop();
       m_results.pauseTimer();
+      m_paused = false;
 
       // Avisamos a los observadores que la simulación ha terminado
       setChanged();
@@ -129,46 +136,9 @@ public class SimulationManager extends Observable implements Runnable {
   }
 
   /**
-   * @return Si la simulación se está ejecutando.
+   * Lleva a cabo un paso de la simulación.
    */
-  public boolean isRunning () {
-    return m_future != null && !m_future.isDone();
-  }
-
-  /**
-   * @return Si la simulación está pausada.
-   */
-  public boolean isPaused () {
-    return m_future != null && m_future.isCancelled();
-  }
-
-  /**
-   * @return Si la simulación está parada.
-   */
-  public boolean isStopped () {
-    return m_future == null;
-  }
-
-  /**
-   * @return Si la simulación ha acabado (todos los agentes están parados).
-   */
-  public boolean isFinished () {
-    return m_sim_finished;
-  }
-
-  /**
-   * @return Resultados de la simulación actual. Puede ser que sean incompletos,
-   * dado que puede ser que la simulación no haya acabado.
-   */
-  public final SimulationResults getResults () {
-    return m_results;
-  }
-
-  /* (non-Javadoc)
-   * @see java.lang.Runnable#run()
-   */
-  @Override
-  public void run () {
+  public void stepSimulation () {
     int amount_finished = 0;
 
     // Hacemos que ejecuten un paso todos los agentes de todos los entornos
@@ -186,5 +156,41 @@ public class SimulationManager extends Observable implements Runnable {
       m_sim_finished = true;
       stopSimulation();
     }
+  }
+
+  /**
+   * @return Si la simulación se está ejecutando.
+   */
+  public boolean isRunning () {
+    return m_timer.isRunning();
+  }
+
+  /**
+   * @return Si la simulación está pausada.
+   */
+  public boolean isPaused () {
+    return m_paused;
+  }
+
+  /**
+   * @return Si la simulación está parada.
+   */
+  public boolean isStopped () {
+    return !m_timer.isRunning() && !m_paused;
+  }
+
+  /**
+   * @return Si la simulación ha acabado (todos los agentes están parados).
+   */
+  public boolean isFinished () {
+    return m_sim_finished;
+  }
+
+  /**
+   * @return Resultados de la simulación actual. Puede ser que sean incompletos,
+   * dado que puede ser que la simulación no haya acabado.
+   */
+  public final SimulationResults getResults () {
+    return m_results;
   }
 }

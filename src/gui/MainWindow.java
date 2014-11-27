@@ -517,7 +517,7 @@ public class MainWindow extends JFrame implements Observer {
     m_step.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        m_simulation.run();
+        m_simulation.stepSimulation();
       }
     });
 
