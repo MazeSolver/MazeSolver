@@ -187,7 +187,7 @@ public abstract class MazeCreationAlgorithm {
    * @param n Número de paredes a quitar.
    */
   private void addRandomCycles (int n) {
-    if (n > (m_columns-1) * (m_rows-1))
+    if (n > Maze.perfectMazeWalls(m_rows, m_columns))
       throw new IllegalArgumentException("El número aristas es superior al posible");
 
     int k = 0;
@@ -197,18 +197,19 @@ public abstract class MazeCreationAlgorithm {
       int y = (int) (Math.random() * m_rows);
       Point p = new Point(x, y);
       ArrayList <Direction> directions = new ArrayList <Direction>();
+
       for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
         dir = Direction.fromIndex(i);
-        p = dir.movePoint(p);
-        if (p.y >= 0 && p.y < m_rows && p.x >= 0 && p.x < m_columns
-            && m_maze.get(x).get(y).hasWall(dir))
+        Point p2 = dir.movePoint(p);
+        if (p2.y >= 0 && p2.y < m_rows && p2.x >= 0 && p2.x < m_columns
+            && m_maze.get(p.y).get(p.x).hasWall(dir))
           directions.add(dir);
       }
+
       if (!directions.isEmpty()) {
         dir = directions.get((int) (Math.random() * directions.size()));
+        openPassage(p.x, p.y, dir);
         k++;
-        m_maze.get(x).get(y).unsetWall(dir);
-        m_maze.get(p.x).get(p.y).unsetWall(dir.getOpposite());
       }
     }
   }
@@ -219,7 +220,7 @@ public abstract class MazeCreationAlgorithm {
    * @param n Número de paredes para añadir.
    */
   private void addRandomWalls (int n) {
-    if ( n > (m_columns*m_rows)-1)
+    if (n > Maze.perfectMazeEdges(m_rows, m_columns))
       throw new IllegalArgumentException("El número aristas es superior al posible");
 
     int k = 0;
@@ -229,18 +230,21 @@ public abstract class MazeCreationAlgorithm {
       int y = (int) (Math.random() * m_rows);
       Point p = new Point(x, y);
       ArrayList <Direction> directions = new ArrayList <Direction>();
+
       for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
         dir = Direction.fromIndex(i);
-        p = dir.movePoint(p);
-        if (p.y >= 0 && p.y < m_rows && p.x >= 0 && p.x < m_columns
-            && !m_maze.get(x).get(y).hasWall(dir))
+        Point p2 = dir.movePoint(p);
+        if (p2.y >= 0 && p2.y < m_rows && p2.x >= 0 && p2.x < m_columns
+            && !m_maze.get(p2.y).get(p2.x).hasWall(dir))
           directions.add(dir);
       }
+
       if (!directions.isEmpty()) {
         dir = directions.get((int) (Math.random() * directions.size()));
+        m_maze.get(p.y).get(p.x).setWall(dir);
+        p = dir.movePoint(p);
+        m_maze.get(p.y).get(p.x).setWall(dir.getOpposite());
         k++;
-        m_maze.get(x).get(y).setWall(dir);
-        m_maze.get(p.x).get(p.y).setWall(dir.getOpposite());
       }
     }
   }
