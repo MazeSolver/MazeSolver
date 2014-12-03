@@ -179,6 +179,7 @@ public abstract class MazeCreationAlgorithm {
     }
 
     m_maze.get(m_maze_exit.y).get(m_maze_exit.x).unsetWall(dir);
+    m_maze_exit = dir.movePoint(m_maze_exit);
   }
 
   /**
