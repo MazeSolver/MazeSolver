@@ -222,6 +222,6 @@ public abstract class Agent implements Cloneable, Serializable {
    * @see java.lang.Object#clone()
    */
   @Override
-  public abstract Object clone () throws CloneNotSupportedException;
+  public abstract Object clone ();
 
 }

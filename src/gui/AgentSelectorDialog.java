@@ -159,10 +159,7 @@ public class AgentSelectorDialog extends JDialog {
 
         // Clonamos el agente en todas las posiciones (todos serán iguales)
         for (int i = 1; i < amount; i++) {
-          try {
-            m_result[i] = (Agent) m_result[0].clone();
-          }
-          catch (CloneNotSupportedException e1) {}
+          m_result[i] = (Agent) m_result[0].clone();
         }
 
         setVisible(false);

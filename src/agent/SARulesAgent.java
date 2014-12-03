@@ -79,7 +79,7 @@ public class SARulesAgent extends Agent {
       + "UP OFFLIMITS -> MOVE UP.\n\n"
 
       + "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
-      + "// Siempre intenta acercarse a la esquina inferior izquierda\n"
+      + "// Siempre intenta acercarse a la esquina inferior derecha\n"
       + "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
       + "RIGHT FREE & RIGHT ~VISITED => GO RIGHT.\n"
       + "LEFT FREE & LEFT ~VISITED => GO LEFT.\n"
@@ -292,7 +292,7 @@ public class SARulesAgent extends Agent {
    * @see agent.Agent#duplicate()
    */
   @Override
-  public Object clone () throws CloneNotSupportedException {
+  public Object clone () {
     SARulesAgent ag = new SARulesAgent(m_env);
     ag.m_code = m_code;
     ag.m_pos = (Point) m_pos.clone();

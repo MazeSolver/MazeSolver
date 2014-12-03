@@ -160,7 +160,7 @@ public class PATableAgent extends Agent {
    * @see agent.Agent#clone()
    */
   @Override
-  public Object clone () throws CloneNotSupportedException {
+  public Object clone () {
     PATableAgent ag = new PATableAgent(m_env);
     ag.m_table = deepDataCopy(m_table);
     return ag;
