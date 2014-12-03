@@ -28,6 +28,7 @@ package agent;
 import gui.AgentConfigurationPanel;
 import gui.environment.Environment;
 
+import java.awt.FlowLayout;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,10 +36,15 @@ import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TreeMap;
 
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
 import agent.distance.DistanceCalculator;
+import agent.distance.EuclideanDistance;
 import agent.distance.ManhattanDistance;
 
 /**
@@ -155,8 +161,30 @@ public class HillClimbAgent extends Agent {
    */
   @Override
   public AgentConfigurationPanel getConfigurationPanel () {
-    // TODO Auto-generated method stub
-    return null;
+    return new AgentConfigurationPanel() {
+      private static final long serialVersionUID = 1L;
+      private JComboBox <DistanceCalculator> combo;
+
+      @Override
+      protected void createGUI (JPanel root) {
+        root.setLayout(new FlowLayout(FlowLayout.LEFT));
+        root.add(new JLabel("Distance measure:"));
+
+        combo = new JComboBox <DistanceCalculator>();
+        combo.addItem(new EuclideanDistance());
+        combo.addItem(new ManhattanDistance());
+        root.add(combo);
+      }
+
+      @Override
+      protected void cancel () {}
+
+      @Override
+      protected boolean accept () {
+        setDistanceCalculator((DistanceCalculator) combo.getSelectedItem());
+        return true;
+      }
+    };
   }
 
   /* (non-Javadoc)
