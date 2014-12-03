@@ -304,9 +304,11 @@ public class SARulesAgent extends Agent {
   }
 
   /**
-   * @param input
-   * @throws ClassNotFoundException
-   * @throws IOException
+   * Extrae la información del objeto a partir de una forma serializada del
+   * mismo.
+   * @param input Flujo de entrada con la información del objeto.
+   * @throws ClassNotFoundException Si se trata de un objeto de otra clase.
+   * @throws IOException Si no se puede leer el flujo de entrada.
    */
   private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
     input.defaultReadObject();
