@@ -26,12 +26,15 @@
 package agent.distance;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 /**
  * Interfaz que implementan las clases que pueden medir la distancia entre
  * 2 puntos en 2 dimensiones.
  */
-public abstract class DistanceCalculator {
+public abstract class DistanceCalculator implements Serializable {
+  private static final long serialVersionUID = 1L;
+
   /**
    * Mide la distancia entre 2 puntos.
    * @param p1 Punto 1.

@@ -31,6 +31,7 @@ import java.awt.Point;
  * Métrica de distancia correspondiente a la distancia euclídea.
  */
 public class EuclideanDistance extends DistanceCalculator {
+  private static final long serialVersionUID = 3873048442851862831L;
 
   /* (non-Javadoc)
    * @see agent.distance.DistanceCalculator#distance(java.awt.Point, java.awt.Point)
