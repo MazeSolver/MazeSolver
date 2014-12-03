@@ -42,11 +42,11 @@ public class EuclideanDistance extends DistanceCalculator {
   }
 
   /* (non-Javadoc)
-   * @see agent.distance.DistanceCalculator#toString()
+   * @see agent.distance.DistanceCalculator#getType()
    */
   @Override
-  public String toString () {
-    return "Euclidean Distance";
+  public DistanceType getType () {
+    return DistanceType.EUCLIDEAN;
   }
 
   /* (non-Javadoc)

@@ -43,11 +43,11 @@ public class ManhattanDistance extends DistanceCalculator {
   }
 
   /* (non-Javadoc)
-   * @see agent.distance.DistanceCalculator#toString()
+   * @see agent.distance.DistanceCalculator#getType()
    */
   @Override
-  public String toString () {
-    return "Manhattan Distance";
+  public DistanceType getType () {
+    return DistanceType.MANHATTAN;
   }
 
   /* (non-Javadoc)

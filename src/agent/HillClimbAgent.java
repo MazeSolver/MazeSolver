@@ -44,7 +44,7 @@ import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
 import agent.distance.DistanceCalculator;
-import agent.distance.EuclideanDistance;
+import agent.distance.DistanceCalculator.DistanceType;
 import agent.distance.ManhattanDistance;
 
 /**
@@ -163,16 +163,15 @@ public class HillClimbAgent extends Agent {
   public AgentConfigurationPanel getConfigurationPanel () {
     return new AgentConfigurationPanel() {
       private static final long serialVersionUID = 1L;
-      private JComboBox <DistanceCalculator> combo;
+      private JComboBox <DistanceType> combo;
 
       @Override
       protected void createGUI (JPanel root) {
         root.setLayout(new FlowLayout(FlowLayout.LEFT));
         root.add(new JLabel("Distance measure:"));
 
-        combo = new JComboBox <DistanceCalculator>();
-        combo.addItem(new EuclideanDistance());
-        combo.addItem(new ManhattanDistance());
+        combo = new JComboBox<DistanceType>(DistanceType.values());
+        combo.setSelectedItem(m_dist.getType());
         root.add(combo);
       }
 
@@ -181,7 +180,7 @@ public class HillClimbAgent extends Agent {
 
       @Override
       protected boolean accept () {
-        setDistanceCalculator((DistanceCalculator) combo.getSelectedItem());
+        setDistanceCalculator(DistanceCalculator.fromType((DistanceType) combo.getSelectedItem()));
         return true;
       }
     };

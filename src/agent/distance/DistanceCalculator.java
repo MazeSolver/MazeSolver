@@ -35,13 +35,38 @@ import java.io.Serializable;
 public abstract class DistanceCalculator implements Serializable, Cloneable {
   private static final long serialVersionUID = 1L;
 
+  public static enum DistanceType {
+    EUCLIDEAN,
+    MANHATTAN;
+
+    public String toString () {
+      switch (this) {
+        case EUCLIDEAN:
+          return "Euclidean Distance";
+        case MANHATTAN:
+          return "Manhattan Distance";
+        default:
+          return "";
+      }
+    }
+  }
+
   /**
-   * Mide la distancia entre 2 puntos.
-   * @param p1 Punto 1.
-   * @param p2 Punto 2.
-   * @return Distancia entre los 2 puntos.
+   * Método factoría que crea una instancia de alguna de las subclases dependiendo
+   * del tipo especificado.
+   * @param type Tipo de la clase que se quiere obtener.
+   * @return Una instancia de la clase.
    */
-  public abstract double distance (Point p1, Point p2);
+  public static DistanceCalculator fromType (DistanceType type) {
+    switch (type) {
+      case EUCLIDEAN:
+        return new EuclideanDistance();
+      case MANHATTAN:
+        return new ManhattanDistance();
+      default:
+        return null;
+    }
+  }
 
   /**
    * Mide la distancia entre 2 puntos.
@@ -55,11 +80,18 @@ public abstract class DistanceCalculator implements Serializable, Cloneable {
     return distance(new Point(x1, y1), new Point(x2, y2));
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
+  /**
+   * Mide la distancia entre 2 puntos.
+   * @param p1 Punto 1.
+   * @param p2 Punto 2.
+   * @return Distancia entre los 2 puntos.
    */
-  @Override
-  public abstract String toString ();
+  public abstract double distance (Point p1, Point p2);
+
+  /**
+   * @return El tipo de la clase.
+   */
+  public abstract DistanceType getType ();
 
   /* (non-Javadoc)
    * @see java.lang.Object#clone()
