@@ -42,4 +42,11 @@ public class ManhattanDistance extends DistanceCalculator {
     return Math.abs(p2.x - p1.x) + Math.abs(p2.y - p1.y);
   }
 
+  /* (non-Javadoc)
+   * @see agent.distance.DistanceCalculator#clone()
+   */
+  @Override
+  public Object clone () {
+    return new ManhattanDistance();
+  }
 }

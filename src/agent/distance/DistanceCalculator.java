@@ -32,7 +32,7 @@ import java.io.Serializable;
  * Interfaz que implementan las clases que pueden medir la distancia entre
  * 2 puntos en 2 dimensiones.
  */
-public abstract class DistanceCalculator implements Serializable {
+public abstract class DistanceCalculator implements Serializable, Cloneable {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -54,4 +54,10 @@ public abstract class DistanceCalculator implements Serializable {
   public double distance (int x1, int y1, int x2, int y2) {
     return distance(new Point(x1, y1), new Point(x2, y2));
   }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public abstract Object clone ();
 }
