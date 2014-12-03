@@ -48,6 +48,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import agent.Agent;
+import agent.HillClimbAgent;
 import agent.PATableAgent;
 import agent.SARulesAgent;
 
@@ -66,7 +67,7 @@ public class AgentSelectorDialog extends JDialog {
     ALGORITHMS.put("Logical (Prolog)", null);
     ALGORITHMS.put("A*", null);
     ALGORITHMS.put("RTA*", null);
-    ALGORITHMS.put("Hill Climbing", null);
+    ALGORITHMS.put("Hill Climbing", HillClimbAgent.class);
     ALGORITHMS.put("Simulated Annealing", null);
   }
 
@@ -158,10 +159,7 @@ public class AgentSelectorDialog extends JDialog {
 
         // Clonamos el agente en todas las posiciones (todos serán iguales)
         for (int i = 1; i < amount; i++) {
-          try {
-            m_result[i] = (Agent) m_result[0].clone();
-          }
-          catch (CloneNotSupportedException e1) {}
+          m_result[i] = (Agent) m_result[0].clone();
         }
 
         setVisible(false);

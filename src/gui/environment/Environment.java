@@ -303,11 +303,8 @@ public class Environment extends BaseInternalFrame {
   public ArrayList <Agent> getAgents () {
     ArrayList <Agent> agents = new ArrayList <Agent>();
 
-    try {
-      for (Agent i: m_agents)
-        agents.add((Agent) i.clone());
-    }
-    catch (CloneNotSupportedException e) {}
+    for (Agent i: m_agents)
+      agents.add((Agent) i.clone());
 
     return agents;
   }

@@ -38,13 +38,16 @@ import java.util.ArrayList;
  */
 public class Maze {
   private ArrayList <ArrayList <MazeCell>> m_maze;
+  private Point m_exit;
 
   /**
    * @param alg Algoritmo de creación de laberintos ya inicializado
    */
   public Maze (MazeCreationAlgorithm alg) {
-    if (alg != null)
+    if (alg != null) {
       m_maze = alg.createMaze();
+      m_exit = alg.getExit();
+    }
     else
       throw new IllegalArgumentException("El algoritmo de creación del laberinto es inválido");
   }
@@ -92,6 +95,13 @@ public class Maze {
   }
 
   /**
+   * @return La posición donde se encuentra la salida al laberinto.
+   */
+  public Point getExit () {
+    return new Point(m_exit);
+  }
+
+  /**
    * Determina si el punto se encuentra dentro del laberinto o no.
    * @param p Punto a testear.
    * @return Si el punto está dentro del laberinto o no.
@@ -112,6 +122,7 @@ public class Maze {
       FileInputStream fileIn = new FileInputStream(fileName);
       ObjectInputStream in = new ObjectInputStream(fileIn);
       m_maze = (ArrayList <ArrayList <MazeCell>>) in.readObject();
+      m_exit = (Point) in.readObject();
       in.close();
       fileIn.close();
     }
@@ -130,6 +141,7 @@ public class Maze {
     FileOutputStream fileOut = new FileOutputStream(fileName);
     ObjectOutputStream out = new ObjectOutputStream(fileOut);
     out.writeObject(m_maze);
+    out.writeObject(m_exit);
     out.close();
     fileOut.close();
   }

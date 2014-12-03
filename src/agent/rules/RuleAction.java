@@ -86,7 +86,7 @@ public class RuleAction implements Cloneable {
    * @see java.lang.Object#clone()
    */
   @Override
-  protected Object clone () throws CloneNotSupportedException {
+  protected Object clone () {
     return new RuleAction(m_direction);
   }
 

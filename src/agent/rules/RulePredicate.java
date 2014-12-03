@@ -109,7 +109,7 @@ public abstract class RulePredicate implements Cloneable {
    * @see java.lang.Object#clone()
    */
   @Override
-  public abstract Object clone () throws CloneNotSupportedException;
+  public abstract Object clone ();
 
   /**
    * Subclase que gestiona una regla sin conectores. Es decir, un término de la
@@ -212,7 +212,7 @@ public abstract class RulePredicate implements Cloneable {
      * @see java.lang.Object#clone()
      */
     @Override
-    public Object clone () throws CloneNotSupportedException {
+    public Object clone () {
       SimpleRulePredicate pred = new SimpleRulePredicate(m_direction, m_vision);
       pred.m_negated = m_negated;
       pred.m_visited_status = m_visited_status;
@@ -265,7 +265,7 @@ public abstract class RulePredicate implements Cloneable {
      * @see java.lang.Object#clone()
      */
     @Override
-    public Object clone () throws CloneNotSupportedException {
+    public Object clone () {
       ComplexRulePredicate pred = new ComplexRulePredicate(
           (RulePredicate) m_p1.clone(), (RulePredicate) m_p2.clone(),
           m_connector);
