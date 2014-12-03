@@ -102,8 +102,11 @@ public class HillClimbAgent extends Agent {
   public Direction getNextMovement () {
     Direction dir = selectDirection();
     if (dir == Direction.NONE && !m_stack.empty()) {
-      m_backtracking = true;
-      dir = m_stack.pop().getOpposite();
+      Direction head = m_stack.peek().getOpposite();
+      if (m_env.movementAllowed(m_pos, head)) {
+        m_backtracking = true;
+        dir = m_stack.pop().getOpposite();
+      }
     }
 
     return dir;
@@ -114,13 +117,16 @@ public class HillClimbAgent extends Agent {
    */
   @Override
   public void doMovement (Direction dir) {
-    if (!m_backtracking)
-      m_stack.push(dir);
-    else
-      m_backtracking = false;
-
+    Point prev = m_pos;
     m_visited[m_pos.y][m_pos.x] = true;
     super.doMovement(dir);
+
+    if (!prev.equals(m_pos)) {
+      if (!m_backtracking)
+        m_stack.push(dir);
+      else
+        m_backtracking = false;
+    }
   }
 
   /* (non-Javadoc)
