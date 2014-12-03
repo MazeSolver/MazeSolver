@@ -56,6 +56,12 @@ public abstract class DistanceCalculator implements Serializable, Cloneable {
   }
 
   /* (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public abstract String toString ();
+
+  /* (non-Javadoc)
    * @see java.lang.Object#clone()
    */
   @Override
