@@ -81,6 +81,34 @@ public enum Direction implements Serializable {
   }
 
   /**
+   * Extrae la dirección asociada al paso entre 2 posiciones contiguas.
+   * @param p1 Posición de inicio.
+   * @param p2 Posición de destino.
+   * @return La dirección que une los 2 puntos contiguos o {@code null} si los
+   *         puntos no están contiguos,
+   */
+  public static Direction fromPoints (Point p1, Point p2) {
+    Point diff = new Point(p2.x - p1.x, p2.y - p1.y);
+    switch (diff.x) {
+      case -1: // izquierda
+        return diff.y == 0? Direction.LEFT : null;
+      case 1: // derecha
+        return diff.y == 0? Direction.RIGHT : null;
+      case 0: // misma posición en X
+        switch (diff.y) {
+          case -1: // arriba
+            return Direction.UP;
+          case 1: // abajo
+            return Direction.DOWN;
+          case 0: // misma posición
+            return Direction.NONE;
+        }
+      default:
+        return null;
+    }
+  }
+
+  /**
    * Crea una dirección de forma aleatoria.
    * @return Una dirección aleatoria. No va a ser Direction.NONE.
    */
