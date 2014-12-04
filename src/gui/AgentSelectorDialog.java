@@ -47,6 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import agent.AStarAgent;
 import agent.Agent;
 import agent.HillClimbAgent;
 import agent.PATableAgent;
@@ -65,7 +66,7 @@ public class AgentSelectorDialog extends JDialog {
     ALGORITHMS.put("Perception-Action Tables", PATableAgent.class);
     ALGORITHMS.put("Situation-Action Rules", SARulesAgent.class);
     ALGORITHMS.put("Logical (Prolog)", null);
-    ALGORITHMS.put("A*", null);
+    ALGORITHMS.put("A*", AStarAgent.class);
     ALGORITHMS.put("RTA*", null);
     ALGORITHMS.put("Hill Climbing", HillClimbAgent.class);
     ALGORITHMS.put("Simulated Annealing", null);
