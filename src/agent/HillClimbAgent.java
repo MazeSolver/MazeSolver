@@ -28,7 +28,6 @@ package agent;
 import gui.AgentConfigurationPanel;
 import gui.environment.Environment;
 
-import java.awt.FlowLayout;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -36,26 +35,21 @@ import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TreeMap;
 
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
 import agent.distance.DistanceCalculator;
-import agent.distance.DistanceCalculator.DistanceType;
-import agent.distance.ManhattanDistance;
 
 /**
  * Agente que implementa el comportamiento del algoritmo de escalada. Siempre
  * intenta moverse al lugar que no ha visitado y que le acerque más al objetivo.
  * En el peor de los casos hace un recorrido por todo el laberinto.
  */
-public class HillClimbAgent extends Agent {
+public class HillClimbAgent extends HeuristicAgent {
   private static final long serialVersionUID = 6553751391274900253L;
 
-  private DistanceCalculator m_dist;
   private transient boolean m_backtracking;
   private transient Stack <Direction> m_stack;
   private transient boolean[][] m_visited;
@@ -67,7 +61,6 @@ public class HillClimbAgent extends Agent {
    */
   public HillClimbAgent (Environment env) {
     super(env);
-    m_dist = new ManhattanDistance();
     m_stack = new Stack<Direction>();
   }
 
@@ -80,17 +73,6 @@ public class HillClimbAgent extends Agent {
 
     Maze maze = env.getMaze();
     m_visited = new boolean[maze.getHeight()][maze.getWidth()];
-  }
-
-  /**
-   * Cambia el algoritmo de cálculo de distancias.
-   * @param dist Algoritmo de cálculo de distancias entre puntos.
-   */
-  public void setDistanceCalculator (DistanceCalculator dist) {
-    if (dist == null)
-      throw new IllegalArgumentException("El medidor de distancias indicado no es válido");
-
-    m_dist = (DistanceCalculator) dist.clone();
   }
 
   /* (non-Javadoc)
@@ -163,16 +145,12 @@ public class HillClimbAgent extends Agent {
   public AgentConfigurationPanel getConfigurationPanel () {
     return new AgentConfigurationPanel() {
       private static final long serialVersionUID = 1L;
-      private JComboBox <DistanceType> combo;
+      private DistanceConfigurationPanel distance;
 
       @Override
       protected void createGUI (JPanel root) {
-        root.setLayout(new FlowLayout(FlowLayout.LEFT));
-        root.add(new JLabel("Distance measure:"));
-
-        combo = new JComboBox<DistanceType>(DistanceType.values());
-        combo.setSelectedItem(m_dist.getType());
-        root.add(combo);
+        distance = new DistanceConfigurationPanel();
+        root.add(distance);
       }
 
       @Override
@@ -180,7 +158,7 @@ public class HillClimbAgent extends Agent {
 
       @Override
       protected boolean accept () {
-        setDistanceCalculator(DistanceCalculator.fromType((DistanceType) combo.getSelectedItem()));
+        setDistanceCalculator(DistanceCalculator.fromType(distance.getSelectedType()));
         return true;
       }
     };
