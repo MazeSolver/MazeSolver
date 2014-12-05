@@ -29,25 +29,27 @@ import gui.AgentConfigurationPanel;
 import gui.environment.Environment;
 
 import java.awt.Point;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
+import javax.swing.JPanel;
+
 import maze.Direction;
 import agent.distance.DistanceCalculator;
-import agent.distance.ManhattanDistance;
 import agent.util.Path;
 
 /**
  * Agente que implementa el comportamiento del algoritmo A*.
  */
-public class AStarAgent extends Agent {
+public class AStarAgent extends HeuristicAgent {
   private static final long serialVersionUID = 4696525877860033142L;
   private static final double STEP_COST = 1.0;
 
-  private DistanceCalculator m_dist;
   private transient Point m_exit;
 
   private transient ArrayList<Path> m_closed;
@@ -78,13 +80,7 @@ public class AStarAgent extends Agent {
    */
   public AStarAgent (Environment env) {
     super(env);
-
-    m_dist = new ManhattanDistance();
-    m_exit = env.getMaze().getExit();
-
-    m_closed = new ArrayList <Path>();
-    m_open = new PriorityQueue<Path>(10, new HeuristicPathComparator());
-    m_open.add(new Path(m_pos));
+    initialize();
   }
 
   /* (non-Javadoc)
@@ -150,8 +146,25 @@ public class AStarAgent extends Agent {
    */
   @Override
   public AgentConfigurationPanel getConfigurationPanel () {
-    // TODO Crear la interfaz común para agentes heurísticos
-    return null;
+    return new AgentConfigurationPanel() {
+      private static final long serialVersionUID = 1L;
+      private DistanceConfigurationPanel distance;
+
+      @Override
+      protected void createGUI (JPanel root) {
+        distance = new DistanceConfigurationPanel();
+        root.add(distance);
+      }
+
+      @Override
+      protected void cancel () {}
+
+      @Override
+      protected boolean accept () {
+        setDistanceCalculator(DistanceCalculator.fromType(distance.getSelectedType()));
+        return true;
+      }
+    };
   }
 
   /* (non-Javadoc)
@@ -162,6 +175,15 @@ public class AStarAgent extends Agent {
     AStarAgent ag = new AStarAgent(m_env);
     ag.m_dist = (DistanceCalculator) m_dist.clone();
     return ag;
+  }
+
+  /**
+   * Inicializa los atributos de la clase que no se generan automáticamente.
+   */
+  private void initialize () {
+    m_closed = new ArrayList <Path>();
+    m_open = new PriorityQueue<Path>(10, new HeuristicPathComparator());
+    m_open.add(new Path(m_pos));
   }
 
   /**
@@ -259,5 +281,18 @@ public class AStarAgent extends Agent {
       list.add(path);
 
     return discarded;
+  }
+
+  /**
+   * Extrae la información del objeto a partir de una forma serializada del
+   * mismo.
+   * @param input Flujo de entrada con la información del objeto.
+   * @throws ClassNotFoundException Si se trata de un objeto de otra clase.
+   * @throws IOException Si no se puede leer el flujo de entrada.
+   */
+  private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+    input.defaultReadObject();
+    m_pos = new Point();
+    initialize();
   }
 }
