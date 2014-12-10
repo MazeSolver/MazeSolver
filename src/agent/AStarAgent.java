@@ -55,22 +55,6 @@ public class AStarAgent extends HeuristicAgent {
   private transient int m_direction_index;
   private transient ArrayList<Direction> m_directions;
 
-  private class HeuristicPathComparator implements Comparator<Path> {
-    /* (non-Javadoc)
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public int compare (Path o1, Path o2) {
-      double h1 = m_dist.distance(o1.getEndPoint(), m_exit);
-      double h2 = m_dist.distance(o2.getEndPoint(), m_exit);
-
-      // La ordenación se hace por coste acumulado (m_cost) + coste estimado
-      // (distancia a la salida)
-      return Double.compare(o1.getCost() + h1, o2.getCost() + h2);
-    }
-
-  }
-
   /**
    * Inicializa el agente A* con la distancia de Manhattan por defecto.
    * @param env Entorno en el que colocar al agente.
@@ -169,6 +153,21 @@ public class AStarAgent extends HeuristicAgent {
     AStarAgent ag = new AStarAgent(m_env);
     ag.m_dist = (DistanceCalculator) m_dist.clone();
     return ag;
+  }
+
+  private class HeuristicPathComparator implements Comparator<Path> {
+    /* (non-Javadoc)
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public int compare (Path o1, Path o2) {
+      double h1 = m_dist.distance(o1.getEndPoint(), m_exit);
+      double h2 = m_dist.distance(o2.getEndPoint(), m_exit);
+
+      // La ordenación se hace por coste acumulado (m_cost) + coste estimado
+      // (distancia a la salida)
+      return Double.compare(o1.getCost() + h1, o2.getCost() + h2);
+    }
   }
 
   /**
