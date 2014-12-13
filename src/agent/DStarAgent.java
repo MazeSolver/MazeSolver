@@ -104,6 +104,9 @@ public class DStarAgent extends HeuristicAgent {
    */
   @Override
   public Direction getNextMovement () {
+    if (!m_maze.containsPoint(m_pos))
+      return Direction.NONE;
+
     // Si estamos al lado de la salida evitamos cálculos y salimos directamente
     for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
       Direction dir = Direction.fromIndex(i);
@@ -145,6 +148,7 @@ public class DStarAgent extends HeuristicAgent {
     if (changed)
       calculatePartialPath(m_state_maze.get(m_pos.y).get(m_pos.x));
 
+    /* Utilidad para mostrar el camino que puede tomar el agente
     for (int i = 0; i < m_maze.getHeight(); i++) {
       for (int j = 0; j < m_maze.getWidth(); j++) {
         State s = m_state_maze.get(i).get(j);
@@ -173,6 +177,7 @@ public class DStarAgent extends HeuristicAgent {
       System.out.println();
     }
     System.out.println();
+    */
 
     Point next_pos = m_state_maze.get(m_pos.y).get(m_pos.x).backpointer.point;
     return Direction.fromPoints(m_pos, next_pos);
@@ -322,7 +327,7 @@ public class DStarAgent extends HeuristicAgent {
     // el coste de cada posición se aumenta en cada iteración y nunca se saca
     // de OPEN.
 
-    // Cuando devuelve kmin >= x.path_cost lo que hay en OPEN suelen ser los
+    // Cuando devuelve kmin > x.path_cost lo que hay en OPEN suelen ser los
     // vecinos de x, que hay que actualizar o eso parece...
 
     // Modificación del algoritmo original: Seguir procesando el estado hasta
