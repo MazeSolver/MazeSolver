@@ -23,12 +23,10 @@
  * @file Direction.java
  * @date 21/10/2014
  */
-package maze;
+package util;
 
 import java.awt.Point;
 import java.io.Serializable;
-
-import util.Pair;
 
 /**
  * Enum que representa una dirección de movimiento en 2D. Cada posible opción es

@@ -49,12 +49,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.text.DefaultEditorKit;
 
-import maze.Direction;
 import maze.Maze;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
+import util.Direction;
 import agent.rules.RuleAction;
 import agent.rules.SituationActionRule;
 import agent.rules.parser.SituationActionErrorHandler;

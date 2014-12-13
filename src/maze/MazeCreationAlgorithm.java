@@ -28,6 +28,7 @@ package maze;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import util.Direction;
 import util.Pair;
 
 /**

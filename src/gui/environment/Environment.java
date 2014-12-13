@@ -31,9 +31,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
-import maze.Direction;
 import maze.Maze;
 import maze.MazeCell;
+import util.Direction;
 import util.SimulationResults;
 import agent.Agent;
 

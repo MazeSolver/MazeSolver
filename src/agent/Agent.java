@@ -36,7 +36,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import maze.Direction;
+import util.Direction;
 import maze.MazeCell;
 
 /**

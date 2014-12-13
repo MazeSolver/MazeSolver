@@ -27,6 +27,8 @@ package maze;
 
 import java.io.Serializable;
 
+import util.Direction;
+
 /**
  * Clase que representa una celda del laberinto.
  */

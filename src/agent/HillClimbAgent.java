@@ -37,7 +37,7 @@ import java.util.TreeMap;
 
 import javax.swing.JPanel;
 
-import maze.Direction;
+import util.Direction;
 import maze.Maze;
 import maze.MazeCell;
 import agent.distance.DistanceCalculator;

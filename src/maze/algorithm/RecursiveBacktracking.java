@@ -29,7 +29,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import maze.Direction;
+import util.Direction;
 import maze.MazeCreationAlgorithm;
 
 /**

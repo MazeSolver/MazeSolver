@@ -28,7 +28,7 @@ package maze.algorithm;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import maze.Direction;
+import util.Direction;
 import maze.MazeCreationAlgorithm;
 
 /**

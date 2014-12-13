@@ -34,7 +34,7 @@ import java.util.PriorityQueue;
 
 import javax.swing.JPanel;
 
-import maze.Direction;
+import util.Direction;
 import maze.Maze;
 import maze.MazeCell;
 import maze.algorithm.EmptyMaze;

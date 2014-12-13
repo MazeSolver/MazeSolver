@@ -25,7 +25,7 @@
  */
 package maze.algorithm;
 
-import maze.Direction;
+import util.Direction;
 import maze.MazeCreationAlgorithm;
 
 /**

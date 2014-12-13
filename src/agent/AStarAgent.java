@@ -39,7 +39,7 @@ import java.util.PriorityQueue;
 
 import javax.swing.JPanel;
 
-import maze.Direction;
+import util.Direction;
 import agent.distance.DistanceCalculator;
 import agent.util.Path;
 

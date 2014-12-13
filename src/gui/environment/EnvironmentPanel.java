@@ -37,7 +37,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
-import maze.Direction;
+import util.Direction;
 import maze.Maze;
 import maze.MazeCell;
 import agent.Agent;

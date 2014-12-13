@@ -27,8 +27,8 @@ package maze.algorithm;
 
 import java.util.ArrayList;
 
-import maze.Direction;
 import maze.MazeCreationAlgorithm;
+import util.Direction;
 import util.Pair;
 
 /**

@@ -38,7 +38,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 
-import maze.Direction;
+import util.Direction;
 import maze.MazeCell.Vision;
 
 /**

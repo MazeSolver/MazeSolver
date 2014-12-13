@@ -25,7 +25,7 @@
  */
 package agent.rules;
 
-import maze.Direction;
+import util.Direction;
 import maze.MazeCell;
 import agent.SARulesAgent;
 import agent.rules.parser.SituationActionParser.AndContext;
