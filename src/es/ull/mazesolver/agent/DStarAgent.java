@@ -103,9 +103,6 @@ public class DStarAgent extends HeuristicAgent {
    */
   @Override
   public Direction getNextMovement () {
-    if (!m_maze.containsPoint(m_pos))
-      return Direction.NONE;
-
     // Si estamos al lado de la salida evitamos cálculos y salimos directamente
     for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
       Direction dir = Direction.fromIndex(i);
