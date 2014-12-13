@@ -120,7 +120,7 @@ public class DStarAgent extends HeuristicAgent {
 
     // Comprobamos en todas las direcciones que las paredes están colocadas en
     // los mismos sitios
-    ArrayList<Direction> changed = new ArrayList<Direction>();
+    boolean changed = false;
     for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
       Direction dir = Direction.fromIndex(i);
 
@@ -132,7 +132,8 @@ public class DStarAgent extends HeuristicAgent {
         Point new_point = dir.movePoint(m_pos);
         if (m_maze.containsPoint(new_point)) {
           m_maze.get(new_point.y, new_point.x).toggleWall(dir.getOpposite());
-          changed.add(dir);
+          modifyCost(m_state_maze.get(new_point.y).get(new_point.x));
+          changed = true;
         }
       }
     }
@@ -141,16 +142,8 @@ public class DStarAgent extends HeuristicAgent {
     // que las distancias desde la posición actual hacia alguna de sus vecinas
     // ha cambiado, así que hay que actualizar la ruta calculada por si ha
     // dejado de ser factible.
-    if (!changed.isEmpty()) {
-      State x = m_state_maze.get(m_pos.y).get(m_pos.x);
-
-      for (Direction dir: changed) {
-        Point new_pos = dir.movePoint(m_pos);
-        State y = m_state_maze.get(new_pos.y).get(new_pos.x);
-        modifyCost(y);
-        calculatePartialPath(x);
-      }
-    }
+    if (changed)
+      calculatePartialPath(m_state_maze.get(m_pos.y).get(m_pos.x));
 
     for (int i = 0; i < m_maze.getHeight(); i++) {
       for (int j = 0; j < m_maze.getWidth(); j++) {
@@ -241,6 +234,9 @@ public class DStarAgent extends HeuristicAgent {
    * Representa un estado dentro del algoritmo D*.
    */
   private class State implements Comparable<State> {
+    // No nos vale Double.MAX_VALUE porque Double.MAX_VALUE + 1.0 == Double.MAX_VALUE
+    private static final double BIG_COST = 1000000.0;
+
     public Point point;
     public State backpointer;    // b(X)
     public Tag tag;              // t(X)
@@ -256,7 +252,7 @@ public class DStarAgent extends HeuristicAgent {
     public State (Point pos) {
       point = (Point) pos.clone();
       tag = Tag.NEW;
-      path_cost = previous_cost = key_value = Double.MAX_VALUE;
+      path_cost = previous_cost = key_value = BIG_COST;
     }
 
     /* (non-Javadoc)
@@ -322,9 +318,17 @@ public class DStarAgent extends HeuristicAgent {
    * invalidada tras la modificación.
    */
   private void calculatePartialPath (State x) {
-    double kmin = getKmin();
-    while (kmin <= x.path_cost)
-      kmin = processState();
+    // TODO Cuando no hay camino hasta la salida, nunca acaba el bucle porque
+    // el coste de cada posición se aumenta en cada iteración y nunca se saca
+    // de OPEN.
+
+    // Cuando devuelve kmin >= x.path_cost lo que hay en OPEN suelen ser los
+    // vecinos de x, que hay que actualizar o eso parece...
+
+    // Modificación del algoritmo original: Seguir procesando el estado hasta
+    // que no haya nada en la lista abierta (todos los caminos son óptimos)
+    while (!m_open.isEmpty())
+      processState();
   }
 
   /**
@@ -473,7 +477,7 @@ public class DStarAgent extends HeuristicAgent {
   private double distance (State x, State y) {
     Point pos = x.point;
     if (m_maze.get(pos.y, pos.x).hasWall(Direction.fromPoints(pos, y.point)))
-      return Double.MAX_VALUE;
+      return State.BIG_COST;
     else
       return m_dist.distance(pos, y.point);
   }
