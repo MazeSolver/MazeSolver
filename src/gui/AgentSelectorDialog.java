@@ -66,11 +66,11 @@ public class AgentSelectorDialog extends JDialog {
   static {
     ALGORITHMS.put("Perception-Action Tables", PATableAgent.class);
     ALGORITHMS.put("Situation-Action Rules", SARulesAgent.class);
-    ALGORITHMS.put("Logical (Prolog)", null);
+    //ALGORITHMS.put("Logical (Prolog)", PrologAgent.class);
     ALGORITHMS.put("A*", AStarAgent.class);
     ALGORITHMS.put("D*", DStarAgent.class);
     ALGORITHMS.put("Hill Climbing", HillClimbAgent.class);
-    ALGORITHMS.put("Simulated Annealing", null);
+    //ALGORITHMS.put("Simulated Annealing", SimulatedAnnealingAgent.class);
   }
 
   private JComboBox<String> m_agents;
