@@ -33,6 +33,16 @@ public enum Rotation {
   COUNTER_CLOCKWISE;
 
   /**
+   * @return La dirección contraria a la actual.
+   */
+  public Rotation getOpposite () {
+    if (this == CLOCKWISE)
+      return COUNTER_CLOCKWISE;
+    else
+      return CLOCKWISE;
+  }
+
+  /**
    * Alias equivalente a {@code Rotation.CLOCKWISE}.
    */
   public static Rotation CW = CLOCKWISE;
