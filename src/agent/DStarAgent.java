@@ -120,7 +120,7 @@ public class DStarAgent extends HeuristicAgent {
 
     // Comprobamos en todas las direcciones que las paredes están colocadas en
     // los mismos sitios
-    boolean modified = false;
+    ArrayList<Direction> changed = new ArrayList<Direction>();
     for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
       Direction dir = Direction.fromIndex(i);
 
@@ -132,10 +132,7 @@ public class DStarAgent extends HeuristicAgent {
         Point new_point = dir.movePoint(m_pos);
         if (m_maze.containsPoint(new_point)) {
           m_maze.get(new_point.y, new_point.x).toggleWall(dir.getOpposite());
-          modifyCost(m_state_maze.get(new_point.y).get(new_point.x));
-
-          // Señalizamos que la representación del laberinto se ha modificado
-          modified = true;
+          changed.add(dir);
         }
       }
     }
@@ -144,8 +141,45 @@ public class DStarAgent extends HeuristicAgent {
     // que las distancias desde la posición actual hacia alguna de sus vecinas
     // ha cambiado, así que hay que actualizar la ruta calculada por si ha
     // dejado de ser factible.
-    if (modified)
-      calculatePartialPath();
+    if (!changed.isEmpty()) {
+      State x = m_state_maze.get(m_pos.y).get(m_pos.x);
+
+      for (Direction dir: changed) {
+        Point new_pos = dir.movePoint(m_pos);
+        State y = m_state_maze.get(new_pos.y).get(new_pos.x);
+        modifyCost(y);
+        calculatePartialPath(x);
+      }
+    }
+
+    for (int i = 0; i < m_maze.getHeight(); i++) {
+      for (int j = 0; j < m_maze.getWidth(); j++) {
+        State s = m_state_maze.get(i).get(j);
+        if (s.backpointer == null)
+          System.out.print("·");
+        else {
+          switch (Direction.fromPoints(s.point, s.backpointer.point)) {
+            case UP:
+              System.out.print("\u2191");
+              break;
+            case DOWN:
+              System.out.print("\u2193");
+              break;
+            case LEFT:
+              System.out.print("\u2190");
+              break;
+            case RIGHT:
+              System.out.print("\u2192");
+              break;
+            default:
+              System.out.print("·");
+              break;
+          }
+        }
+      }
+      System.out.println();
+    }
+    System.out.println();
 
     Point next_pos = m_state_maze.get(m_pos.y).get(m_pos.x).backpointer.point;
     return Direction.fromPoints(m_pos, next_pos);
@@ -287,10 +321,9 @@ public class DStarAgent extends HeuristicAgent {
    * Sólo recalcula aquella parte del camino previamente calculado que ha sido
    * invalidada tras la modificación.
    */
-  private void calculatePartialPath () {
-    State x = m_state_maze.get(m_pos.y).get(m_pos.x);
+  private void calculatePartialPath (State x) {
     double kmin = getKmin();
-    while (kmin < x.path_cost)
+    while (kmin <= x.path_cost)
       kmin = processState();
   }
 
@@ -402,7 +435,7 @@ public class DStarAgent extends HeuristicAgent {
    */
   private double getKmin () {
     State min = minState();
-    return min != null? min.key_value : 0.0;
+    return min != null? min.key_value : -1.0;
   }
 
   /**
@@ -421,6 +454,10 @@ public class DStarAgent extends HeuristicAgent {
    * @param s Estado que insertar.
    */
   private void insert (State s) {
+    // Reposicionamiento del elemento si ya estaba, en lugar de inserción
+    if (s.tag == Tag.OPEN)
+      m_open.remove(s);
+
     s.key_value = Math.min(s.path_cost, s.previous_cost);
     s.tag = Tag.OPEN;
     m_open.add(s);
