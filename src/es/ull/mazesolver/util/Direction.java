@@ -159,6 +159,26 @@ public enum Direction implements Serializable {
   }
 
   /**
+   * Rota la dirección absoluta actual en el sentido indicado.
+   * @param rot Sentido de rotación que aplicar.
+   * @return La nueva dirección rotada.
+   */
+  public Direction rotate (Rotation rot) {
+    switch (this) {
+      case UP:
+        return rot == Rotation.CLOCKWISE? RIGHT : LEFT;
+      case DOWN:
+        return rot == Rotation.CLOCKWISE? LEFT : RIGHT;
+      case LEFT:
+        return rot == Rotation.CLOCKWISE? UP : DOWN;
+      case RIGHT:
+        return rot == Rotation.CLOCKWISE? DOWN : UP;
+      default:
+        return NONE;
+    }
+  }
+
+  /**
    * Desplaza un punto en la dirección y lo guarda en un punto nuevo.
    * @param p Punto que se desea mover en esta dirección.
    * @return Nuevo punto equivalente al indicado desplazado en esta dirección.
