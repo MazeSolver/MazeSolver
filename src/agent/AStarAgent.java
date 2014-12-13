@@ -52,27 +52,8 @@ public class AStarAgent extends HeuristicAgent {
 
   private transient Point m_exit;
 
-  private transient ArrayList<Path> m_closed;
-  private transient PriorityQueue<Path> m_open;
-
   private transient int m_direction_index;
   private transient ArrayList<Direction> m_directions;
-
-  private class HeuristicPathComparator implements Comparator<Path> {
-    /* (non-Javadoc)
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public int compare (Path o1, Path o2) {
-      double h1 = m_dist.distance(o1.getEndPoint(), m_exit);
-      double h2 = m_dist.distance(o2.getEndPoint(), m_exit);
-
-      // La ordenación se hace por coste acumulado (m_cost) + coste estimado
-      // (distancia a la salida)
-      return Double.compare(o1.getCost() + h1, o2.getCost() + h2);
-    }
-
-  }
 
   /**
    * Inicializa el agente A* con la distancia de Manhattan por defecto.
@@ -80,7 +61,6 @@ public class AStarAgent extends HeuristicAgent {
    */
   public AStarAgent (Environment env) {
     super(env);
-    initialize();
   }
 
   /* (non-Javadoc)
@@ -135,8 +115,6 @@ public class AStarAgent extends HeuristicAgent {
    */
   @Override
   public void resetMemory () {
-    if (m_open != null) m_open.clear();
-    if (m_closed != null) m_closed.clear();
     m_directions = null;
     m_direction_index = 0;
   }
@@ -177,30 +155,38 @@ public class AStarAgent extends HeuristicAgent {
     return ag;
   }
 
-  /**
-   * Inicializa los atributos de la clase que no se generan automáticamente.
-   */
-  private void initialize () {
-    m_closed = new ArrayList <Path>();
-    m_open = new PriorityQueue<Path>(10, new HeuristicPathComparator());
-    m_open.add(new Path(m_pos));
+  private class HeuristicPathComparator implements Comparator<Path> {
+    /* (non-Javadoc)
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public int compare (Path o1, Path o2) {
+      double h1 = m_dist.distance(o1.getEndPoint(), m_exit);
+      double h2 = m_dist.distance(o2.getEndPoint(), m_exit);
+
+      // La ordenación se hace por coste acumulado (m_cost) + coste estimado
+      // (distancia a la salida)
+      return Double.compare(o1.getCost() + h1, o2.getCost() + h2);
+    }
   }
 
   /**
    * Recalcula el camino hacia la salida del laberinto desde la posición actual.
    */
   private void calculatePath () {
-    resetMemory();
     Path solution = null;
+
+    ArrayList<Path> closed = new ArrayList <Path>();
+    PriorityQueue<Path> open = new PriorityQueue<Path>(10, new HeuristicPathComparator());
 
     // Inicialmente la lista abierta contiene una trayectoria formada por sólo
     // el nodo de inicio
-    m_open.add(new Path(m_pos));
+    open.add(new Path(m_pos));
 
     // Repetimos mientras hayan posibles trayectorias por recorrer
-    while (!m_open.isEmpty()) {
+    while (!open.isEmpty()) {
       // Sacamos la trayectoria de la lista abierta
-      Path path = m_open.poll();
+      Path path = open.poll();
 
       // Si la trayectoria finaliza en la salida, se trata de la trayectoria
       // óptima: Salimos del bucle
@@ -210,7 +196,7 @@ public class AStarAgent extends HeuristicAgent {
       }
 
       // Insertamos la trayectoria en la lista cerrada
-      insertPath(path, m_closed);
+      insertPath(path, closed);
 
       // Expandimos la trayectoria actual para obtener los posibles pasos que
       // se pueden dar desde la posición actual
@@ -227,9 +213,9 @@ public class AStarAgent extends HeuristicAgent {
           Point n_pos = dir.movePoint(pos);
           if (n_steps < 2 || !path.getPoint(n_steps - 2).equals(n_pos)) {
             Path expanded_path = path.addStep(dir, STEP_COST);
-            Path discarded = insertPath(expanded_path, m_open);
+            Path discarded = insertPath(expanded_path, open);
             if (discarded != null && discarded != expanded_path)
-              insertPath(discarded, m_closed);
+              insertPath(discarded, closed);
           }
         }
       }
@@ -293,6 +279,5 @@ public class AStarAgent extends HeuristicAgent {
   private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
     input.defaultReadObject();
     m_pos = new Point();
-    initialize();
   }
 }

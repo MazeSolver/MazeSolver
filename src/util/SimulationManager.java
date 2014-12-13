@@ -61,7 +61,7 @@ public class SimulationManager extends Observable {
     m_timer = new Timer(0, new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        stepSimulation();
+        doStep();
       }
     });
     m_timer.setRepeats(true);
@@ -136,26 +136,16 @@ public class SimulationManager extends Observable {
   }
 
   /**
-   * Lleva a cabo un paso de la simulación.
+   * Lleva a cabo un paso de la simulación, arrancándola si no está actualmente
+   * ejecutándose. Este método está pensado para ser utilizado por el usuario
+   * directamente cuando quiera hacer una ejecución paso a paso.
    */
   public void stepSimulation () {
-    int amount_finished = 0;
-
-    // Hacemos que ejecuten un paso todos los agentes de todos los entornos
-    // donde no haya acabado algún agente
-    ArrayList <Environment> envs = m_environments.getEnvironmentList();
-    for (int i = 0; i < envs.size(); i++) {
-      if (!m_finished[i])
-        m_finished[i] = envs.get(i).runStep(m_results);
-      else
-        amount_finished++;
+    if (isStopped()) {
+      startSimulation();
+      pauseSimulation();
     }
-
-    // Si todos los agentes han terminado de ejecutar, paramos la simulación
-    if (amount_finished == m_environments.getEnvironmentCount()) {
-      m_sim_finished = true;
-      stopSimulation();
-    }
+    doStep();
   }
 
   /**
@@ -192,5 +182,28 @@ public class SimulationManager extends Observable {
    */
   public final SimulationResults getResults () {
     return m_results;
+  }
+
+  /**
+   * Lleva a cabo un paso de la simulación.
+   */
+  private void doStep () {
+    int amount_finished = 0;
+
+    // Hacemos que ejecuten un paso todos los agentes de todos los entornos
+    // donde no haya acabado algún agente
+    ArrayList <Environment> envs = m_environments.getEnvironmentList();
+    for (int i = 0; i < envs.size(); i++) {
+      if (!m_finished[i])
+        m_finished[i] = envs.get(i).runStep(m_results);
+      else
+        amount_finished++;
+    }
+
+    // Si todos los agentes han terminado de ejecutar, paramos la simulación
+    if (amount_finished == m_environments.getEnvironmentCount()) {
+      m_sim_finished = true;
+      stopSimulation();
+    }
   }
 }
