@@ -328,14 +328,23 @@ public class Environment extends BaseInternalFrame {
     boolean ended = true;
 
     for (Agent i: m_agents) {
-      Direction dir = i.getNextMovement();
+      // Si el agente ya salió del laberinto no lo movemos más, pero si no ha
+      // salido hacemos que calcule su siguiente movimiento
+      Direction dir;
+      if (m_maze.containsPoint(i.getPos()))
+        dir = i.getNextMovement();
+      else
+        dir = Direction.NONE;
+
+      // Restringimos el movimiento del agente para que no atraviese paredes
+      // u otros agentes independientemente de errores que se hayan podido
+      // cometer a la hora de programar a los agentes
       if (movementAllowed(new Point(i.getX(),  i.getY()), dir)) {
         i.doMovement(dir);
         results.agentWalked(i);
       }
 
-      if (i.getX() >= 0 && i.getY() >= 0 && i.getX() < m_maze.getWidth() &&
-          i.getY() < m_maze.getHeight())
+      if (m_maze.containsPoint(i.getPos()))
         ended = false;
       else
         results.agentFinished(i);

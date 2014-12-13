@@ -90,6 +90,13 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * @return Posición del agente.
+   */
+  public Point getPos () {
+    return new Point(m_pos);
+  }
+
+  /**
    * Este método debería sobrecargarse en las clases derivadas que contengan
    * información acerca del camino a seguir por el agente (un plan) de forma que
    * éste siga siendo coherente tras el cambio de laberinto.
