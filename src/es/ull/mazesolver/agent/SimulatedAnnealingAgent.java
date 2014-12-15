@@ -25,12 +25,19 @@
  */
 package es.ull.mazesolver.agent;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
+import es.ull.mazesolver.agent.distance.DistanceCalculator;
 import es.ull.mazesolver.gui.AgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.MazeCell;
@@ -123,14 +130,46 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
     return new AgentConfigurationPanel() {
       private static final long serialVersionUID = 1L;
 
-      private DistanceConfigurationPanel m_dist;
+      private static final double COOLING_STEP = 0.001;
+      private static final double EPSILON = 0.000000001;
+      private static final String COOLING_RATE_FORMAT = "0.000000000";
+
+      private DistanceConfigurationPanel distance;
+      private JSpinner initial_temp;
+      private JSpinner cooling_rate;
 
       @Override
       protected void createGUI (JPanel root) {
-        // TODO Añadir controles para modificar la temperatura inicial y el
-        // ratio de enfriamiento
-        m_dist = new DistanceConfigurationPanel();
-        root.add(m_dist);
+        distance = new DistanceConfigurationPanel();
+        initial_temp = new JSpinner(
+          new SpinnerNumberModel(m_initial_temp, 1, Integer.MAX_VALUE, 1)
+        );
+        cooling_rate = new JSpinner(
+          new SpinnerNumberModel(m_cooling_rate, EPSILON, 1 - EPSILON, COOLING_STEP)
+        );
+        cooling_rate.setEditor(
+          new JSpinner.NumberEditor(cooling_rate, COOLING_RATE_FORMAT)
+        );
+
+        JPanel label_panel = new JPanel(new GridLayout(2, 1));
+        label_panel.add(new JLabel("Initial temperature:"));
+        label_panel.add(new JLabel("Cooling rate factor:"));
+
+        JPanel content_panel = new JPanel(new GridLayout(2, 1));
+        content_panel.add(initial_temp);
+        content_panel.add(cooling_rate);
+
+        JPanel label_content = new JPanel(new BorderLayout());
+        label_content.add(label_panel, BorderLayout.WEST);
+        label_content.add(content_panel, BorderLayout.CENTER);
+
+        JPanel global = new JPanel(new BorderLayout());
+        global.add(distance, BorderLayout.NORTH);
+        global.add(label_content, BorderLayout.SOUTH);
+
+        root.setLayout(new BorderLayout(5, 0));
+        root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        root.add(global, BorderLayout.NORTH);
       }
 
       @Override
@@ -138,8 +177,9 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
 
       @Override
       protected boolean accept () {
-        // TODO Copiar los valores seleccionados por el usuario a los miembros
-        // de la clase
+        m_dist = DistanceCalculator.fromType(distance.getSelectedType());
+        m_initial_temp = (Integer) initial_temp.getValue();
+        m_cooling_rate = (Double) cooling_rate.getValue();
         return true;
       }
     };
