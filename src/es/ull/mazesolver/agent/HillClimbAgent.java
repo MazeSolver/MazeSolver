@@ -25,6 +25,7 @@
  */
 package es.ull.mazesolver.agent;
 
+import java.awt.BorderLayout;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TreeMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import es.ull.mazesolver.agent.distance.DistanceCalculator;
@@ -149,7 +151,9 @@ public class HillClimbAgent extends HeuristicAgent {
       @Override
       protected void createGUI (JPanel root) {
         distance = new DistanceConfigurationPanel();
-        root.add(distance);
+        root.setLayout(new BorderLayout());
+        root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        root.add(distance, BorderLayout.NORTH);
       }
 
       @Override

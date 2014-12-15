@@ -51,6 +51,7 @@ import es.ull.mazesolver.agent.DStarAgent;
 import es.ull.mazesolver.agent.HillClimbAgent;
 import es.ull.mazesolver.agent.PATableAgent;
 import es.ull.mazesolver.agent.SARulesAgent;
+import es.ull.mazesolver.agent.SimulatedAnnealingAgent;
 import es.ull.mazesolver.agent.WallFollowerAgent;
 import es.ull.mazesolver.gui.environment.Environment;
 
@@ -70,7 +71,7 @@ public class AgentSelectorDialog extends JDialog {
     ALGORITHMS.put("A*", AStarAgent.class);
     ALGORITHMS.put("D*", DStarAgent.class);
     ALGORITHMS.put("Hill Climbing", HillClimbAgent.class);
-    //ALGORITHMS.put("Simulated Annealing", SimulatedAnnealingAgent.class);
+    ALGORITHMS.put("Simulated Annealing", SimulatedAnnealingAgent.class);
     ALGORITHMS.put("Wall Follower", WallFollowerAgent.class);
   }
 
@@ -188,6 +189,7 @@ public class AgentSelectorDialog extends JDialog {
         final JDialog d = new JDialog(AgentSelectorDialog.this, "Configure agent", true);
         d.setLocationRelativeTo(AgentSelectorDialog.this);
         d.add(config_panel);
+        d.setResizable(false);
 
         config_panel.addEventListener(new AgentConfigurationPanel.EventListener () {
           @Override
