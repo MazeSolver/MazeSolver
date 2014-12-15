@@ -189,6 +189,7 @@ public class AgentSelectorDialog extends JDialog {
         final JDialog d = new JDialog(AgentSelectorDialog.this, "Configure agent", true);
         d.setLocationRelativeTo(AgentSelectorDialog.this);
         d.add(config_panel);
+        d.setResizable(false);
 
         config_panel.addEventListener(new AgentConfigurationPanel.EventListener () {
           @Override

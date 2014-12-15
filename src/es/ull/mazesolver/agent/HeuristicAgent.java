@@ -25,7 +25,7 @@
  */
 package es.ull.mazesolver.agent;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -78,12 +78,12 @@ public abstract class HeuristicAgent extends Agent {
      * Crea el panel de configuración del agente.
      */
     public DistanceConfigurationPanel () {
-      setLayout(new FlowLayout(FlowLayout.LEFT));
-      add(new JLabel("Distance measure:"));
+      setLayout(new BorderLayout(5, 0));
+      add(new JLabel("Distance measure:"), BorderLayout.WEST);
 
       combo = new JComboBox<DistanceType>(DistanceType.values());
       combo.setSelectedItem(m_dist.getType());
-      add(combo);
+      add(combo, BorderLayout.CENTER);
     }
 
     /**
