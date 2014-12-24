@@ -36,4 +36,36 @@ public class Pair<T1, T2> {
     first = f;
     second = s;
   }
+
+  @Override
+  public int hashCode () {
+    return (first != null? first.hashCode() : 0) *
+           (second != null? second.hashCode() : 0);
+  }
+
+  @Override
+  public boolean equals (Object obj) {
+    if (obj instanceof Pair) {
+      Pair <?,?> o = (Pair<?,?>) obj;
+      try {
+        return first.equals(o.first) && second.equals(o.second);
+      }
+      catch (NullPointerException e) {
+        if (first == null && o.first == null) {
+          if (second == null && o.second == null)
+            return true;
+          else if (second != null)
+            return second.equals(o.second);
+        }
+        else if (first != null && first.equals(o.first)) {
+          if (second == null && o.second == null)
+            return true;
+          else if (second != null)
+            return second.equals(o.second);
+        }
+        return false;
+      }
+    }
+    return false;
+  }
 }
