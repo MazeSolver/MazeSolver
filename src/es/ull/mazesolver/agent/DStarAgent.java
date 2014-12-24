@@ -146,36 +146,7 @@ public class DStarAgent extends HeuristicAgent {
     if (changed)
       calculatePartialPath(m_state_maze.get(m_pos.y).get(m_pos.x));
 
-    /* Utilidad para mostrar el camino que puede tomar el agente
-    for (int i = 0; i < m_maze.getHeight(); i++) {
-      for (int j = 0; j < m_maze.getWidth(); j++) {
-        State s = m_state_maze.get(i).get(j);
-        if (s.backpointer == null)
-          System.out.print("·");
-        else {
-          switch (Direction.fromPoints(s.point, s.backpointer.point)) {
-            case UP:
-              System.out.print("\u2191");
-              break;
-            case DOWN:
-              System.out.print("\u2193");
-              break;
-            case LEFT:
-              System.out.print("\u2190");
-              break;
-            case RIGHT:
-              System.out.print("\u2192");
-              break;
-            default:
-              System.out.print("·");
-              break;
-          }
-        }
-      }
-      System.out.println();
-    }
-    System.out.println();
-    */
+    // printBackpointers();
 
     Point next_pos = m_state_maze.get(m_pos.y).get(m_pos.x).backpointer.point;
     return Direction.fromPoints(m_pos, next_pos);
@@ -485,5 +456,40 @@ public class DStarAgent extends HeuristicAgent {
       return State.BIG_COST;
     else
       return m_dist.distance(pos, y.point);
+  }
+
+  /**
+   * Imprime por consola la matriz de movimientos actual del agente.
+   */
+  @SuppressWarnings ("unused")
+  private void printBackpointers () {
+    for (int i = 0; i < m_maze.getHeight(); i++) {
+      for (int j = 0; j < m_maze.getWidth(); j++) {
+        State s = m_state_maze.get(i).get(j);
+        if (s.backpointer == null)
+          System.out.print("·");
+        else {
+          switch (Direction.fromPoints(s.point, s.backpointer.point)) {
+            case UP:
+              System.out.print("\u2191");
+              break;
+            case DOWN:
+              System.out.print("\u2193");
+              break;
+            case LEFT:
+              System.out.print("\u2190");
+              break;
+            case RIGHT:
+              System.out.print("\u2192");
+              break;
+            default:
+              System.out.print("·");
+              break;
+          }
+        }
+      }
+      System.out.println();
+    }
+    System.out.println();
   }
 }
