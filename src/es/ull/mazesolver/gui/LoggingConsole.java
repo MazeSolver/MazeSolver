@@ -103,6 +103,7 @@ public class LoggingConsole extends JPanel {
     StyleConstants.setForeground(m_warning_style, Color.YELLOW);
 
     final JScrollPane text_scroll = new JScrollPane(m_text);
+    text_scroll.setVisible(false);
 
     JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
     top.add(m_clear_button);
@@ -110,7 +111,7 @@ public class LoggingConsole extends JPanel {
 
     final WebButton collapser = new WebButton();
     collapser.setUndecorated(true);
-    collapser.setIcon(UIManager.getIcon("Tree.expandedIcon"));
+    collapser.setIcon(UIManager.getIcon("Tree.collapsedIcon"));
 
     collapser.addActionListener(new ActionListener() {
       @Override
