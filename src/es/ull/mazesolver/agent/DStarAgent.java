@@ -180,10 +180,18 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
     if (changed)
       calculatePartialPath(m_st.state_maze.get(m_pos.y).get(m_pos.x));
 
-    printBackpointers();
+    // printBackpointers();
 
     Point next_pos = m_st.state_maze.get(m_pos.y).get(m_pos.x).backpointer.point;
-    return Direction.fromPoints(m_pos, next_pos);
+    Direction dir = Direction.fromPoints(m_pos, next_pos);
+    if (look(dir) != MazeCell.Vision.WALL)
+      return dir;
+    else {
+      modifyCost(m_st.state_maze.get(next_pos.y).get(next_pos.x));
+      calculatePartialPath(m_st.state_maze.get(m_pos.y).get(m_pos.x));
+      next_pos = m_st.state_maze.get(m_pos.y).get(m_pos.x).backpointer.point;
+      return Direction.fromPoints(m_pos, next_pos);
+    }
   }
 
   /* (non-Javadoc)
@@ -197,6 +205,10 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
           for (State s: l)
             s.reset();
       }
+
+      for (int i = 0; i < m_st.maze.getHeight(); i++)
+        for (int j = 0; j < m_st.maze.getWidth(); j++)
+          m_st.maze.get(i, j).removeWalls();
 
       m_st.open = new PriorityQueue<State>();
     }
