@@ -394,13 +394,16 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_agent_add.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        if (m_environments.getSelectedEnvironment() == null) {
+        Environment env = m_environments.getSelectedEnvironment();
+        if (env == null) {
           JOptionPane.showMessageDialog(null, "There are no environments selected",
               "Agent creation failed", JOptionPane.WARNING_MESSAGE);
           return;
         }
 
-        AgentSelectorDialog dialog = new AgentSelectorDialog(MainWindow.this);
+        Maze maze = env.getMaze();
+        AgentSelectorDialog dialog = new AgentSelectorDialog(MainWindow.this,
+                    (maze.getHeight() * maze.getWidth()) - env.getAgentCount());
         dialog.setLocationRelativeTo(MainWindow.this);
         Agent[] agents = dialog.showDialog();
 

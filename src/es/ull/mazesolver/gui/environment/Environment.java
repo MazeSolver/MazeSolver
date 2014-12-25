@@ -36,7 +36,9 @@ import com.tomtessier.scrollabledesktop.BaseInternalFrame;
 import es.ull.mazesolver.agent.Agent;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.maze.MazeCell;
+import es.ull.mazesolver.util.BlackboardManager;
 import es.ull.mazesolver.util.Direction;
+import es.ull.mazesolver.util.MessageManager;
 import es.ull.mazesolver.util.SimulationResults;
 
 /**
@@ -50,11 +52,14 @@ public class Environment extends BaseInternalFrame {
   private static final int WINDOWS_OFFSET = 20;
 
   private static int s_instance = 0;
-  private static Point start_pos = new Point();
+  private static Point s_start_pos = new Point();
 
   private Maze m_maze;
   private ArrayList<Agent> m_agents;
   private int m_selected, m_hovered;
+
+  private BlackboardManager m_blackboard_mgr;
+  private MessageManager m_message_mgr;
 
   /**
    * Constructor para las clases de tipo entorno.
@@ -69,12 +74,15 @@ public class Environment extends BaseInternalFrame {
     setContentPane(new EnvironmentPanel(this));
     updateSize();
 
-    setLocation(start_pos);
-    start_pos.x += WINDOWS_OFFSET;
-    start_pos.y += WINDOWS_OFFSET;
+    setLocation(s_start_pos);
+    s_start_pos.x += WINDOWS_OFFSET;
+    s_start_pos.y += WINDOWS_OFFSET;
 
     m_selected = m_hovered = -1;
     m_agents = new ArrayList<Agent>();
+
+    m_blackboard_mgr = new BlackboardManager();
+    m_message_mgr = new MessageManager();
 
     // Añadimos la escucha del cursor para permitir al usuario seleccionar un
     // agente.
@@ -317,6 +325,20 @@ public class Environment extends BaseInternalFrame {
   }
 
   /**
+   * @return El gestor de pizarras del entorno.
+   */
+  public BlackboardManager getBlackboardManager () {
+    return m_blackboard_mgr;
+  }
+
+  /**
+   * @return El gestor de mensajes del entorno.
+   */
+  public MessageManager getMessageManager () {
+    return m_message_mgr;
+  }
+
+  /**
    * Ejecuta un paso de la simulación de ejecución de los agentes en el entorno
    * y devuelve el resultado de la ejecución.
    * @param results Objeto que representa el resultado de la simulación, que
@@ -325,6 +347,7 @@ public class Environment extends BaseInternalFrame {
    * @return true si todos los agentes han salido del laberinto y false en otro caso.
    */
   public boolean runStep (SimulationResults results) {
+    m_message_mgr.flushMessageQueues();
     boolean ended = true;
 
     for (Agent i: m_agents) {
@@ -339,7 +362,7 @@ public class Environment extends BaseInternalFrame {
       // Restringimos el movimiento del agente para que no atraviese paredes
       // u otros agentes independientemente de errores que se hayan podido
       // cometer a la hora de programar a los agentes
-      if (movementAllowed(new Point(i.getX(),  i.getY()), dir)) {
+      if (movementAllowed(i.getPos(), dir)) {
         i.doMovement(dir);
         results.agentWalked(i);
       }

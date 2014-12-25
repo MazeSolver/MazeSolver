@@ -34,11 +34,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import es.ull.mazesolver.agent.distance.DistanceCalculator;
+import es.ull.mazesolver.agent.util.BlackboardCommunication;
 import es.ull.mazesolver.gui.AgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.maze.MazeCell;
 import es.ull.mazesolver.maze.algorithm.EmptyMaze;
+import es.ull.mazesolver.util.BlackboardManager;
 import es.ull.mazesolver.util.Direction;
 
 /**
@@ -48,21 +50,31 @@ import es.ull.mazesolver.util.Direction;
  *   Optimal and Efficient Path Planning for Unknown and Dynamic Environments
  * </a>
  */
-public class DStarAgent extends HeuristicAgent {
+public class DStarAgent extends HeuristicAgent implements BlackboardCommunication {
   private static final long serialVersionUID = 1342168437798267323L;
 
-  /**
-   * No se trata del laberinto en el que el agente se mueve, sino la
-   * representación de lo que el agente conoce sobre el laberinto. Todas
-   * aquellas zonas que el agente no ha visitado supone que no contienen
-   * paredes.
-   */
-  private transient Maze m_maze;
-  private transient Point m_exit;
-  private transient ArrayList<ArrayList<State>> m_state_maze;
+  private static String BLACKBOARD_CHANNEL = "D* Agents Channel";
 
-  private transient PriorityQueue<State> m_open;
-  private transient double k_old;
+  /**
+   * Representa el estado del algoritmo, que es lo que es compartido entre
+   * agentes D* como pizarra.
+   */
+  private static class AlgorithmState {
+    /**
+     * No se trata del laberinto en el que el agente se mueve, sino la
+     * representación de lo que el agente conoce sobre el laberinto. Todas
+     * aquellas zonas que el agente no ha visitado supone que no contienen
+     * paredes.
+     */
+    public Maze maze;
+    public Point exit;
+    public ArrayList<ArrayList<State>> state_maze;
+
+    public PriorityQueue<State> open;
+    public double k_old;
+  }
+
+  private transient AlgorithmState m_st;
 
   /**
    * @param env Entorno en el que se va a colocar al agente.
@@ -87,17 +99,37 @@ public class DStarAgent extends HeuristicAgent {
     super.setEnvironment(env);
     resetMemory();
 
-    Maze real_maze = env.getMaze();
-    m_maze = new Maze(new EmptyMaze(real_maze.getHeight(), real_maze.getWidth()));
+    BlackboardManager mgr = env.getBlackboardManager();
+    try {
+      setBlackboard(mgr.getBlackboard(BLACKBOARD_CHANNEL));
+    }
+    catch (Exception e) {
+      Maze real_maze = env.getMaze();
 
-    // La salida la colocaremos dentro del laberinto para que el agente pueda
-    // utilizarla como un estado más, luego en el método getNextMovement() se
-    // encarga de moverse al exterior si está en el punto al lado de la salida
-    m_exit = real_maze.getExit();
-    if (m_exit.x < 0) m_exit.x++;
-    else if (m_exit.x == m_maze.getWidth()) m_exit.x--;
-    else if (m_exit.y < 0) m_exit.y++;
-    else /*m_exit.y == m_maze.getHeight()*/ m_exit.y--;
+      m_st = new AlgorithmState();
+      m_st.maze = new Maze(new EmptyMaze(real_maze.getHeight(), real_maze.getWidth()));
+
+      // Creamos la matriz de estados, donde cada celda representa un nodo en el
+      // grafo que manipula el algoritmo. Esto será lo que se comparta entre
+      // todos los agentes.
+      m_st.state_maze = new ArrayList<ArrayList<State>>(m_st.maze.getHeight());
+      for (int i = 0; i < m_st.maze.getHeight(); i++) {
+        m_st.state_maze.add(new ArrayList <State>(m_st.maze.getWidth()));
+        for (int j = 0; j < m_st.maze.getWidth(); j++)
+          m_st.state_maze.get(i).add(new State(new Point(j, i)));
+      }
+
+      // La salida la colocaremos dentro del laberinto para que el agente pueda
+      // utilizarla como un estado más, luego en el método getNextMovement() se
+      // encarga de moverse al exterior si está en el punto al lado de la salida
+      m_st.exit = real_maze.getExit();
+      if (m_st.exit.x < 0) m_st.exit.x++;
+      else if (m_st.exit.x == m_st.maze.getWidth()) m_st.exit.x--;
+      else if (m_st.exit.y < 0) m_st.exit.y++;
+      else /*m_st.exit.y == m_st.maze.getHeight()*/ m_st.exit.y--;
+
+      BLACKBOARD_CHANNEL = mgr.addBlackboard(m_st, BLACKBOARD_CHANNEL);
+    }
   }
 
   /* (non-Javadoc)
@@ -112,11 +144,13 @@ public class DStarAgent extends HeuristicAgent {
         return dir;
     }
 
-    if (m_state_maze == null)
+    // Si no se sabe a dónde moverse, hay que calcular la ruta completa
+    if (m_st.state_maze.get(m_pos.y).get(m_pos.x).backpointer == null)
       calculatePath();
 
-    // Obtenemos las celdas real y estimada para compararlas
-    MazeCell known_cell = m_maze.get(m_pos.y, m_pos.x);
+    // Obtenemos las celdas real y estimada para compararlas y actualizar el
+    // mapa consecuentemente
+    MazeCell known_cell = m_st.maze.get(m_pos.y, m_pos.x);
     MazeCell real_cell = m_env.getMaze().get(m_pos.y, m_pos.x);
 
     // Comprobamos en todas las direcciones que las paredes están colocadas en
@@ -131,9 +165,9 @@ public class DStarAgent extends HeuristicAgent {
         known_cell.toggleWall(dir);
 
         Point new_point = dir.movePoint(m_pos);
-        if (m_maze.containsPoint(new_point)) {
-          m_maze.get(new_point.y, new_point.x).toggleWall(dir.getOpposite());
-          modifyCost(m_state_maze.get(new_point.y).get(new_point.x));
+        if (m_st.maze.containsPoint(new_point)) {
+          m_st.maze.get(new_point.y, new_point.x).toggleWall(dir.getOpposite());
+          modifyCost(m_st.state_maze.get(new_point.y).get(new_point.x));
           changed = true;
         }
       }
@@ -144,41 +178,20 @@ public class DStarAgent extends HeuristicAgent {
     // ha cambiado, así que hay que actualizar la ruta calculada por si ha
     // dejado de ser factible.
     if (changed)
-      calculatePartialPath(m_state_maze.get(m_pos.y).get(m_pos.x));
+      calculatePartialPath(m_st.state_maze.get(m_pos.y).get(m_pos.x));
 
-    /* Utilidad para mostrar el camino que puede tomar el agente
-    for (int i = 0; i < m_maze.getHeight(); i++) {
-      for (int j = 0; j < m_maze.getWidth(); j++) {
-        State s = m_state_maze.get(i).get(j);
-        if (s.backpointer == null)
-          System.out.print("·");
-        else {
-          switch (Direction.fromPoints(s.point, s.backpointer.point)) {
-            case UP:
-              System.out.print("\u2191");
-              break;
-            case DOWN:
-              System.out.print("\u2193");
-              break;
-            case LEFT:
-              System.out.print("\u2190");
-              break;
-            case RIGHT:
-              System.out.print("\u2192");
-              break;
-            default:
-              System.out.print("·");
-              break;
-          }
-        }
-      }
-      System.out.println();
+    // printBackpointers();
+
+    Point next_pos = m_st.state_maze.get(m_pos.y).get(m_pos.x).backpointer.point;
+    Direction dir = Direction.fromPoints(m_pos, next_pos);
+    if (look(dir) != MazeCell.Vision.WALL)
+      return dir;
+    else {
+      modifyCost(m_st.state_maze.get(next_pos.y).get(next_pos.x));
+      calculatePartialPath(m_st.state_maze.get(m_pos.y).get(m_pos.x));
+      next_pos = m_st.state_maze.get(m_pos.y).get(m_pos.x).backpointer.point;
+      return Direction.fromPoints(m_pos, next_pos);
     }
-    System.out.println();
-    */
-
-    Point next_pos = m_state_maze.get(m_pos.y).get(m_pos.x).backpointer.point;
-    return Direction.fromPoints(m_pos, next_pos);
   }
 
   /* (non-Javadoc)
@@ -186,8 +199,19 @@ public class DStarAgent extends HeuristicAgent {
    */
   @Override
   public void resetMemory () {
-    m_state_maze = null;
-    m_open = new PriorityQueue<State>();
+    if (m_st != null) {
+      if (m_st.state_maze != null) {
+        for (ArrayList<State> l: m_st.state_maze)
+          for (State s: l)
+            s.reset();
+      }
+
+      for (int i = 0; i < m_st.maze.getHeight(); i++)
+        for (int j = 0; j < m_st.maze.getWidth(); j++)
+          m_st.maze.get(i, j).removeWalls();
+
+      m_st.open = new PriorityQueue<State>();
+    }
   }
 
   /* (non-Javadoc)
@@ -228,6 +252,29 @@ public class DStarAgent extends HeuristicAgent {
     return ag;
   }
 
+  /* (non-Javadoc)
+   * @see es.ull.mazesolver.agent.util.BlackboardCommunication#getBlackboard()
+   */
+  @Override
+  public Object getBlackboard () {
+    return m_st.state_maze;
+  }
+
+  /* (non-Javadoc)
+   * @see es.ull.mazesolver.agent.util.BlackboardCommunication#setBlackboard(java.lang.Object)
+   */
+  @Override
+  public void setBlackboard (Object blackboard) {
+    try {
+      m_st = (AlgorithmState) blackboard;
+      if (blackboard == null)
+        throw new Exception();
+    }
+    catch (Exception e) {
+      throw new IllegalArgumentException("The blackboard is not the format expected");
+    }
+  }
+
   /**
    * Define los posibles valores con los que puede estar etiquetado un estado.
    */
@@ -256,6 +303,14 @@ public class DStarAgent extends HeuristicAgent {
      */
     public State (Point pos) {
       point = (Point) pos.clone();
+      reset();
+    }
+
+    /**
+     * Restaura el estado a sus valores iniciales.
+     */
+    public void reset () {
+      backpointer = null;
       tag = Tag.NEW;
       path_cost = previous_cost = key_value = BIG_COST;
     }
@@ -280,8 +335,8 @@ public class DStarAgent extends HeuristicAgent {
       for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
         Direction dir = Direction.fromIndex(i);
         Point new_pos = dir.movePoint(point);
-        if (m_maze.containsPoint(new_pos))
-          neighbours.add(m_state_maze.get(new_pos.y).get(new_pos.x));
+        if (m_st.maze.containsPoint(new_pos))
+          neighbours.add(m_st.state_maze.get(new_pos.y).get(new_pos.x));
       }
 
       return neighbours;
@@ -295,17 +350,8 @@ public class DStarAgent extends HeuristicAgent {
    * utilizar sólo una vez por entorno.
    */
   private void calculatePath () {
-    // Creamos la matriz de estados, donde cada celda representa un nodo en el
-    // grafo que manipula el algoritmo
-    m_state_maze = new ArrayList<ArrayList<State>>(m_maze.getHeight());
-    for (int i = 0; i < m_maze.getHeight(); i++) {
-      m_state_maze.add(new ArrayList <State>(m_maze.getWidth()));
-      for (int j = 0; j < m_maze.getWidth(); j++)
-        m_state_maze.get(i).add(new State(new Point(j, i)));
-    }
-
-    State initial = m_state_maze.get(m_pos.y).get(m_pos.x);
-    State goal = m_state_maze.get(m_exit.y).get(m_exit.x);
+    State initial = m_st.state_maze.get(m_pos.y).get(m_pos.x);
+    State goal = m_st.state_maze.get(m_st.exit.y).get(m_st.exit.x);
 
     goal.path_cost = 0.0;
     insert(goal);
@@ -332,7 +378,7 @@ public class DStarAgent extends HeuristicAgent {
 
     // Modificación del algoritmo original: Seguir procesando el estado hasta
     // que no haya nada en la lista abierta (todos los caminos son óptimos)
-    while (!m_open.isEmpty())
+    while (!m_st.open.isEmpty())
       processState();
   }
 
@@ -346,7 +392,7 @@ public class DStarAgent extends HeuristicAgent {
     if (x == null)
       return -1;
 
-    k_old = getKmin();
+    m_st.k_old = getKmin();
     delete(x);
 
     ArrayList<State> neighbours = x.getNeighbours();
@@ -354,7 +400,7 @@ public class DStarAgent extends HeuristicAgent {
     // Reducimos el coste del nodo actual si se puede desde alguno de sus
     // vecinos, pero sólo si el camino actual a los vecinos es óptimo
     for (State y: neighbours) {
-      if (y.tag == Tag.CLOSED && y.path_cost <= k_old &&
+      if (y.tag == Tag.CLOSED && y.path_cost <= m_st.k_old &&
           x.path_cost > y.path_cost + distance(y, x)) {
         x.backpointer = y;
         x.path_cost = y.path_cost + distance(y, x);
@@ -403,7 +449,7 @@ public class DStarAgent extends HeuristicAgent {
           }
           else {
             if (y.backpointer != x && x.path_cost > y.path_cost + distance(y, x) &&
-                y.tag == Tag.CLOSED && y.path_cost > k_old) {
+                y.tag == Tag.CLOSED && y.path_cost > m_st.k_old) {
               y.previous_cost = y.path_cost;
               insert(y);
             }
@@ -436,7 +482,7 @@ public class DStarAgent extends HeuristicAgent {
    * @return El estado de la lista abierta con menor valor de k.
    */
   private State minState () {
-    return m_open.isEmpty()? null : m_open.peek();
+    return m_st.open.isEmpty()? null : m_st.open.peek();
   }
 
   /**
@@ -453,7 +499,7 @@ public class DStarAgent extends HeuristicAgent {
    * @param s Estado que eliminar.
    */
   private void delete (State s) {
-    m_open.remove(s);
+    m_st.open.remove(s);
     s.tag = Tag.CLOSED;
   }
 
@@ -465,11 +511,11 @@ public class DStarAgent extends HeuristicAgent {
   private void insert (State s) {
     // Reposicionamiento del elemento si ya estaba, en lugar de inserción
     if (s.tag == Tag.OPEN)
-      m_open.remove(s);
+      m_st.open.remove(s);
 
     s.key_value = Math.min(s.path_cost, s.previous_cost);
     s.tag = Tag.OPEN;
-    m_open.add(s);
+    m_st.open.add(s);
   }
 
   /**
@@ -481,9 +527,44 @@ public class DStarAgent extends HeuristicAgent {
    */
   private double distance (State x, State y) {
     Point pos = x.point;
-    if (m_maze.get(pos.y, pos.x).hasWall(Direction.fromPoints(pos, y.point)))
+    if (m_st.maze.get(pos.y, pos.x).hasWall(Direction.fromPoints(pos, y.point)))
       return State.BIG_COST;
     else
       return m_dist.distance(pos, y.point);
+  }
+
+  /**
+   * Imprime por consola la matriz de movimientos actual del agente.
+   */
+  @SuppressWarnings ("unused")
+  private void printBackpointers () {
+    for (int i = 0; i < m_st.maze.getHeight(); i++) {
+      for (int j = 0; j < m_st.maze.getWidth(); j++) {
+        State s = m_st.state_maze.get(i).get(j);
+        if (s.backpointer == null)
+          System.out.print("·");
+        else {
+          switch (Direction.fromPoints(s.point, s.backpointer.point)) {
+            case UP:
+              System.out.print("\u2191");
+              break;
+            case DOWN:
+              System.out.print("\u2193");
+              break;
+            case LEFT:
+              System.out.print("\u2190");
+              break;
+            case RIGHT:
+              System.out.print("\u2192");
+              break;
+            default:
+              System.out.print("·");
+              break;
+          }
+        }
+      }
+      System.out.println();
+    }
+    System.out.println();
   }
 }

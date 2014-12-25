@@ -20,36 +20,24 @@
  */
 
 /**
- * @file EmptyMaze.java
- * @date 10/12/2014
+ * @file BlackboardCommunication.java
+ * @date 24/12/2014
  */
-package es.ull.mazesolver.maze.algorithm;
-
-import es.ull.mazesolver.maze.MazeCreationAlgorithm;
+package es.ull.mazesolver.agent.util;
 
 /**
- * Algoritmo que crea un laberinto que no contiene paredes. No se pueden añadir
- * ciclos al laberinto generado.
+ * Interfaz necesaria para implementar la capacidad de comunicación mediante
+ * pizarras.
  */
-public class EmptyMaze extends MazeCreationAlgorithm {
+public interface BlackboardCommunication {
+  /**
+   * @return Pizarra que contiene actualmente el agente.
+   */
+  public Object getBlackboard ();
 
   /**
-   * @param rows Número de filas del laberinto que se genere.
-   * @param columns Número de columnas del laberinto que se genere.
+   * Cambia la pizarra que tiene el agente.
+   * @param blackboard Nueva pizarra para el agente.
    */
-  public EmptyMaze (int rows, int columns) {
-    super(rows, columns);
-  }
-
-  /* (non-Javadoc)
-   * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
-   */
-  @Override
-  protected void runCreationAlgorithm () {
-    // Quitamos todas las paredes, incluidos los bordes
-    for (int i = 0; i < m_rows; i++)
-      for (int j = 0; j < m_columns; j++)
-        m_maze.get(i).get(j).removeWalls();
-  }
-
+  public void setBlackboard (Object blackboard);
 }

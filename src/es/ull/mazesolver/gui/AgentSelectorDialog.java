@@ -62,7 +62,6 @@ import es.ull.mazesolver.gui.environment.Environment;
 public class AgentSelectorDialog extends JDialog {
   private static final long serialVersionUID = 1L;
 
-  private static final int MAX_AGENTS_AMOUNT = 10;
   private static final TreeMap <String, Class<? extends Agent>> ALGORITHMS = new TreeMap<>();
   static {
     ALGORITHMS.put("Perception-Action Tables", PATableAgent.class);
@@ -75,6 +74,7 @@ public class AgentSelectorDialog extends JDialog {
     ALGORITHMS.put("Wall Follower", WallFollowerAgent.class);
   }
 
+  private int max_agents;
   private JComboBox<String> m_agents;
   private JSpinner m_amount;
 
@@ -85,8 +85,9 @@ public class AgentSelectorDialog extends JDialog {
    * Crea el diálogo de creación de agentes.
    * @param parent Ventana padre del diálogo.
    */
-  public AgentSelectorDialog (JFrame parent) {
+  public AgentSelectorDialog (JFrame parent, int available_cells) {
     super(parent, "Create a new agent", true);
+    max_agents = available_cells - 1;
     buildInterface();
 
     setResizable(false);
@@ -117,7 +118,7 @@ public class AgentSelectorDialog extends JDialog {
     JPanel controls = new JPanel(new GridLayout(2, 1, 5, 5));
 
     m_agents = new JComboBox<String>(ALGORITHMS.keySet().toArray(new String[ALGORITHMS.size()]));
-    m_amount = new JSpinner(new SpinnerNumberModel(1, 1, MAX_AGENTS_AMOUNT, 1));
+    m_amount = new JSpinner(new SpinnerNumberModel(1, 1, max_agents, 1));
 
     labels.add(ags);
     controls.add(m_agents);
