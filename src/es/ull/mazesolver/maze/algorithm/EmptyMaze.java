@@ -26,7 +26,6 @@
 package es.ull.mazesolver.maze.algorithm;
 
 import es.ull.mazesolver.maze.MazeCreationAlgorithm;
-import es.ull.mazesolver.util.Direction;
 
 /**
  * Algoritmo que crea un laberinto que no contiene paredes. No se pueden añadir
@@ -48,14 +47,9 @@ public class EmptyMaze extends MazeCreationAlgorithm {
   @Override
   protected void runCreationAlgorithm () {
     // Quitamos todas las paredes, incluidos los bordes
-    for (int i = 0; i < m_rows; i++) {
-      for (int j = 0; j < m_columns; j++) {
-        m_maze.get(i).get(j).unsetWall(Direction.UP);
-        m_maze.get(i).get(j).unsetWall(Direction.DOWN);
-        m_maze.get(i).get(j).unsetWall(Direction.LEFT);
-        m_maze.get(i).get(j).unsetWall(Direction.RIGHT);
-      }
-    }
+    for (int i = 0; i < m_rows; i++)
+      for (int j = 0; j < m_columns; j++)
+        m_maze.get(i).get(j).removeWalls();
   }
 
 }

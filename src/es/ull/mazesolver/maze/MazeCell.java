@@ -77,6 +77,13 @@ public class MazeCell implements Serializable {
   }
 
   /**
+   * Elimina todas las paredes de la celda.
+   */
+  public void removeWalls () {
+    m_cell = 0;
+  }
+
+  /**
    * @param dir Lado de la celda que se quiere consultar.
    * @return Si hay una celda en esa dirección o no.
    */
