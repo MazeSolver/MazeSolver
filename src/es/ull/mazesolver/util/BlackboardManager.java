@@ -69,6 +69,22 @@ public class BlackboardManager {
   }
 
   /**
+   * Intenta añadir la pizarra al canal deseado. Esto será posible sólo si el
+   * canal no está ya ocupado.
+   * @param blackboard Objeto que representa la pizarra.
+   * @param desired_channel Canal donde se quiere colocar la pizarra.
+   * @return Canal donde finalmente se ha colocado la pizarra.
+   */
+  public String addBlackboard (Object blackboard, String desired_channel) {
+    if (!m_blackboards.containsKey(desired_channel)) {
+      m_blackboards.put(desired_channel, blackboard);
+      return desired_channel;
+    }
+    else
+      return addBlackboard(blackboard);
+  }
+
+  /**
    * Cambia el objeto pizarra asociado a un canal ya creado.
    * @param channel Canal en el que modificar la pizarra.
    * @param blackboard Nueva pizarra que colocar en el canal.
