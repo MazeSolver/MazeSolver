@@ -347,6 +347,7 @@ public class Environment extends BaseInternalFrame {
    * @return true si todos los agentes han salido del laberinto y false en otro caso.
    */
   public boolean runStep (SimulationResults results) {
+    m_message_mgr.flushMessageQueues();
     boolean ended = true;
 
     for (Agent i: m_agents) {
@@ -361,7 +362,7 @@ public class Environment extends BaseInternalFrame {
       // Restringimos el movimiento del agente para que no atraviese paredes
       // u otros agentes independientemente de errores que se hayan podido
       // cometer a la hora de programar a los agentes
-      if (movementAllowed(new Point(i.getX(),  i.getY()), dir)) {
+      if (movementAllowed(i.getPos(), dir)) {
         i.doMovement(dir);
         results.agentWalked(i);
       }
