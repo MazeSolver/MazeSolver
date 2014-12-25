@@ -224,8 +224,19 @@ public class AStarAgent extends HeuristicAgent {
       }
     }
 
-    if (solution == null)
-      return;
+    // Si no encontramos una solución, al menos nos acercamos lo más posible a
+    // la salida, por si más tarde se puede llegar (un agente se ha quitado de
+    // la trayectoria hasta la salida)
+    if (solution == null) {
+      double dist = Double.MAX_VALUE;
+      for (Path p: closed) {
+        double p_dist = m_dist.distance(p.getEndPoint(), m_exit);
+        if (p_dist < dist) {
+          solution = p;
+          dist = p_dist;
+        }
+      }
+    }
 
     ArrayList<Point> path = solution.getPath();
     m_directions = new ArrayList<Direction>(path.size()-1);
