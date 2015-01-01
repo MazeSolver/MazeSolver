@@ -499,8 +499,19 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_about.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        // TODO Mostrar interfaz con: Hecho por X, Y, Z. Sistemas Inteligentes
-        // 2014, etc
+        JOptionPane.showMessageDialog(null, "<html><h2>MazeSolver</h2>"
+                                          + "Copyright &copy; 2014 - 2015<br>Sergio M. Afonso Fumero and Kevin I. Robayna Hernández<br><br>"
+                                          + "This program is free software: you can redistribute it and/or modify<br>"
+                                          + "it under the terms of the GNU General Public License as published by<br>"
+                                          + "the Free Software Foundation, either version 3 of the License, or<br>"
+                                          + "(at your option) any later version.<br><br>"
+                                          + "This program is distributed in the hope that it will be useful,<br>"
+                                          + "but WITHOUT ANY WARRANTY; without even the implied warranty of<br>"
+                                          + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>"
+                                          + "GNU General Public License for more details.<br><br>"
+                                          + "You should have received a copy of the GNU General Public License<br>"
+                                          + "along with this program. If not, see &lt;<a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>&gt;.</html>",
+            "About", JOptionPane.INFORMATION_MESSAGE);
       }
     });
   }
