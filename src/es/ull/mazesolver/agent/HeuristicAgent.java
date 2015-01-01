@@ -49,6 +49,7 @@ public abstract class HeuristicAgent extends Agent {
   /**
    * Crea el agente en el entorno indicado y con la distancia de Manhattan por
    * defecto.
+   * @param env Entorno en el que colocar el agente.
    */
   public HeuristicAgent (Environment env) {
     super(env);

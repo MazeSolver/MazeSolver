@@ -162,7 +162,7 @@ public class FileDialog {
   /**
    * Muestra un diálogo para que el usuario seleccione un fichero donde guardar
    * una configuración de agente.
-   * @return Agente cargado o null si no era un fichero válido.
+   * @param agent Agente que se quiere guardar en un fichero.
    * @throws IOException Si no se puede leer el fichero.
    */
   public static void saveAgent (Agent agent) throws IOException {

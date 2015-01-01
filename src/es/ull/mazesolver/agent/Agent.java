@@ -164,8 +164,9 @@ public abstract class Agent implements Cloneable, Serializable {
   /**
    * Carga la descripción serializada del agente de un fichero, lo crea y lo
    * devuelve.
-   * @param fileName Nombre del fichero de entrada.
+   * @param filename Nombre del fichero de entrada.
    * @param env Entorno en el que cargar el agente.
+   * @return El agente creado.
    * @throws IOException Si no es posible leer el fichero.
    */
   public static Agent loadFile (String filename, Environment env) throws IOException {

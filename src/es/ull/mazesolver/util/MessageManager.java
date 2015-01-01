@@ -86,7 +86,7 @@ public class MessageManager {
    * Pone un mensaje a la cola de un grupo para ser enviado posteriormente
    * cuando se llame a {@code flushMessageQueues()}. Que la inserción se
    * realice satisfactoriamente no implica que el mensaje sea enviado.
-   * @see flushMessageQueues()
+   * @see #flushMessageQueues()
    * @param sender Agente que envía el mensaje.
    * @param group Grupo al que se está enviando el mensaje.
    * @param msg Mensaje que se quiere enviar.

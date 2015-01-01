@@ -84,6 +84,7 @@ public class AgentSelectorDialog extends JDialog {
   /**
    * Crea el diálogo de creación de agentes.
    * @param parent Ventana padre del diálogo.
+   * @param available_cells Número de celdas vacías actualmente en el laberinto.
    */
   public AgentSelectorDialog (JFrame parent, int available_cells) {
     super(parent, "Create a new agent", true);
