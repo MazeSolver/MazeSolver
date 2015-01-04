@@ -28,6 +28,8 @@ package es.ull.mazesolver.agent;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -195,6 +197,18 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
     ag.m_cooling_rate = m_cooling_rate;
     ag.m_initial_temp = m_initial_temp;
     return ag;
+  }
+
+  /**
+   * Extrae la información del objeto a partir de una forma serializada del
+   * mismo.
+   * @param input Flujo de entrada con la información del objeto.
+   * @throws ClassNotFoundException Si se trata de un objeto de otra clase.
+   * @throws IOException Si no se puede leer el flujo de entrada.
+   */
+  private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+    input.defaultReadObject();
+    m_actual_temp = m_initial_temp;
   }
 
   /**
