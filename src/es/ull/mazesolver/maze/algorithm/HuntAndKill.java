@@ -49,10 +49,10 @@ public class HuntAndKill extends MazeCreationAlgorithm {
     // las celdas que no se han visitado todavía.
     m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
 
-    for (int i = 0; i < rows; i++) {
+    for (int y = 0; y < rows; y++) {
       m_included_cells.add(new ArrayList <Boolean>(columns));
-      for (int j = 0; j < columns; j++)
-        m_included_cells.get(i).add(false);
+      for (int x = 0; x < columns; x++)
+        m_included_cells.get(y).add(false);
     }
   }
 
@@ -79,12 +79,12 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    *          buscar un nuevo camino nuevo
    */
   private void walk (Point p) {
-    Direction dir = getRandomDirection(p.x, p.y);
+    Direction dir = getRandomDirection(p.y, p.x);
     while (dir != Direction.NONE) {
-      openPassage(p.x, p.y, dir);
+      openPassage(p.y, p.x, dir);
       p = dir.movePoint(p);
       m_included_cells.get(p.y).set(p.x, true);
-      dir = getRandomDirection(p.x, p.y);
+      dir = getRandomDirection(p.y, p.x);
     }
   }
 
@@ -97,12 +97,12 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    *         explorando
    */
   private Point hunt () {
-    for (int i = 0; i < m_rows; i++) {
-      for (int j = 0; j < m_columns; j++) {
-        Direction dir = getRandomDirection(j, i);
+    for (int y = 0; y < m_rows; y++) {
+      for (int x = 0; x < m_columns; x++) {
+        Direction dir = getRandomDirection(y, x);
         if (dir != Direction.NONE) {
-          openPassage(j, i, dir);
-          Point p = dir.movePoint(new Point(j, i));
+          openPassage(y, x, dir);
+          Point p = dir.movePoint(new Point(x, y));
           m_included_cells.get(p.y).set(p.x, true);
           return p;
         }
@@ -112,12 +112,12 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   }
 
   /**
-   * @param x Posición en el eje X desde la que se quiere partir.
    * @param y Posición en el eje Y desde la que se quiere partir.
+   * @param x Posición en el eje X desde la que se quiere partir.
    * @return retorna una direccion aleatoria dentro de las posibles a las que ir
    *         en la casilla dada por las posiciones i y j
    */
-  private Direction getRandomDirection (final int x, final int y) {
+  private Direction getRandomDirection (final int y, final int x) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
     Point actual = new Point(x, y);
 
