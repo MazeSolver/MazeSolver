@@ -50,6 +50,7 @@ import es.ull.mazesolver.agent.Agent;
 import es.ull.mazesolver.agent.DStarAgent;
 import es.ull.mazesolver.agent.HillClimbAgent;
 import es.ull.mazesolver.agent.PATableAgent;
+import es.ull.mazesolver.agent.RecursiveAgent;
 import es.ull.mazesolver.agent.SARulesAgent;
 import es.ull.mazesolver.agent.SimulatedAnnealingAgent;
 import es.ull.mazesolver.agent.WallFollowerAgent;
@@ -66,11 +67,11 @@ public class AgentSelectorDialog extends JDialog {
   static {
     ALGORITHMS.put("Perception-Action Tables", PATableAgent.class);
     ALGORITHMS.put("Situation-Action Rules", SARulesAgent.class);
-    //ALGORITHMS.put("Logical (Prolog)", PrologAgent.class);
     ALGORITHMS.put("A*", AStarAgent.class);
     ALGORITHMS.put("D*", DStarAgent.class);
     ALGORITHMS.put("Hill Climbing", HillClimbAgent.class);
     ALGORITHMS.put("Simulated Annealing", SimulatedAnnealingAgent.class);
+    ALGORITHMS.put("Recursive Backtracking", RecursiveAgent.class);
     ALGORITHMS.put("Wall Follower", WallFollowerAgent.class);
   }
 
