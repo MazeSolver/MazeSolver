@@ -25,7 +25,10 @@
  */
 package es.ull.mazesolver.maze.algorithm;
 
+import java.awt.Point;
+
 import es.ull.mazesolver.maze.MazeCreationAlgorithm;
+import es.ull.mazesolver.util.Direction;
 
 /**
  * Implementación de algoritmo Division Recursiva para la generación aleatoria
@@ -34,7 +37,7 @@ import es.ull.mazesolver.maze.MazeCreationAlgorithm;
 public class RecursiveDivision extends MazeCreationAlgorithm {
 
   private final static int HORIZONTAL = 0;
-  private final static int VERTICAL = 0;
+  private final static int VERTICAL = 1;
 
   /**
    * @param rows
@@ -44,6 +47,15 @@ public class RecursiveDivision extends MazeCreationAlgorithm {
    */
   public RecursiveDivision (int rows, int columns) {
     super(rows, columns);
+    for (int y = 0; y < m_rows; y++)
+      for (int x = 0; x < m_columns; x++)
+        for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
+          Direction dir = Direction.fromIndex(i);
+          Point next = dir.movePoint(new Point(x, y));
+
+          if (next.y >= 0 && next.y < m_rows && next.x >= 0 && next.x < m_columns)
+            m_maze.get(y).get(x).toggleWall(dir);
+        }
   }
 
   /*
@@ -53,42 +65,73 @@ public class RecursiveDivision extends MazeCreationAlgorithm {
    */
   @Override
   protected void runCreationAlgorithm () {
-    divide(0, 0, m_rows, m_columns, chooseOrientation(m_rows, m_columns));
+    divide(0, 0, m_columns, m_rows, chooseOrientation(m_columns, m_rows));
   }
 
   /**
    * Funcion principal recursiva que va generando sub laberintos
    *
-   * @param y
-   *          Posición en el eje Y desde la que se quiere partir.
    * @param x
    *          Posición en el eje X desde la que se quiere partir.
-   * @param rows
-   *          Número de filas del sub Laberinto.
-   * @param columns
+   * @param y
+   *          Posición en el eje Y desde la que se quiere partir.
+   * @param width
    *          Número de columnas del sub laberinto.
+   * @param height
+   *          Número de filas del sub Laberinto.
    * @param orientation
    *          Orientación a seguir para generar el sub laberinto
    */
-  private void divide (int x, int y, int rows, int columns, int orientation) {
+  private void divide (int x, int y, int width, int height, int orientation) {
+    if (height > 2 && width > 2) {
+      int wx = x + ((orientation == HORIZONTAL)? 0 : (int) (Math.random() * (width - 2)));
+      int wy = y + ((orientation == HORIZONTAL)? (int) (Math.random() * (height - 2)) : 0);
 
+      int px = wx + ((orientation == HORIZONTAL)? (int) (Math.random() * width) : 0);
+      int py = wy + ((orientation == HORIZONTAL)? 0 : (int) (Math.random() * height));
+
+      int length = (orientation == HORIZONTAL)? width : height;
+
+      Direction dir = (orientation == HORIZONTAL)? Direction.DOWN : Direction.RIGHT;
+
+      int dx = (orientation == HORIZONTAL)? 1 : 0;
+      int dy = (orientation == HORIZONTAL)? 0 : 1;
+
+      for (int i = 0; i < length; i++) {
+        if (wx != px && wy != py)
+          m_maze.get(wy).get(wx).setWall(dir);
+        wx += dx;
+        wy += dy;
+      }
+
+      int nx = x, ny = y;
+      int w = (orientation == HORIZONTAL)? width : wx - x + 1;
+      int h = (orientation == HORIZONTAL)? wy - y + 1 : height;
+      divide(nx, ny, w, h, chooseOrientation(w, h));
+
+      nx = (orientation == HORIZONTAL)? x : wx + 1;
+      ny = (orientation == HORIZONTAL)? wy + 1 : y;
+      w = (orientation == HORIZONTAL)? width : x + width - wx - 1;
+      h = (orientation == HORIZONTAL)? y + height - wy - 1 : height;
+      divide(nx, ny, w, h, chooseOrientation(w, h));
+    }
   }
 
   /**
    * Función auxiliar para elegir la orientación por la que ir dividiendo el
    * laberinto
    *
-   * @param rows
-   *          Número de filas del Laberinto.
-   * @param columns
-   *          Número de columnas del laberinto.
+   * @param width
+   *          Número de columnas del Laberinto.
+   * @param height
+   *          Número de filas del laberinto.
    * @return orientación a seguir para ir dividiendo el laberinto.
    */
-  private int chooseOrientation (int rows, int columns) {
-    if (columns < rows)
-      return VERTICAL;
-    else if (columns > rows)
+  private int chooseOrientation (int width, int height) {
+    if (width < height)
       return HORIZONTAL;
+    else if (height < width)
+      return VERTICAL;
     else
       return (int) (Math.random() * 2);
   }
