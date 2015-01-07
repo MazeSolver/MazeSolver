@@ -47,9 +47,9 @@ public class EmptyMaze extends MazeCreationAlgorithm {
   @Override
   protected void runCreationAlgorithm () {
     // Quitamos todas las paredes, incluidos los bordes
-    for (int i = 0; i < m_rows; i++)
-      for (int j = 0; j < m_columns; j++)
-        m_maze.get(i).get(j).removeWalls();
+    for (int y = 0; y < m_rows; y++)
+      for (int x = 0; x < m_columns; x++)
+        m_maze.get(y).get(x).removeWalls();
   }
 
 }

@@ -50,10 +50,10 @@ public class AldousBroder extends MazeCreationAlgorithm {
     // las celdas que no se han visitado todavía.
     m_included_cells = new ArrayList <ArrayList <Boolean>>(rows);
 
-    for (int i = 0; i < rows; i++) {
+    for (int y = 0; y < rows; y++) {
       m_included_cells.add(new ArrayList <Boolean>(columns));
-      for (int j = 0; j < columns; j++)
-        m_included_cells.get(i).add(false);
+      for (int x = 0; x < columns; x++)
+        m_included_cells.get(y).add(false);
     }
   }
 
@@ -67,10 +67,10 @@ public class AldousBroder extends MazeCreationAlgorithm {
     Point p = new Point(x, y);
 
     while (cellVisitedCount < (m_columns * m_rows)) {
-      Direction dir = getRandomDirection(p.x, p.y);
+      Direction dir = getRandomDirection(p.y, p.x);
       p = dir.movePoint(p);
       if (!m_included_cells.get(p.y).get(p.x)) {
-        openPassage(p.x, p.y, dir.getOpposite());
+        openPassage(p.y, p.x, dir.getOpposite());
         m_included_cells.get(p.y).set(p.x, true);
         cellVisitedCount++;
       }
@@ -78,11 +78,11 @@ public class AldousBroder extends MazeCreationAlgorithm {
   }
 
   /**
-   * @param x Posición en el eje X desde la que se quiere partir.
    * @param y Posición en el eje Y desde la que se quiere partir.
+   * @param x Posición en el eje X desde la que se quiere partir.
    * @return Dirección aleatoria hacia la que el agente se puede mover.
    */
-  private Direction getRandomDirection (int x, int y) {
+  private Direction getRandomDirection (int y, int x) {
     Point p = new Point(x, y);
     Point next_pos;
     Direction dir;

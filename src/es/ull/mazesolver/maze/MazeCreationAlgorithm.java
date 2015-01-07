@@ -61,6 +61,7 @@ public abstract class MazeCreationAlgorithm {
 
   /**
    * Devuelve la posición de la salida del laberinto.
+   *
    * @return La posición de la salida del laberinto.
    */
   public Point getExit () {
@@ -81,17 +82,20 @@ public abstract class MazeCreationAlgorithm {
 
   /**
    * Establece el número de ciclos que se quiere que genere el algoritmo.
-   * @param n_cycles Número de ciclos.
+   *
+   * @param n_cycles
+   *          Número de ciclos.
    */
   public void setCycles (int n_cycles) {
     m_cycles = n_cycles;
   }
 
   /**
-   * Establece el número de componentes separadas que se quiere tener al
-   * generar el laberinto. Si se especifica 1, no se modifica el laberinto
-   * perfecto.
-   * @param n_components Número de componentes.
+   * Establece el número de componentes separadas que se quiere tener al generar
+   * el laberinto. Si se especifica 1, no se modifica el laberinto perfecto.
+   *
+   * @param n_components
+   *          Número de componentes.
    */
   public void setComponents (int n_components) {
     m_walls = n_components - 1;
@@ -101,8 +105,8 @@ public abstract class MazeCreationAlgorithm {
    * Ejecuta el algoritmo de creación del laberinto, dejando el resultado en la
    * variable miembro {@code m_maze}.
    *
-   * Cuando se llama a este método, la variable está inicializada con un mapa
-   * en el que todas las celdas están rodeadas de paredes.
+   * Cuando se llama a este método, la variable está inicializada con un mapa en
+   * el que todas las celdas están rodeadas de paredes.
    */
   protected abstract void runCreationAlgorithm ();
 
@@ -115,10 +119,10 @@ public abstract class MazeCreationAlgorithm {
    */
   protected ArrayList <ArrayList <MazeCell>> initializeMaze () {
     ArrayList <ArrayList <MazeCell>> maze = new ArrayList <ArrayList <MazeCell>>(m_rows);
-    for (int i = 0; i < m_rows; i++) {
+    for (int y = 0; y < m_rows; y++) {
       maze.add(new ArrayList <MazeCell>(m_columns));
-      for (int j = 0; j < m_columns; j++)
-        maze.get(i).add(new MazeCell());
+      for (int x = 0; x < m_columns; x++)
+        maze.get(y).add(new MazeCell());
     }
 
     return maze;
@@ -128,14 +132,16 @@ public abstract class MazeCreationAlgorithm {
    * Abre un pasillo entre la celda (x,y) y su adyacente en la dirección
    * indicada.
    *
-   * @param x
-   *          Posición en el eje X (COLUMNA).
    * @param y
    *          Posición en el eje Y (FILA).
+   *
+   * @param x
+   *          Posición en el eje X (COLUMNA).
+   *
    * @param dir
    *          Dirección hacia la que abrir el camino.
    */
-  protected void openPassage (int x, int y, final Direction dir) {
+  protected void openPassage (int y, int x, final Direction dir) {
     Pair <Integer, Integer> desp = dir.decompose();
     m_maze.get(y).get(x).unsetWall(dir);
     m_maze.get(y + desp.second).get(x + desp.first).unsetWall(dir.getOpposite());
@@ -186,7 +192,9 @@ public abstract class MazeCreationAlgorithm {
   /**
    * Elimina paredes de un laberinto perfecto ya creado para crear ciclos y
    * hacer que deje de serlo.
-   * @param n Número de paredes a quitar.
+   *
+   * @param n
+   *          Número de paredes a quitar.
    */
   private void addRandomCycles (int n) {
     if (n > Maze.perfectMazeWalls(m_rows, m_columns))
@@ -210,7 +218,7 @@ public abstract class MazeCreationAlgorithm {
 
       if (!directions.isEmpty()) {
         dir = directions.get((int) (Math.random() * directions.size()));
-        openPassage(p.x, p.y, dir);
+        openPassage(p.y, p.x, dir);
         k++;
       }
     }
@@ -219,7 +227,9 @@ public abstract class MazeCreationAlgorithm {
   /**
    * Añade paredes al laberinto perfecto ya creado para que esté compuesto por
    * distintas componentes inaccesibles entre sí y deje de ser perfecto.
-   * @param n Número de paredes para añadir.
+   *
+   * @param n
+   *          Número de paredes para añadir.
    */
   private void addRandomWalls (int n) {
     if (n > Maze.perfectMazeEdges(m_rows, m_columns))

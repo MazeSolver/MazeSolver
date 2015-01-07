@@ -54,6 +54,7 @@ import es.ull.mazesolver.maze.algorithm.HuntAndKill;
 import es.ull.mazesolver.maze.algorithm.Kruskal;
 import es.ull.mazesolver.maze.algorithm.Prim;
 import es.ull.mazesolver.maze.algorithm.RecursiveBacktracking;
+import es.ull.mazesolver.maze.algorithm.Wilson;
 
 /**
  * Interfaz gráfica para seleccionar el generador de laberintos y el tamaño del
@@ -79,7 +80,7 @@ public class MazeSelectorDialog extends JDialog {
     super(parent,"Create a new maze");
 
     String[] algos = {"Aldous Broder", "Hunt and Kill", "Kruskal", "Prim",
-                      "Recursive Backtracking"};
+                      "Recursive Backtracking","Wilson"};
     m_algorithms = new JComboBox<String>(algos);
 
     buildInterface();
@@ -249,6 +250,9 @@ public class MazeSelectorDialog extends JDialog {
             break;
           case "Recursive Backtracking":
             alg = new RecursiveBacktracking(rows, columns);
+            break;
+          case "Wilson":
+            alg = new Wilson(rows, columns);
             break;
         }
 
