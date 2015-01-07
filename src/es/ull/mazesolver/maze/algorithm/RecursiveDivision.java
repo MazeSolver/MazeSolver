@@ -29,6 +29,7 @@ import java.awt.Point;
 
 import es.ull.mazesolver.maze.MazeCreationAlgorithm;
 import es.ull.mazesolver.util.Direction;
+import es.ull.mazesolver.util.Pair;
 
 /**
  * Implementación de algoritmo Division Recursiva para la generación aleatoria
@@ -83,23 +84,34 @@ public class RecursiveDivision extends MazeCreationAlgorithm {
    *          Orientación a seguir para generar el sub laberinto
    */
   private void divide (int x, int y, int width, int height, int orientation) {
-    if (height > 2 && width > 2) {
-      int wx = x + ((orientation == HORIZONTAL)? 0 : (int) (Math.random() * (width - 2)));
-      int wy = y + ((orientation == HORIZONTAL)? (int) (Math.random() * (height - 2)) : 0);
+    if (height > 1 && width > 1) {
 
-      int px = wx + ((orientation == HORIZONTAL)? (int) (Math.random() * width) : 0);
-      int py = wy + ((orientation == HORIZONTAL)? 0 : (int) (Math.random() * height));
+      // Inicio del muro del sub laberinto
+      int wx = x, wy = y;
+      wx += (orientation == HORIZONTAL)? 0 : (int) (Math.random() * (width - 1));
+      wy += (orientation == HORIZONTAL)? (int) (Math.random() * (height - 1)) : 0;
 
-      int length = (orientation == HORIZONTAL)? width : height;
+      // Posicion de la puerta
+      int px = wx, py = wy;
+      px += (orientation == HORIZONTAL)? (int) (Math.random() * width) : 0;
+      py += (orientation == HORIZONTAL)? 0 : (int) (Math.random() * height);
 
-      Direction dir = (orientation == HORIZONTAL)? Direction.DOWN : Direction.RIGHT;
-
+      // Direccion a la que moverse
       int dx = (orientation == HORIZONTAL)? 1 : 0;
       int dy = (orientation == HORIZONTAL)? 0 : 1;
 
+      // Longitud del muro
+      int length = (orientation == HORIZONTAL)? width : height;
+
+      // Direccion donde dibujar el muro
+      Direction dir = (orientation == HORIZONTAL)? Direction.DOWN : Direction.RIGHT;
+
       for (int i = 0; i < length; i++) {
-        if (wx != px && wy != py)
+        if (wx != px || wy != py) {
+          Pair <Integer, Integer> desp = dir.decompose();
           m_maze.get(wy).get(wx).setWall(dir);
+          m_maze.get(wy + desp.second).get(wx + desp.first).setWall(dir.getOpposite());
+        }
         wx += dx;
         wy += dy;
       }
