@@ -70,7 +70,7 @@ public class Wilson extends MazeCreationAlgorithm {
    */
   @Override
   protected void runCreationAlgorithm () {
-    while (m_remaining >= 0) {
+    while (m_remaining > 0) {
       ArrayList <Short []> path = walk();
       for (int i = 0; i < path.size(); i++) {
         Short [] aux = path.get(i);
@@ -90,13 +90,7 @@ public class Wilson extends MazeCreationAlgorithm {
    *         para llegar a una zona visitada.
    */
   private ArrayList <Short []> walk () {
-    Point p_start;
-    do {
-      int x = (int) (Math.random() * m_columns);
-      int y = (int) (Math.random() * m_rows);
-      p_start = new Point(x, y);
-    }
-    while (m_included_cells.get(p_start.y).get(p_start.x));
+    Point p_start = getRandomStarter();
     ArrayList <ArrayList <Direction>> directionsTaken;
     directionsTaken = new ArrayList <ArrayList <Direction>>(m_rows);
 
@@ -114,7 +108,7 @@ public class Wilson extends MazeCreationAlgorithm {
     while (!m_included_cells.get(p.y).get(p.x));
 
     p = p_start;
-    ArrayList <Short []> path = null;
+    ArrayList <Short []> path = new ArrayList <Short []>();
     do {
       Direction dir = directionsTaken.get(p.y).get(p.x);
       Short [] pos = {(short) p.x, (short) p.y, dir.val};
@@ -151,6 +145,19 @@ public class Wilson extends MazeCreationAlgorithm {
       return Direction.NONE;
     else
       return directions.get((int) (Math.random() * directions.size()));
+  }
+
+  /**
+   *
+   * @return Punto inicial aleatorio para metodo walk
+   */
+  private Point getRandomStarter () {
+    ArrayList <Point> freePoints = new ArrayList <Point>();
+    for (int y = 0; y < m_rows; y++)
+      for (int x = 0; x < m_columns; x++)
+        if (!m_included_cells.get(y).get(x))
+          freePoints.add(new Point(x, y));
+    return freePoints.get((int) (Math.random() * freePoints.size()));
   }
 
 }
