@@ -54,6 +54,7 @@ import es.ull.mazesolver.maze.algorithm.HuntAndKill;
 import es.ull.mazesolver.maze.algorithm.Kruskal;
 import es.ull.mazesolver.maze.algorithm.Prim;
 import es.ull.mazesolver.maze.algorithm.RecursiveBacktracking;
+import es.ull.mazesolver.maze.algorithm.RecursiveDivision;
 import es.ull.mazesolver.maze.algorithm.Wilson;
 
 /**
@@ -80,7 +81,7 @@ public class MazeSelectorDialog extends JDialog {
     super(parent,"Create a new maze");
 
     String[] algos = {"Aldous Broder", "Hunt and Kill", "Kruskal", "Prim",
-                      "Recursive Backtracking","Wilson"};
+                      "Recursive Backtracking","Recursive Division","Wilson"};
     m_algorithms = new JComboBox<String>(algos);
 
     buildInterface();
@@ -247,6 +248,10 @@ public class MazeSelectorDialog extends JDialog {
             break;
           case "Prim":
             alg = new Prim(rows, columns);
+            break;
+
+          case "Recursive Division":
+            alg = new RecursiveDivision(rows, columns);
             break;
           case "Recursive Backtracking":
             alg = new RecursiveBacktracking(rows, columns);
