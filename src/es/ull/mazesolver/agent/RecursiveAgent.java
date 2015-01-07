@@ -196,10 +196,13 @@ public class RecursiveAgent extends Agent {
    *         hay ninguna celda adyacente accesible no visitada.
    */
   private Direction selectDirection () {
+    Point exit = m_env.getMaze().getExit();
     for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
       Direction dir = Direction.fromIndex(i);
       Point next = dir.movePoint(m_pos);
-      if (look(dir) == MazeCell.Vision.EMPTY && !m_visited[next.y][next.x]) {
+      if (next.equals(exit))
+        return dir;
+      else if (look(dir) == MazeCell.Vision.EMPTY && !m_visited[next.y][next.x]) {
         return dir;
       }
     }
