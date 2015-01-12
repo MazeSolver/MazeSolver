@@ -51,7 +51,7 @@ public abstract class MazeCreationAlgorithm {
    *          Número de columnas del laberinto.
    */
   public MazeCreationAlgorithm (int rows, int columns) {
-    if (rows <= MIN_ROWS || columns <= MIN_COLUMNS)
+    if (rows < MIN_ROWS || columns < MIN_COLUMNS)
       throw new IllegalArgumentException("El número de filas o columnas es demasiado pequeño");
 
     m_rows = rows;
@@ -247,7 +247,7 @@ public abstract class MazeCreationAlgorithm {
         dir = Direction.fromIndex(i);
         Point p2 = dir.movePoint(p);
         if (p2.y >= 0 && p2.y < m_rows && p2.x >= 0 && p2.x < m_columns
-            && !m_maze.get(p2.y).get(p2.x).hasWall(dir))
+            && !m_maze.get(p.y).get(p.x).hasWall(dir))
           directions.add(dir);
       }
 

@@ -141,9 +141,9 @@ public class MazeSelectorDialog extends JDialog {
     m_type.add(m_add_components);
 
     m_cycles = new JSpinner(new SpinnerNumberModel(0, 0,
-        (int) Math.round(Maze.perfectMazeEdges(MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
-    m_components = new JSpinner(new SpinnerNumberModel(0, 0,
         (int) Math.round(Maze.perfectMazeWalls(MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
+    m_components = new JSpinner(new SpinnerNumberModel(0, 0,
+        (int) Math.round(Maze.perfectMazeEdges(MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
 
     m_cycles.setEnabled(false);
     m_components.setEnabled(false);
@@ -188,8 +188,8 @@ public class MazeSelectorDialog extends JDialog {
         int rows = (Integer) m_rows.getValue();
         int columns = (Integer) m_columns.getValue();
 
-        int max_cycles = (int) Math.round(Maze.perfectMazeEdges(rows, columns) * 0.75);
-        int max_components = (int) Math.round(Maze.perfectMazeWalls(rows, columns) * 0.75);
+        int max_cycles = (int) Math.round(Maze.perfectMazeWalls(rows, columns) * 0.75);
+        int max_components = (int) Math.round(Maze.perfectMazeEdges(rows, columns) * 0.75);
 
         SpinnerNumberModel cycles_model = (SpinnerNumberModel)m_cycles.getModel();
         SpinnerNumberModel components_model = (SpinnerNumberModel)m_components.getModel();
@@ -249,7 +249,6 @@ public class MazeSelectorDialog extends JDialog {
           case "Prim":
             alg = new Prim(rows, columns);
             break;
-
           case "Recursive Division":
             alg = new RecursiveDivision(rows, columns);
             break;
@@ -266,7 +265,7 @@ public class MazeSelectorDialog extends JDialog {
           if (command.equals(m_add_cycles.getActionCommand()))
             alg.setCycles((Integer) m_cycles.getValue());
           else if (command.equals(m_add_components.getActionCommand()))
-            alg.setComponents((Integer) m_components.getValue());
+            alg.setComponents((Integer) m_components.getValue() + 1);
 
           m_result = new Maze(alg);
         }

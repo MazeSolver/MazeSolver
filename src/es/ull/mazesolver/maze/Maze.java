@@ -156,7 +156,7 @@ public class Maze {
    * @return Número de paredes en el interior del laberinto.
    */
   public static int perfectMazeWalls (int rows, int columns) {
-    return (rows-1) * (columns-1);
+    return (rows * columns) - rows - columns + 1;
   }
 
   /**
