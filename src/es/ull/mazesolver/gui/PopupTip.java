@@ -58,7 +58,9 @@ public class PopupTip {
     // tiempo de visualización
     s_timer.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed (ActionEvent e) { hide(); }
+      public void actionPerformed (ActionEvent e) {
+        hide();
+      }
     });
 
     s_text_label = new JTextArea();
@@ -81,7 +83,9 @@ public class PopupTip {
   /**
    * Asigna un listener para la siguiente operación de cerrado del popup que se
    * lleve a cabo.
-   * @param l Clase oyente a la cual le llegará la próxima notificación.
+   *
+   * @param l
+   *          Clase oyente a la cual le llegará la próxima notificación.
    */
   public synchronized static void setNextCloseOperationListener (CloseOperationListener l) {
     s_listener = l;
@@ -90,11 +94,17 @@ public class PopupTip {
   /**
    * Muestra el popup en la pantalla, con el mensaje, posición y duración
    * indicados.
-   * @param owner Componente que posee el popup.
-   * @param msg Mensaje que se va a mostrar en el popup.
-   * @param x Posición absoluta en X.
-   * @param y Posición absoluta en Y.
-   * @param time_ms Tiempo en milisegundos que el popup va a estar mostrándose.
+   *
+   * @param owner
+   *          Componente que posee el popup.
+   * @param msg
+   *          Mensaje que se va a mostrar en el popup.
+   * @param x
+   *          Posición absoluta en X.
+   * @param y
+   *          Posición absoluta en Y.
+   * @param time_ms
+   *          Tiempo en milisegundos que el popup va a estar mostrándose.
    */
   public static void show (Component owner, String msg, int x, int y, int time_ms) {
     if (s_popup != null) {
@@ -115,10 +125,15 @@ public class PopupTip {
   /**
    * Función de conveniencia que permite mostrar el popup con una duración
    * predeterminada.
-   * @param owner Componente que posee el popup.
-   * @param msg Mensaje que se va a mostrar en el popup.
-   * @param x Posición absoluta en X.
-   * @param y Posición absoluta en Y.
+   *
+   * @param owner
+   *          Componente que posee el popup.
+   * @param msg
+   *          Mensaje que se va a mostrar en el popup.
+   * @param x
+   *          Posición absoluta en X.
+   * @param y
+   *          Posición absoluta en Y.
    */
   public static void show (Component owner, String msg, int x, int y) {
     show(owner, msg, x, y, DEFAULT_POPUP_DURATION_MS);

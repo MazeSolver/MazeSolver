@@ -34,15 +34,20 @@ import java.awt.Point;
 public class ManhattanDistance extends DistanceCalculator {
   private static final long serialVersionUID = 6109509269853813165L;
 
-  /* (non-Javadoc)
-   * @see agent.distance.DistanceCalculator#distance(java.awt.Point, java.awt.Point)
+  /*
+   * (non-Javadoc)
+   *
+   * @see agent.distance.DistanceCalculator#distance(java.awt.Point,
+   * java.awt.Point)
    */
   @Override
   public double distance (Point p1, Point p2) {
     return Math.abs(p2.x - p1.x) + Math.abs(p2.y - p1.y);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.distance.DistanceCalculator#getType()
    */
   @Override
@@ -50,7 +55,9 @@ public class ManhattanDistance extends DistanceCalculator {
     return DistanceType.MANHATTAN;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.distance.DistanceCalculator#clone()
    */
   @Override

@@ -41,7 +41,8 @@ public class Maze {
   private Point m_exit;
 
   /**
-   * @param alg Algoritmo de creación de laberintos ya inicializado
+   * @param alg
+   *          Algoritmo de creación de laberintos ya inicializado
    */
   public Maze (MazeCreationAlgorithm alg) {
     if (alg != null) {
@@ -53,7 +54,8 @@ public class Maze {
   }
 
   /**
-   * @param fileName Nombre del fichero del que cargar el laberinto.
+   * @param fileName
+   *          Nombre del fichero del que cargar el laberinto.
    * @throws IOException
    *           Cuando no se encuentra el fichero, no se puede abrir para su
    *           lectura o no contiene un laberinto válido.
@@ -63,8 +65,10 @@ public class Maze {
   }
 
   /**
-   * @param row Fila.
-   * @param column Columna.
+   * @param row
+   *          Fila.
+   * @param column
+   *          Columna.
    * @return Celda en la posición indicada.
    */
   public MazeCell get (int row, int column) {
@@ -72,9 +76,12 @@ public class Maze {
   }
 
   /**
-   * @param row Fila.
-   * @param column Columna.
-   * @param cell Celda que se quiere introducir.
+   * @param row
+   *          Fila.
+   * @param column
+   *          Columna.
+   * @param cell
+   *          Celda que se quiere introducir.
    */
   public void set (int row, int column, MazeCell cell) {
     m_maze.get(row).set(column, cell);
@@ -103,7 +110,9 @@ public class Maze {
 
   /**
    * Determina si el punto se encuentra dentro del laberinto o no.
-   * @param p Punto a testear.
+   *
+   * @param p
+   *          Punto a testear.
    * @return Si el punto está dentro del laberinto o no.
    */
   public boolean containsPoint (Point p) {
@@ -111,7 +120,8 @@ public class Maze {
   }
 
   /**
-   * @param fileName Nombre del fichero del que cargar el laberinto.
+   * @param fileName
+   *          Nombre del fichero del que cargar el laberinto.
    * @throws IOException
    *           Cuando no se encuentra el fichero, no se puede abrir para su
    *           lectura o no contiene un laberinto válido.
@@ -132,7 +142,8 @@ public class Maze {
   }
 
   /**
-   * @param fileName Nombre del fichero donde guardar el laberinto.
+   * @param fileName
+   *          Nombre del fichero donde guardar el laberinto.
    * @throws IOException
    *           Cuando el fichero no se puede abrir o no se tienen permisos de
    *           escritura en el mismo.
@@ -151,8 +162,11 @@ public class Maze {
    * del tamaño dado. Cada arista se refiere a un pasillo abierto entre 2
    * celdas. Se puede ver como el número de paredes que tiene en su interior un
    * laberinto perfecto, sin contar el contorno.
-   * @param rows Número de filas.
-   * @param columns Número de columnas.
+   *
+   * @param rows
+   *          Número de filas.
+   * @param columns
+   *          Número de columnas.
    * @return Número de paredes en el interior del laberinto.
    */
   public static int perfectMazeWalls (int rows, int columns) {
@@ -162,8 +176,11 @@ public class Maze {
   /**
    * Calcula el número de aristas que tiene un laberinto perfecto de las
    * dimensiones dadas. Las aristas representan pasillos entre 2 celdas.
-   * @param rows Númnero de filas.
-   * @param columns Número de columnas.
+   *
+   * @param rows
+   *          Númnero de filas.
+   * @param columns
+   *          Número de columnas.
    * @return Número de aristas del laberinto perfecto.
    */
   public static int perfectMazeEdges (int rows, int columns) {

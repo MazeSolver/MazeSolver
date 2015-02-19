@@ -54,17 +54,21 @@ public class AStarAgent extends HeuristicAgent {
   private transient Point m_exit;
 
   private transient int m_direction_index;
-  private transient ArrayList<Direction> m_directions;
+  private transient ArrayList <Direction> m_directions;
 
   /**
    * Inicializa el agente A* con la distancia de Manhattan por defecto.
-   * @param env Entorno en el que colocar al agente.
+   *
+   * @param env
+   *          Entorno en el que colocar al agente.
    */
   public AStarAgent (Environment env) {
     super(env);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getAlgorithmName()
    */
   @Override
@@ -72,16 +76,20 @@ public class AStarAgent extends HeuristicAgent {
     return "A*";
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#setPosition(java.awt.Point)
    */
   @Override
-  public void setPosition (Point pos)  {
+  public void setPosition (Point pos) {
     super.setPosition(pos);
     resetMemory();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#setEnvironment(gui.environment.Environment)
    */
   @Override
@@ -91,17 +99,18 @@ public class AStarAgent extends HeuristicAgent {
     m_exit = m_env.getMaze().getExit();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getNextMovement()
    */
   @Override
   public Direction getNextMovement () {
-    if (m_directions == null ||
-        (m_direction_index == m_directions.size() && !m_pos.equals(m_exit)))
+    if (m_directions == null || (m_direction_index == m_directions.size() && !m_pos.equals(m_exit)))
       calculatePath();
 
-    return m_directions != null && m_direction_index != m_directions.size()?
-           m_directions.get(m_direction_index) : Direction.NONE;
+    return m_directions != null && m_direction_index != m_directions.size()? m_directions
+        .get(m_direction_index) : Direction.NONE;
   }
 
   @Override
@@ -111,7 +120,9 @@ public class AStarAgent extends HeuristicAgent {
       m_direction_index++;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#resetMemory()
    */
   @Override
@@ -120,7 +131,9 @@ public class AStarAgent extends HeuristicAgent {
     m_direction_index = 0;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getConfigurationPanel()
    */
   @Override
@@ -138,7 +151,8 @@ public class AStarAgent extends HeuristicAgent {
       }
 
       @Override
-      protected void cancel () {}
+      protected void cancel () {
+      }
 
       @Override
       protected boolean accept () {
@@ -148,7 +162,9 @@ public class AStarAgent extends HeuristicAgent {
     };
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#clone()
    */
   @Override
@@ -158,8 +174,10 @@ public class AStarAgent extends HeuristicAgent {
     return ag;
   }
 
-  private class HeuristicPathComparator implements Comparator<Path> {
-    /* (non-Javadoc)
+  private class HeuristicPathComparator implements Comparator <Path> {
+    /*
+     * (non-Javadoc)
+     *
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -179,8 +197,8 @@ public class AStarAgent extends HeuristicAgent {
   private void calculatePath () {
     Path solution = null;
 
-    ArrayList<Path> closed = new ArrayList <Path>();
-    PriorityQueue<Path> open = new PriorityQueue<Path>(10, new HeuristicPathComparator());
+    ArrayList <Path> closed = new ArrayList <Path>();
+    PriorityQueue <Path> open = new PriorityQueue <Path>(10, new HeuristicPathComparator());
 
     // Inicialmente la lista abierta contiene una trayectoria formada por sólo
     // el nodo de inicio
@@ -238,10 +256,10 @@ public class AStarAgent extends HeuristicAgent {
       }
     }
 
-    ArrayList<Point> path = solution.getPath();
-    m_directions = new ArrayList<Direction>(path.size()-1);
+    ArrayList <Point> path = solution.getPath();
+    m_directions = new ArrayList <Direction>(path.size() - 1);
     for (int i = 1; i < path.size(); i++)
-      m_directions.add(Direction.fromPoints(path.get(i-1), path.get(i)));
+      m_directions.add(Direction.fromPoints(path.get(i - 1), path.get(i)));
 
     m_direction_index = 0;
   }
@@ -251,16 +269,19 @@ public class AStarAgent extends HeuristicAgent {
    * está siendo procesada. Si la encuentra, dependiendo de los costes de ambas
    * trayectorias sólo se deja en la lista la de menor coste. Si no la
    * encuentra, simplemente añade la trayectoria a la lista.
-   * @param path Trayectoria a añadir a la lista.
-   * @param list Lista de trayectorias a la que se quiere añadir la trayectoria.
+   *
+   * @param path
+   *          Trayectoria a añadir a la lista.
+   * @param list
+   *          Lista de trayectorias a la que se quiere añadir la trayectoria.
    * @return La trayectoria eliminada de la lista, la trayectoria de entrada si
    *         no fue insertada o null, dependiendo del caso.
    */
-  private Path insertPath (Path path, Collection<Path> list) {
+  private Path insertPath (Path path, Collection <Path> list) {
     Path discarded = null;
     boolean add_path = true;
 
-    Iterator<Path> iter = list.iterator();
+    Iterator <Path> iter = list.iterator();
     while (iter.hasNext()) {
       Path p = iter.next();
       if (p.endsInTheSamePoint(path)) {
@@ -286,11 +307,15 @@ public class AStarAgent extends HeuristicAgent {
   /**
    * Extrae la información del objeto a partir de una forma serializada del
    * mismo.
-   * @param input Flujo de entrada con la información del objeto.
-   * @throws ClassNotFoundException Si se trata de un objeto de otra clase.
-   * @throws IOException Si no se puede leer el flujo de entrada.
+   *
+   * @param input
+   *          Flujo de entrada con la información del objeto.
+   * @throws ClassNotFoundException
+   *           Si se trata de un objeto de otra clase.
+   * @throws IOException
+   *           Si no se puede leer el flujo de entrada.
    */
-  private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+  private void readObject (ObjectInputStream input) throws ClassNotFoundException, IOException {
     input.defaultReadObject();
     m_pos = new Point();
   }

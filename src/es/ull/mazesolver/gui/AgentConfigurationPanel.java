@@ -38,18 +38,18 @@ import javax.swing.JPanel;
  * Se trata de un panel de configuración de agentes, que permite al usuario
  * configurar un agente dependiendo del tipo que sea.
  *
- * Los controles para aceptar o cancelar la configuración deben ser implementados
- * desde el exterior y utilizarse para llamar a los métodos "accept()" o
- * "cancel", respectivamente.
+ * Los controles para aceptar o cancelar la configuración deben ser
+ * implementados desde el exterior y utilizarse para llamar a los métodos
+ * "accept()" o "cancel", respectivamente.
  */
 public abstract class AgentConfigurationPanel extends JPanel {
   private static final long serialVersionUID = 1L;
 
   private JPanel m_root;
-  private ArrayList<EventListener> m_listeners;
+  private ArrayList <EventListener> m_listeners;
 
-  protected ArrayList<String> m_errors;
-  protected ArrayList<String> m_success;
+  protected ArrayList <String> m_errors;
+  protected ArrayList <String> m_success;
 
   /**
    * Interfaz de escucha de eventos de tipo "Exitoso". Estos eventos son
@@ -59,9 +59,11 @@ public abstract class AgentConfigurationPanel extends JPanel {
     /**
      * LLamado cuando ocurre el evento de tipo "Exitoso". Estos eventos son
      * notificados cuando se llama a {@code onSuccess()}.
-     * @param msgs Lista de mensajes que se quieren mostrar al usuario.
+     *
+     * @param msgs
+     *          Lista de mensajes que se quieren mostrar al usuario.
      */
-    public void onSuccess (ArrayList<String> msgs);
+    public void onSuccess (ArrayList <String> msgs);
 
     /**
      * LLamado cuando ocurre el evento de tipo "Cancelar". Estos eventos son
@@ -72,9 +74,11 @@ public abstract class AgentConfigurationPanel extends JPanel {
     /**
      * LLamado cuando ocurre el evento de tipo "Error". Estos eventos son
      * notificados cuando se llama a {@code onError()}.
-     * @param errors Lista de mensajes de error a mostrar al usuario.
+     *
+     * @param errors
+     *          Lista de mensajes de error a mostrar al usuario.
      */
-    public void onError (ArrayList<String> errors);
+    public void onError (ArrayList <String> errors);
   }
 
   /**
@@ -82,9 +86,9 @@ public abstract class AgentConfigurationPanel extends JPanel {
    */
   public AgentConfigurationPanel () {
     m_root = new JPanel();
-    m_listeners = new ArrayList<EventListener>();
-    m_errors = new ArrayList<String>();
-    m_success = new ArrayList<String>();
+    m_listeners = new ArrayList <EventListener>();
+    m_errors = new ArrayList <String>();
+    m_success = new ArrayList <String>();
 
     createGUI(m_root);
     createControls();
@@ -92,7 +96,9 @@ public abstract class AgentConfigurationPanel extends JPanel {
 
   /**
    * Añade un oyente de eventos.
-   * @param listener Clase oyente que se quiere añadir.
+   *
+   * @param listener
+   *          Clase oyente que se quiere añadir.
    */
   public final void addEventListener (EventListener listener) {
     if (!m_listeners.contains(listener))
@@ -102,7 +108,9 @@ public abstract class AgentConfigurationPanel extends JPanel {
   /**
    * Elimina un oyente de eventos. Si no es un oyente, la lista de oyentes
    * permanece intacta.
-   * @param listener Clase oyente que se quiere añadir.
+   *
+   * @param listener
+   *          Clase oyente que se quiere añadir.
    */
   public final void removeEventListener (EventListener listener) {
     m_listeners.remove(listener);
@@ -113,16 +121,17 @@ public abstract class AgentConfigurationPanel extends JPanel {
    * configuración se guarde en el agente, modificando su comportamiento.
    *
    * Este método debe ser implementado por cada agente.
+   *
    * @return <ul>
-   *           <li><b>true</b> si se pudo guardar el resultado.</li>
-   *           <li><b>false</b> si la configuración indicada no es válida.</li>
+   *         <li><b>true</b> si se pudo guardar el resultado.</li>
+   *         <li><b>false</b> si la configuración indicada no es válida.</li>
    *         </ul>
    */
   protected abstract boolean accept ();
 
   /**
-   * Cancela la operación de configuración, dejando al agente en su estado
-   * de partida.
+   * Cancela la operación de configuración, dejando al agente en su estado de
+   * partida.
    *
    * Este método debe ser implementado por cada agente.
    */
@@ -130,11 +139,13 @@ public abstract class AgentConfigurationPanel extends JPanel {
 
   /**
    * Crea la interfaz gráfica de usuario, que es la que se mostrará al mismo.
-   * Estará personalizada para el agente específico, pero no incluirá los botones
-   * de "Aceptar" y "Cancelar".
-   * @param root Panel padre de todos los elementos que se creen. Si se intenta
-   *        utilizar el panel padre de la clase en lugar de éste, el panel de
-   *        configuración no se mostrará correctamente.
+   * Estará personalizada para el agente específico, pero no incluirá los
+   * botones de "Aceptar" y "Cancelar".
+   *
+   * @param root
+   *          Panel padre de todos los elementos que se creen. Si se intenta
+   *          utilizar el panel padre de la clase en lugar de éste, el panel de
+   *          configuración no se mostrará correctamente.
    */
   protected abstract void createGUI (JPanel root);
 

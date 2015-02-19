@@ -63,7 +63,7 @@ import es.ull.mazesolver.gui.environment.Environment;
 public class AgentSelectorDialog extends JDialog {
   private static final long serialVersionUID = 1L;
 
-  private static final TreeMap <String, Class<? extends Agent>> ALGORITHMS = new TreeMap<>();
+  private static final TreeMap <String, Class <? extends Agent>> ALGORITHMS = new TreeMap <>();
   static {
     ALGORITHMS.put("Perception-Action Tables", PATableAgent.class);
     ALGORITHMS.put("Situation-Action Rules", SARulesAgent.class);
@@ -76,16 +76,19 @@ public class AgentSelectorDialog extends JDialog {
   }
 
   private int max_agents;
-  private JComboBox<String> m_agents;
+  private JComboBox <String> m_agents;
   private JSpinner m_amount;
 
-  private Agent[] m_result;
+  private Agent [] m_result;
   private Agent m_template_agent = null;
 
   /**
    * Crea el diálogo de creación de agentes.
-   * @param parent Ventana padre del diálogo.
-   * @param available_cells Número de celdas vacías actualmente en el laberinto.
+   *
+   * @param parent
+   *          Ventana padre del diálogo.
+   * @param available_cells
+   *          Número de celdas vacías actualmente en el laberinto.
    */
   public AgentSelectorDialog (JFrame parent, int available_cells) {
     super(parent, "Create a new agent", true);
@@ -96,12 +99,13 @@ public class AgentSelectorDialog extends JDialog {
   }
 
   /**
-   * Muestra el diálogo por pantalla y devuelve la lista de agentes que se
-   * deben crear como consecuencia de la selección del usuario.
+   * Muestra el diálogo por pantalla y devuelve la lista de agentes que se deben
+   * crear como consecuencia de la selección del usuario.
+   *
    * @return Lista de agentes que se quieren añadir al entorno o null si no se
    *         quiere añadir ninguno.
    */
-  public Agent[] showDialog () {
+  public Agent [] showDialog () {
     setVisible(true);
     return m_result;
   }
@@ -119,7 +123,7 @@ public class AgentSelectorDialog extends JDialog {
     JPanel labels = new JPanel(new GridLayout(2, 1, 5, 5));
     JPanel controls = new JPanel(new GridLayout(2, 1, 5, 5));
 
-    m_agents = new JComboBox<String>(ALGORITHMS.keySet().toArray(new String[ALGORITHMS.size()]));
+    m_agents = new JComboBox <String>(ALGORITHMS.keySet().toArray(new String [ALGORITHMS.size()]));
     m_amount = new JSpinner(new SpinnerNumberModel(1, 1, max_agents, 1));
 
     labels.add(ags);
@@ -161,7 +165,7 @@ public class AgentSelectorDialog extends JDialog {
         if (m_template_agent == null)
           m_template_agent = createSelectedAgent();
 
-        m_result = new Agent[amount];
+        m_result = new Agent [amount];
         m_result[0] = m_template_agent;
 
         // Clonamos el agente en todas las posiciones (todos serán iguales)
@@ -194,7 +198,7 @@ public class AgentSelectorDialog extends JDialog {
         d.add(config_panel);
         d.setResizable(false);
 
-        config_panel.addEventListener(new AgentConfigurationPanel.EventListener () {
+        config_panel.addEventListener(new AgentConfigurationPanel.EventListener() {
           @Override
           public void onSuccess (ArrayList <String> msgs) {
             String all_msgs = "";
@@ -233,6 +237,7 @@ public class AgentSelectorDialog extends JDialog {
 
   /**
    * Crea una instancia del agente seleccionado actualmente en el ComboBox.
+   *
    * @return Instancia del agente seleccionado.
    */
   private Agent createSelectedAgent () {

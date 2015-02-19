@@ -38,8 +38,8 @@ public class MazeCell implements Serializable {
   private short m_cell;
 
   /**
-   * Constructor por defecto. La celda creada esta rodeada de muros
-   * m_cell = 0x1111;
+   * Constructor por defecto. La celda creada esta rodeada de muros m_cell =
+   * 0x1111;
    */
   public MazeCell () {
     m_cell |= Direction.UP.val;
@@ -51,7 +51,9 @@ public class MazeCell implements Serializable {
   /**
    * Cambia el estado de la dirección especificada. Si no había muro, ahora lo
    * hay y viceversa.
-   * @param dir Lado de la celda que se quiere modificar.
+   *
+   * @param dir
+   *          Lado de la celda que se quiere modificar.
    */
   public void toggleWall (Direction dir) {
     if (hasWall(dir))
@@ -62,7 +64,9 @@ public class MazeCell implements Serializable {
 
   /**
    * Pone un muro si no lo hay en la dirección especificada.
-   * @param dir Lado de la celda que se quiere modificar.
+   *
+   * @param dir
+   *          Lado de la celda que se quiere modificar.
    */
   public void setWall (Direction dir) {
     m_cell |= dir.val;
@@ -70,7 +74,9 @@ public class MazeCell implements Serializable {
 
   /**
    * Quita el muro si lo hay en la dirección especificada.
-   * @param dir Lado de la celda que se quiere modificar.
+   *
+   * @param dir
+   *          Lado de la celda que se quiere modificar.
    */
   public void unsetWall (Direction dir) {
     m_cell &= ~dir.val;
@@ -84,7 +90,8 @@ public class MazeCell implements Serializable {
   }
 
   /**
-   * @param dir Lado de la celda que se quiere consultar.
+   * @param dir
+   *          Lado de la celda que se quiere consultar.
    * @return Si hay una celda en esa dirección o no.
    */
   public boolean hasWall (Direction dir) {
@@ -109,8 +116,8 @@ public class MazeCell implements Serializable {
     WALL,
 
     /**
-     * Este estado significa que hay un agente sobre esa celda actualmente y
-     * no hay nada interponiéndose en medio.
+     * Este estado significa que hay un agente sobre esa celda actualmente y no
+     * hay nada interponiéndose en medio.
      */
     AGENT,
 

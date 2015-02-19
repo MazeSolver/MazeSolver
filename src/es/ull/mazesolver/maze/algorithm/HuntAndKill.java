@@ -39,8 +39,10 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
-   * @param rows Número de filas del laberinto.
-   * @param columns Número de columnas del laberinto.
+   * @param rows
+   *          Número de filas del laberinto.
+   * @param columns
+   *          Número de columnas del laberinto.
    */
   public HuntAndKill (int rows, int columns) {
     super(rows, columns);
@@ -56,7 +58,9 @@ public class HuntAndKill extends MazeCreationAlgorithm {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
    */
   @Override
@@ -75,7 +79,8 @@ public class HuntAndKill extends MazeCreationAlgorithm {
    * Dada una posición de inicio va explorando dicho camino mientras no
    * encuentre un nuevo camino.
    *
-   * @param p punto con las coordenadas x e y de las cuales se quiere empezar a
+   * @param p
+   *          punto con las coordenadas x e y de las cuales se quiere empezar a
    *          buscar un nuevo camino nuevo
    */
   private void walk (Point p) {
@@ -112,8 +117,10 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   }
 
   /**
-   * @param y Posición en el eje Y desde la que se quiere partir.
-   * @param x Posición en el eje X desde la que se quiere partir.
+   * @param y
+   *          Posición en el eje Y desde la que se quiere partir.
+   * @param x
+   *          Posición en el eje X desde la que se quiere partir.
    * @return retorna una direccion aleatoria dentro de las posibles a las que ir
    *         en la casilla dada por las posiciones i y j
    */

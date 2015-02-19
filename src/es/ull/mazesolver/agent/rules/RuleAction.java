@@ -54,7 +54,8 @@ public class RuleAction implements Cloneable {
         dir = Direction.DOWN;
       else if (dir_ctx.LEFT() != null)
         dir = Direction.LEFT;
-      else // RIGHT
+      else
+        // RIGHT
         dir = Direction.RIGHT;
     }
     // Si no la tiene, es el movimiento "STOP"
@@ -82,7 +83,9 @@ public class RuleAction implements Cloneable {
     return m_direction;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.lang.Object#clone()
    */
   @Override

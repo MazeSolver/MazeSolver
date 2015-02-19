@@ -34,14 +34,18 @@ import es.ull.mazesolver.maze.MazeCreationAlgorithm;
 public class EmptyMaze extends MazeCreationAlgorithm {
 
   /**
-   * @param rows Número de filas del laberinto que se genere.
-   * @param columns Número de columnas del laberinto que se genere.
+   * @param rows
+   *          Número de filas del laberinto que se genere.
+   * @param columns
+   *          Número de columnas del laberinto que se genere.
    */
   public EmptyMaze (int rows, int columns) {
     super(rows, columns);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
    */
   @Override

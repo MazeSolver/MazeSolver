@@ -40,28 +40,29 @@ import es.ull.mazesolver.agent.util.MessageCommunication.Message;
 public class MessageManager {
   // Para cada grupo se almacena una lista de mensajes pendientes de transmisión
   // junto al emisor y una lista de receptores, o agentes suscritos al canal.
-  private HashMap <String,
-                   Pair<ArrayList<Pair<MessageCommunication, Message>>,
-                        ArrayList<MessageCommunication>>> m_groups;
+  private HashMap <String, Pair <ArrayList <Pair <MessageCommunication, Message>>, ArrayList <MessageCommunication>>> m_groups;
 
   /**
    * Construye una nueva instancia de la clase.
    */
   public MessageManager () {
-    m_groups = new HashMap<>();
+    m_groups = new HashMap <>();
   }
 
   /**
    * Suscribe el agente al grupo indicado, de manera que recibe los mensajes
    * enviados a ese grupo.
-   * @param agent Agente que se quiere suscribir.
-   * @param group Grupo al que suscribir el agente.
+   *
+   * @param agent
+   *          Agente que se quiere suscribir.
+   * @param group
+   *          Grupo al que suscribir el agente.
    * @return {@code true} si el agente se añadió al grupo y {@code false} si no
-   * se pudo añadir el agente al grupo.
+   *         se pudo añadir el agente al grupo.
    */
   public boolean subscribeGroup (MessageCommunication agent, String group) {
-    Pair<ArrayList<Pair<MessageCommunication, Message>>,
-         ArrayList<MessageCommunication>> g = m_groups.get(group);
+    Pair <ArrayList <Pair <MessageCommunication, Message>>, ArrayList <MessageCommunication>> g =
+        m_groups.get(group);
     if (g != null) {
       if (!g.second.contains(agent))
         g.second.add(agent);
@@ -72,32 +73,39 @@ public class MessageManager {
 
   /**
    * Hace que el agente deje de recibir mensajes del grupo especificado.
-   * @param agent Agente que quiere eliminar su suscripción.
-   * @param group Grupo del cual eliminar la suscripción.
+   *
+   * @param agent
+   *          Agente que quiere eliminar su suscripción.
+   * @param group
+   *          Grupo del cual eliminar la suscripción.
    */
   public void unsubscribeGroup (MessageCommunication agent, String group) {
-    Pair<ArrayList<Pair<MessageCommunication, Message>>,
-         ArrayList<MessageCommunication>> g = m_groups.get(group);
+    Pair <ArrayList <Pair <MessageCommunication, Message>>, ArrayList <MessageCommunication>> g =
+        m_groups.get(group);
     if (g != null)
       g.second.remove(agent);
   }
 
   /**
    * Pone un mensaje a la cola de un grupo para ser enviado posteriormente
-   * cuando se llame a {@code flushMessageQueues()}. Que la inserción se
-   * realice satisfactoriamente no implica que el mensaje sea enviado.
+   * cuando se llame a {@code flushMessageQueues()}. Que la inserción se realice
+   * satisfactoriamente no implica que el mensaje sea enviado.
+   *
    * @see #flushMessageQueues()
-   * @param sender Agente que envía el mensaje.
-   * @param group Grupo al que se está enviando el mensaje.
-   * @param msg Mensaje que se quiere enviar.
+   * @param sender
+   *          Agente que envía el mensaje.
+   * @param group
+   *          Grupo al que se está enviando el mensaje.
+   * @param msg
+   *          Mensaje que se quiere enviar.
    * @return {@code true} si el mensaje se ha colocado en la cola
-   * satisfactoriamente o {@code false} si no se ha podido.
+   *         satisfactoriamente o {@code false} si no se ha podido.
    */
   public boolean sendMessage (MessageCommunication sender, String group, Message msg) {
-    Pair<ArrayList<Pair<MessageCommunication, Message>>,
-         ArrayList<MessageCommunication>> g = m_groups.get(group);
+    Pair <ArrayList <Pair <MessageCommunication, Message>>, ArrayList <MessageCommunication>> g =
+        m_groups.get(group);
     if (g != null) {
-      g.first.add(new Pair<>(sender, msg));
+      g.first.add(new Pair <>(sender, msg));
       return true;
     }
     return false;
@@ -105,23 +113,26 @@ public class MessageManager {
 
   /**
    * Crea un nuevo grupo y devuelve su nombre.
+   *
    * @return Nombre del grupo recién creado.
    */
   public String createGroup () {
     String name = "";
     do {
-      name = Long.toUnsignedString(((Double)(Math.random() * Long.MAX_VALUE)).longValue());
-    } while (m_groups.containsKey(name));
+      name = Long.toUnsignedString(((Double) (Math.random() * Long.MAX_VALUE)).longValue());
+    }
+    while (m_groups.containsKey(name));
 
-    ArrayList<Pair<MessageCommunication, Message>> msg_queue = new ArrayList<>();
-    ArrayList<MessageCommunication> group = new ArrayList<>();
-    m_groups.put(name, new Pair<>(msg_queue, group));
+    ArrayList <Pair <MessageCommunication, Message>> msg_queue = new ArrayList <>();
+    ArrayList <MessageCommunication> group = new ArrayList <>();
+    m_groups.put(name, new Pair <>(msg_queue, group));
 
     return name;
   }
 
   /**
-   * @param group Grupo del cual se quiere comprobar su existencia.
+   * @param group
+   *          Grupo del cual se quiere comprobar su existencia.
    * @return Si el grupo existe o no.
    */
   public boolean groupCreated (String group) {
@@ -130,13 +141,16 @@ public class MessageManager {
 
   /**
    * Comprueba si un agente está suscrito a un grupo de mensajes determinado.
-   * @param agent Agente que se quiere comprobar.
-   * @param group Grupo del que se quiere saber si el agente está suscrito.
+   *
+   * @param agent
+   *          Agente que se quiere comprobar.
+   * @param group
+   *          Grupo del que se quiere saber si el agente está suscrito.
    * @return Si el agente está suscrito al grupo o no.
    */
   public boolean isSubscribed (MessageCommunication agent, String group) {
-    Pair<ArrayList<Pair<MessageCommunication, Message>>,
-         ArrayList<MessageCommunication>> g = m_groups.get(group);
+    Pair <ArrayList <Pair <MessageCommunication, Message>>, ArrayList <MessageCommunication>> g =
+        m_groups.get(group);
 
     return g != null && g.second.contains(group);
   }
@@ -150,22 +164,21 @@ public class MessageManager {
   public void flushMessageQueues () {
     // Creamos una cola de mensajes a ser enviados a cada agente, para detectar
     // las repeticiones de mensajes
-    HashMap <MessageCommunication,
-             ArrayList<Pair<MessageCommunication, Message>>> msgs = new HashMap<>();
+    HashMap <MessageCommunication, ArrayList <Pair <MessageCommunication, Message>>> msgs =
+        new HashMap <>();
 
     // Iteramos sobre los grupos
-    for (Entry<String,
-               Pair<ArrayList<Pair<MessageCommunication, Message>>,
-                    ArrayList<MessageCommunication>>> entry: m_groups.entrySet()) {
+    for (Entry <String, Pair <ArrayList <Pair <MessageCommunication, Message>>, ArrayList <MessageCommunication>>> entry: m_groups
+        .entrySet()) {
 
       // Sólo nos interesan la cola de mensajes y de suscritos al grupo, no el
       // nombre del mismo
-      Pair<ArrayList<Pair<MessageCommunication, Message>>,
-           ArrayList<MessageCommunication>> e_val = entry.getValue();
+      Pair <ArrayList <Pair <MessageCommunication, Message>>, ArrayList <MessageCommunication>> e_val =
+          entry.getValue();
 
       // Recorremos todos los mensajes del grupo y los añadimos a la cola de
       // envío de todos los agentes del grupo
-      for (Pair<MessageCommunication, Message> msg: e_val.first)
+      for (Pair <MessageCommunication, Message> msg: e_val.first)
         for (MessageCommunication recv: e_val.second)
           addMsgToReceiverQueue(msgs, recv, msg);
 
@@ -176,8 +189,8 @@ public class MessageManager {
 
     // Recorremos las listas de mensajes de cada receptor para enviarle sus
     // mensajes pendientes
-    for (Entry<MessageCommunication,
-               ArrayList<Pair<MessageCommunication, Message>>> e: msgs.entrySet()) {
+    for (Entry <MessageCommunication, ArrayList <Pair <MessageCommunication, Message>>> e: msgs
+        .entrySet()) {
       MessageCommunication recv = e.getKey();
       for (Pair <MessageCommunication, Message> msg: e.getValue())
         recv.receiveMessage(msg.first, msg.second);
@@ -187,24 +200,25 @@ public class MessageManager {
   /**
    * Añade un mensaje a la cola de envío de un agente, evitando añadir mensajes
    * que ya se encuentren en dicha cola.
-   * @param msgs Estructura de datos con la lista de mensajes para cada
-   *             receptor.
-   * @param recv Receptor del mensaje.
-   * @param msg Mensaje + Emisor del mensaje que se quiere añadir a la cola.
+   *
+   * @param msgs
+   *          Estructura de datos con la lista de mensajes para cada receptor.
+   * @param recv
+   *          Receptor del mensaje.
+   * @param msg
+   *          Mensaje + Emisor del mensaje que se quiere añadir a la cola.
    */
   private void addMsgToReceiverQueue (
-      Map <MessageCommunication, ArrayList<Pair<MessageCommunication, Message>>> msgs,
-      MessageCommunication recv,
-      Pair<MessageCommunication, Message> msg
-  ) {
+      Map <MessageCommunication, ArrayList <Pair <MessageCommunication, Message>>> msgs,
+      MessageCommunication recv, Pair <MessageCommunication, Message> msg) {
 
-    ArrayList<Pair<MessageCommunication,Message>> r_msgs = msgs.get(recv);
+    ArrayList <Pair <MessageCommunication, Message>> r_msgs = msgs.get(recv);
     if (r_msgs == null) {
-      r_msgs = new ArrayList <Pair<MessageCommunication,Message>>();
+      r_msgs = new ArrayList <Pair <MessageCommunication, Message>>();
       msgs.put(recv, r_msgs);
     }
 
-    for (Pair<MessageCommunication, Message> r_msg: r_msgs) {
+    for (Pair <MessageCommunication, Message> r_msg: r_msgs) {
       // Comparamos las referencias, porque no queremos desechar mensajes
       // iguales, sino repeticiones del mismo mensaje
       if (r_msg.first == msg.first && r_msg.second == msg.second)

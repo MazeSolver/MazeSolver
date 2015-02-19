@@ -60,9 +60,10 @@ public class EnvironmentSet extends JScrollableDesktopPane {
   /**
    * No se deben eliminar los entornos de la lista, o tendrá un comportamiento
    * erróneo posteriormente.
+   *
    * @return Lista de entornos cargados actualmente.
    */
-  public final ArrayList<Environment> getEnvironmentList () {
+  public final ArrayList <Environment> getEnvironmentList () {
     return m_envs;
   }
 
@@ -74,7 +75,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
   }
 
   /**
-   * @param env Añade un entorno a la lista.
+   * @param env
+   *          Añade un entorno a la lista.
    */
   public void addEnvironment (Environment env) {
     if (env != null) {
@@ -100,7 +102,9 @@ public class EnvironmentSet extends JScrollableDesktopPane {
    * Añade un agente al entorno seleccionado y actualiza la referencia al
    * entorno por si se trataba de un entorno simple y tras la adición de un
    * agente pasa a ser un entorno múltiple.
-   * @param ag Agente que se quiere añadir al entorno actual.
+   *
+   * @param ag
+   *          Agente que se quiere añadir al entorno actual.
    */
   public void addAgentToSelectedEnvironment (Agent ag) {
     Environment env = getSelectedEnvironment();
@@ -113,8 +117,11 @@ public class EnvironmentSet extends JScrollableDesktopPane {
   /**
    * Elimina un agente de un entorno y actualiza la referencia al entorno, por
    * si era un entorno múltiple y tras la eliminación tan sólo queda un agente.
-   * @param ag Referencia al agente que se quiere eliminar del entorno.
-   * @param env Entorno del cual se quiere eliminar el agente.
+   *
+   * @param ag
+   *          Referencia al agente que se quiere eliminar del entorno.
+   * @param env
+   *          Entorno del cual se quiere eliminar el agente.
    */
   public void removeAgentFromEnvironment (Agent ag, Environment env) {
     if (m_envs.contains(env))
@@ -125,7 +132,9 @@ public class EnvironmentSet extends JScrollableDesktopPane {
 
   /**
    * Actualiza el zoom de los entornos y sus tamaños.
-   * @param zoom Nivel de escala a aplicar a la visualización de los entornos.
+   *
+   * @param zoom
+   *          Nivel de escala a aplicar a la visualización de los entornos.
    */
   public void setZoom (double zoom) {
     EnvironmentPanel.setZoom(zoom);
@@ -134,10 +143,13 @@ public class EnvironmentSet extends JScrollableDesktopPane {
   }
 
   /**
-   * Intercambia un entorno dentro del conjunto de entornos por otro que no
-   * está en dicho conjunto.
-   * @param e1 Entorno que se quiere eliminar del conjunto.
-   * @param e2 Entorno que se quiere introducir en su lugar.
+   * Intercambia un entorno dentro del conjunto de entornos por otro que no está
+   * en dicho conjunto.
+   *
+   * @param e1
+   *          Entorno que se quiere eliminar del conjunto.
+   * @param e2
+   *          Entorno que se quiere introducir en su lugar.
    */
   public void exchangeEnvironments (Environment e1, Environment e2) {
     // Evitamos intercambiar un entorno por sí mismo

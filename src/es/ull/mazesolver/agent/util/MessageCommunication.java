@@ -50,8 +50,11 @@ public interface MessageCommunication {
 
     /**
      * Crea un mensaje indicando el tipo y contenido.
-     * @param type Tipo de mensaje / acto del habla.
-     * @param content Contenido del mensaje.
+     *
+     * @param type
+     *          Tipo de mensaje / acto del habla.
+     * @param content
+     *          Contenido del mensaje.
      */
     public Message (MessageType type, Object content) {
       m_type = type;
@@ -61,7 +64,9 @@ public interface MessageCommunication {
     /**
      * Crea un mensaje sin contenido, cuyo significado viene dado exclusivamente
      * por el estado del receptor y el tipo de mensaje.
-     * @param type Tipo de mensaje / acto del habla.
+     *
+     * @param type
+     *          Tipo de mensaje / acto del habla.
      */
     public Message (MessageType type) {
       this(type, null);
@@ -85,8 +90,11 @@ public interface MessageCommunication {
   /**
    * Recibe un mensaje y lo procesa, posiblemente produciendo un cambio en su
    * estado y un mensaje de respuesta.
-   * @param sender Agente que envia el mensaje.
-   * @param msg Mensaje que se está enviando.
+   *
+   * @param sender
+   *          Agente que envia el mensaje.
+   * @param msg
+   *          Mensaje que se está enviando.
    */
   public void receiveMessage (MessageCommunication sender, Message msg);
 }

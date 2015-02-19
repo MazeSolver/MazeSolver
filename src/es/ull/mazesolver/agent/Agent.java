@@ -42,9 +42,9 @@ import es.ull.mazesolver.util.Direction;
  * Clase que representa un agente abstracto que se encuentra en algún laberinto.
  * Sus subclases implementan los distintos algoritmos para resolver laberintos.
  *
- * Cada agente debe implementar los métodos de serialización para poder guardarse
- * y cargarse correctamente, en caso de que requiriesen configuración adicional
- * a la genérica.
+ * Cada agente debe implementar los métodos de serialización para poder
+ * guardarse y cargarse correctamente, en caso de que requiriesen configuración
+ * adicional a la genérica.
  */
 public abstract class Agent implements Cloneable, Serializable {
   private static final long serialVersionUID = 1L;
@@ -56,7 +56,8 @@ public abstract class Agent implements Cloneable, Serializable {
   protected transient Point m_pos;
 
   /**
-   * @param maze
+   * @param env
+   *          Entorno al que va a ser asignado dicho agente.
    */
   protected Agent (Environment env) {
     m_agent_id = s_agent_count++;
@@ -100,7 +101,9 @@ public abstract class Agent implements Cloneable, Serializable {
    * Este método debería sobrecargarse en las clases derivadas que contengan
    * información acerca del camino a seguir por el agente (un plan) de forma que
    * éste siga siendo coherente tras el cambio de laberinto.
-   * @param env Entorno donde colocar el agente.
+   *
+   * @param env
+   *          Entorno donde colocar el agente.
    */
   public void setEnvironment (Environment env) {
     if (env != null)
@@ -117,14 +120,17 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
-   * @param dir Dirección hacia la que mirar.
+   * @param dir
+   *          Dirección hacia la que mirar.
    * @return Lo que vería el agente si mira en la dirección especificada.
    */
   public MazeCell.Vision look (Direction dir) {
     return m_env.look(m_pos, dir);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -132,7 +138,9 @@ public abstract class Agent implements Cloneable, Serializable {
     return this == obj;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.lang.Object#hashCode()
    */
   @Override
@@ -146,7 +154,9 @@ public abstract class Agent implements Cloneable, Serializable {
    *
    * La clase base sólo cambia la posición del agente, si se desea más
    * funcionalidad, se debe sobrecargar en las clases derivadas.
-   * @param dir Dirección hacia la que mover el agente.
+   *
+   * @param dir
+   *          Dirección hacia la que mover el agente.
    */
   public void doMovement (Direction dir) {
     m_pos = dir.movePoint(m_pos);
@@ -154,6 +164,7 @@ public abstract class Agent implements Cloneable, Serializable {
 
   /**
    * Pregunta al agente el nombre que le identifica.
+   *
    * @return Nombre identificador del agente. Incluye el nombre del algoritmo
    *         que implementa.
    */
@@ -164,10 +175,14 @@ public abstract class Agent implements Cloneable, Serializable {
   /**
    * Carga la descripción serializada del agente de un fichero, lo crea y lo
    * devuelve.
-   * @param filename Nombre del fichero de entrada.
-   * @param env Entorno en el que cargar el agente.
+   *
+   * @param filename
+   *          Nombre del fichero de entrada.
+   * @param env
+   *          Entorno en el que cargar el agente.
    * @return El agente creado.
-   * @throws IOException Si no es posible leer el fichero.
+   * @throws IOException
+   *           Si no es posible leer el fichero.
    */
   public static Agent loadFile (String filename, Environment env) throws IOException {
     try {
@@ -191,8 +206,11 @@ public abstract class Agent implements Cloneable, Serializable {
 
   /**
    * Guarda la instancia del agente en un fichero utilizando su serialización.
-   * @param filename Nombre del fichero de salida.
-   * @throws IOException Si no es posible guardar el fichero.
+   *
+   * @param filename
+   *          Nombre del fichero de salida.
+   * @throws IOException
+   *           Si no es posible guardar el fichero.
    */
   public void saveFile (String filename) throws IOException {
     FileOutputStream file_out = new FileOutputStream(filename);
@@ -204,6 +222,7 @@ public abstract class Agent implements Cloneable, Serializable {
 
   /**
    * Pregunta al agente el nombre del algoritmo que implementa.
+   *
    * @return Nombre del algoritmo que implementa.
    */
   public abstract String getAlgorithmName ();
@@ -225,7 +244,9 @@ public abstract class Agent implements Cloneable, Serializable {
    */
   public abstract AgentConfigurationPanel getConfigurationPanel ();
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.lang.Object#clone()
    */
   @Override

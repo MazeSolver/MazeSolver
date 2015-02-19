@@ -81,13 +81,15 @@ public class SituationActionRule implements Cloneable {
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.lang.Object#clone()
    */
   @Override
   public Object clone () {
     return new SituationActionRule((RulePredicate) m_predicate.clone(),
-                                   (RuleAction) m_action.clone());
+        (RuleAction) m_action.clone());
   }
 
 }

@@ -42,14 +42,16 @@ public class SituationActionErrorHandler extends BaseErrorListener {
    * Constructor. Crea la lista de errores vacía.
    */
   public SituationActionErrorHandler () {
-    m_errors = new ArrayList<String>();
+    m_errors = new ArrayList <String>();
   }
 
   /*
    * (non-Javadoc)
    *
    * @see
-   * org.antlr.v4.runtime.BaseErrorListener#syntaxError(org.antlr.v4.runtime.Recognizer, java.lang.Object, int, int, java.lang.String, org.antlr.v4.runtime.RecognitionException)
+   * org.antlr.v4.runtime.BaseErrorListener#syntaxError(org.antlr.v4.runtime
+   * .Recognizer, java.lang.Object, int, int, java.lang.String,
+   * org.antlr.v4.runtime.RecognitionException)
    */
   @Override
   public void syntaxError (Recognizer <?, ?> recognizer, Object offendingSymbol, int line,

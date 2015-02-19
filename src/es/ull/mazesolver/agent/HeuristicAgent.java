@@ -49,7 +49,9 @@ public abstract class HeuristicAgent extends Agent {
   /**
    * Crea el agente en el entorno indicado y con la distancia de Manhattan por
    * defecto.
-   * @param env Entorno en el que colocar el agente.
+   *
+   * @param env
+   *          Entorno en el que colocar el agente.
    */
   public HeuristicAgent (Environment env) {
     super(env);
@@ -58,7 +60,9 @@ public abstract class HeuristicAgent extends Agent {
 
   /**
    * Cambia el algoritmo de cálculo de distancias.
-   * @param dist Algoritmo de cálculo de distancias entre puntos.
+   *
+   * @param dist
+   *          Algoritmo de cálculo de distancias entre puntos.
    */
   public void setDistanceCalculator (DistanceCalculator dist) {
     if (dist == null)
@@ -82,7 +86,7 @@ public abstract class HeuristicAgent extends Agent {
       setLayout(new BorderLayout(5, 0));
       add(new JLabel("Distance measure:"), BorderLayout.WEST);
 
-      combo = new JComboBox<DistanceType>(DistanceType.values());
+      combo = new JComboBox <DistanceType>(DistanceType.values());
       combo.setSelectedItem(m_dist.getType());
       add(combo, BorderLayout.CENTER);
     }

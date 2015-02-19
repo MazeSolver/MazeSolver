@@ -40,8 +40,10 @@ public class Prim extends MazeCreationAlgorithm {
   private ArrayList <short []> walls;
 
   /**
-   * @param rows Número de filas del laberinto.
-   * @param columns Número de columnas del laberinto.
+   * @param rows
+   *          Número de filas del laberinto.
+   * @param columns
+   *          Número de columnas del laberinto.
    */
   public Prim (int rows, int columns) {
     super(rows, columns);
@@ -57,7 +59,9 @@ public class Prim extends MazeCreationAlgorithm {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
    */
   @Override
@@ -92,8 +96,10 @@ public class Prim extends MazeCreationAlgorithm {
   }
 
   /**
-   * @param y Posición en el eje Y desde la que se quiere partir.
-   * @param x Posición en el eje X desde la que se quiere partir.
+   * @param y
+   *          Posición en el eje Y desde la que se quiere partir.
+   * @param x
+   *          Posición en el eje X desde la que se quiere partir.
    */
   private void addCell (final int y, final int x) {
     for (short k = 1; k < Direction.MAX_DIRECTIONS; k++) {

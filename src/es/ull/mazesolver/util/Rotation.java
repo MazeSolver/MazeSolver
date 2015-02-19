@@ -29,8 +29,7 @@ package es.ull.mazesolver.util;
  * Representa un sentido de rotación, que puede ser horario o antihorario.
  */
 public enum Rotation {
-  CLOCKWISE,
-  COUNTER_CLOCKWISE;
+  CLOCKWISE, COUNTER_CLOCKWISE;
 
   /**
    * @return La dirección contraria a la actual.

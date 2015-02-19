@@ -168,7 +168,8 @@ public class RecursiveAgent extends Agent {
       }
 
       @Override
-      protected void cancel () {}
+      protected void cancel () {
+      }
 
       @Override
       protected boolean accept () {

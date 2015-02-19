@@ -45,14 +45,16 @@ public class SimulationManager extends Observable {
   private boolean m_paused;
 
   private EnvironmentSet m_environments;
-  private boolean[] m_finished;
+  private boolean [] m_finished;
   private boolean m_sim_finished;
 
   private SimulationResults m_results;
 
   /**
    * Constructor por defecto del simulador.
-   * @param env_set Conjunto de entornos que va a manejar.
+   *
+   * @param env_set
+   *          Conjunto de entornos que va a manejar.
    */
   public SimulationManager (EnvironmentSet env_set) {
     m_results = new SimulationResults();
@@ -69,7 +71,8 @@ public class SimulationManager extends Observable {
   }
 
   /**
-   * @param msec Milisegundos que pasarán entre cada paso de la simulación.
+   * @param msec
+   *          Milisegundos que pasarán entre cada paso de la simulación.
    */
   public void setInterval (int msec) {
     if (msec > 0)
@@ -78,7 +81,9 @@ public class SimulationManager extends Observable {
 
   /**
    * Establece el conjunto de entornos que manipula la simulación.
-   * @param env_set Conjunto de entornos.
+   *
+   * @param env_set
+   *          Conjunto de entornos.
    */
   public void setEnvironments (EnvironmentSet env_set) {
     if (env_set == null)
@@ -88,9 +93,8 @@ public class SimulationManager extends Observable {
   }
 
   /**
-   * Comienza la simulación. Si está pausada, la reanuda.
-   * Nota: No se pueden agregar o eliminar entornos mientras la simulación se
-   * está ejecutando.
+   * Comienza la simulación. Si está pausada, la reanuda. Nota: No se pueden
+   * agregar o eliminar entornos mientras la simulación se está ejecutando.
    */
   public void startSimulation () {
     m_sim_finished = m_paused = false;
@@ -98,7 +102,7 @@ public class SimulationManager extends Observable {
     // Actualizamos el tamaño de la lista de entornos finalizados por si hay un
     // número diferente de entornos que en la última ejecución
     if (isStopped()) {
-      m_finished = new boolean[m_environments.getEnvironmentCount()];
+      m_finished = new boolean [m_environments.getEnvironmentCount()];
       m_results.clear();
     }
 
@@ -178,7 +182,7 @@ public class SimulationManager extends Observable {
 
   /**
    * @return Resultados de la simulación actual. Puede ser que sean incompletos,
-   * dado que puede ser que la simulación no haya acabado.
+   *         dado que puede ser que la simulación no haya acabado.
    */
   public final SimulationResults getResults () {
     return m_results;

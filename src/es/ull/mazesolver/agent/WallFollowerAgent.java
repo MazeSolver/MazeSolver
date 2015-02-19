@@ -43,16 +43,15 @@ import es.ull.mazesolver.util.Rotation;
 
 /**
  * <p>
- *   Agente que implementa la funcionalidad de seguir paredes. Una vez se le
- *   especifica una dirección (derecha o izquierda) el agente recorre el
- *   laberinto como si pegara la mano del lado indicado en la pared y
- *   simplemente la siguiera a lo largo de los giros necesarios hasta encontrar
- *   la salida.
+ * Agente que implementa la funcionalidad de seguir paredes. Una vez se le
+ * especifica una dirección (derecha o izquierda) el agente recorre el laberinto
+ * como si pegara la mano del lado indicado en la pared y simplemente la
+ * siguiera a lo largo de los giros necesarios hasta encontrar la salida.
  * </p>
  * <p>
- *   Este algoritmo garantiza encontrar la salida del laberinto sólo si se
- *   trata de un laberinto perfecto, aunque el número de pasos que requerirá
- *   será mucho mayor que el de la mayoría de agentes.
+ * Este algoritmo garantiza encontrar la salida del laberinto sólo si se trata
+ * de un laberinto perfecto, aunque el número de pasos que requerirá será mucho
+ * mayor que el de la mayoría de agentes.
  * </p>
  */
 public class WallFollowerAgent extends Agent {
@@ -63,7 +62,9 @@ public class WallFollowerAgent extends Agent {
 
   /**
    * Crea el agente en el entorno indicado.
-   * @param env Entorno en el que colocar el agente.
+   *
+   * @param env
+   *          Entorno en el que colocar el agente.
    */
   public WallFollowerAgent (Environment env) {
     super(env);
@@ -73,11 +74,14 @@ public class WallFollowerAgent extends Agent {
 
   /**
    * Indica hacia qué lado girar primero para seguir la pared.
-   * @param rot Determina la pared que seguirá el agente.
-   * <ul>
-   *   <li>{@code Rotation.CLOCKWISE}: Sigue la pared a su derecha.</li>
-   *   <li>{@code Rotation.COUNTER_CLOCKWISE}: Sigue la pared a su izquierda.</li>
-   * </ul>
+   *
+   * @param rot
+   *          Determina la pared que seguirá el agente.
+   *          <ul>
+   *          <li>{@code Rotation.CLOCKWISE}: Sigue la pared a su derecha.</li>
+   *          <li>{@code Rotation.COUNTER_CLOCKWISE}: Sigue la pared a su
+   *          izquierda.</li>
+   *          </ul>
    */
   public void setRotation (Rotation rot) {
     m_rot = rot;
@@ -90,7 +94,9 @@ public class WallFollowerAgent extends Agent {
     return m_rot;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see es.ull.mazesolver.agent.Agent#getAlgorithmName()
    */
   @Override
@@ -98,7 +104,9 @@ public class WallFollowerAgent extends Agent {
     return "Wall Follower";
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see es.ull.mazesolver.agent.Agent#getNextMovement()
    */
   @Override
@@ -127,7 +135,9 @@ public class WallFollowerAgent extends Agent {
     return Direction.NONE;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see es.ull.mazesolver.agent.Agent#resetMemory()
    */
   @Override
@@ -135,7 +145,9 @@ public class WallFollowerAgent extends Agent {
     m_last_dir = Direction.RIGHT;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see es.ull.mazesolver.agent.Agent#getConfigurationPanel()
    */
   @Override
@@ -157,7 +169,8 @@ public class WallFollowerAgent extends Agent {
       }
 
       @Override
-      protected void cancel () {}
+      protected void cancel () {
+      }
 
       @Override
       protected boolean accept () {
@@ -167,7 +180,9 @@ public class WallFollowerAgent extends Agent {
     };
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see es.ull.mazesolver.agent.Agent#clone()
    */
   @Override
@@ -178,29 +193,38 @@ public class WallFollowerAgent extends Agent {
   /**
    * Extrae la información del objeto a partir de una forma serializada del
    * mismo.
-   * @param input Flujo de entrada con la información del objeto.
-   * @throws ClassNotFoundException Si se trata de un objeto de otra clase.
-   * @throws IOException Si no se puede leer el flujo de entrada.
+   *
+   * @param input
+   *          Flujo de entrada con la información del objeto.
+   * @throws ClassNotFoundException
+   *           Si se trata de un objeto de otra clase.
+   * @throws IOException
+   *           Si no se puede leer el flujo de entrada.
    */
-  private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+  private void readObject (ObjectInputStream input) throws ClassNotFoundException, IOException {
     input.defaultReadObject();
     m_last_dir = Direction.RIGHT;
   }
 
   /**
-   * Clase que permite mostrar un nombre personalizado para las rotaciones en
-   * el contexto de seguir paredes.
+   * Clase que permite mostrar un nombre personalizado para las rotaciones en el
+   * contexto de seguir paredes.
    */
   private class RotationRenderer extends DefaultListCellRenderer {
     private static final long serialVersionUID = 1L;
 
-    /* (non-Javadoc)
-     * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax
+     * .swing.JList, java.lang.Object, int, boolean, boolean)
      */
     @Override
     public Component getListCellRendererComponent (JList <?> list, Object value, int index,
         boolean isSelected, boolean cellHasFocus) {
-      Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+      Component c =
+          super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
       switch ((Rotation) value) {
         case CLOCKWISE:
           setText("Right wall");

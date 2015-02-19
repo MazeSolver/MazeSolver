@@ -29,15 +29,14 @@ import java.awt.Point;
 import java.io.Serializable;
 
 /**
- * Interfaz que implementan las clases que pueden medir la distancia entre
- * 2 puntos en 2 dimensiones.
+ * Interfaz que implementan las clases que pueden medir la distancia entre 2
+ * puntos en 2 dimensiones.
  */
 public abstract class DistanceCalculator implements Serializable, Cloneable {
   private static final long serialVersionUID = 1L;
 
   public static enum DistanceType {
-    EUCLIDEAN,
-    MANHATTAN;
+    EUCLIDEAN, MANHATTAN;
 
     public String toString () {
       switch (this) {
@@ -52,9 +51,11 @@ public abstract class DistanceCalculator implements Serializable, Cloneable {
   }
 
   /**
-   * Método factoría que crea una instancia de alguna de las subclases dependiendo
-   * del tipo especificado.
-   * @param type Tipo de la clase que se quiere obtener.
+   * Método factoría que crea una instancia de alguna de las subclases
+   * dependiendo del tipo especificado.
+   *
+   * @param type
+   *          Tipo de la clase que se quiere obtener.
    * @return Una instancia de la clase.
    */
   public static DistanceCalculator fromType (DistanceType type) {
@@ -70,10 +71,15 @@ public abstract class DistanceCalculator implements Serializable, Cloneable {
 
   /**
    * Mide la distancia entre 2 puntos.
-   * @param x1 Posición en el eje X del punto 1.
-   * @param y1 Posición en el eje Y del punto 1.
-   * @param x2 Posición en el eje X del punto 2.
-   * @param y2 Posición en el eje Y del punto 2.
+   *
+   * @param x1
+   *          Posición en el eje X del punto 1.
+   * @param y1
+   *          Posición en el eje Y del punto 1.
+   * @param x2
+   *          Posición en el eje X del punto 2.
+   * @param y2
+   *          Posición en el eje Y del punto 2.
    * @return Distancia entre los 2 puntos.
    */
   public double distance (int x1, int y1, int x2, int y2) {
@@ -82,8 +88,11 @@ public abstract class DistanceCalculator implements Serializable, Cloneable {
 
   /**
    * Mide la distancia entre 2 puntos.
-   * @param p1 Punto 1.
-   * @param p2 Punto 2.
+   *
+   * @param p1
+   *          Punto 1.
+   * @param p2
+   *          Punto 2.
    * @return Distancia entre los 2 puntos.
    */
   public abstract double distance (Point p1, Point p2);
@@ -93,7 +102,9 @@ public abstract class DistanceCalculator implements Serializable, Cloneable {
    */
   public abstract DistanceType getType ();
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.lang.Object#clone()
    */
   @Override

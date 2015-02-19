@@ -46,9 +46,11 @@ import es.ull.mazesolver.util.Direction;
 /**
  * Agente que implementa el algoritmo D* para calcular la ruta más corta hasta
  * la salida teniendo tan sólo conocimiento local del entorno.
- * @see <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.15.3683">
- *   Optimal and Efficient Path Planning for Unknown and Dynamic Environments
- * </a>
+ *
+ * @see <a
+ *      href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.15.3683">
+ *      Optimal and Efficient Path Planning for Unknown and Dynamic Environments
+ *      </a>
  */
 public class DStarAgent extends HeuristicAgent implements BlackboardCommunication {
   private static final long serialVersionUID = 1342168437798267323L;
@@ -68,22 +70,25 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
      */
     public Maze maze;
     public Point exit;
-    public ArrayList<ArrayList<State>> state_maze;
+    public ArrayList <ArrayList <State>> state_maze;
 
-    public PriorityQueue<State> open;
+    public PriorityQueue <State> open;
     public double k_old;
   }
 
   private transient AlgorithmState m_st;
 
   /**
-   * @param env Entorno en el que se va a colocar al agente.
+   * @param env
+   *          Entorno en el que se va a colocar al agente.
    */
   public DStarAgent (Environment env) {
     super(env);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getAlgorithmName()
    */
   @Override
@@ -91,7 +96,9 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
     return "D*";
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#setEnvironment(gui.environment.Environment)
    */
   @Override
@@ -112,7 +119,7 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
       // Creamos la matriz de estados, donde cada celda representa un nodo en el
       // grafo que manipula el algoritmo. Esto será lo que se comparta entre
       // todos los agentes.
-      m_st.state_maze = new ArrayList<ArrayList<State>>(m_st.maze.getHeight());
+      m_st.state_maze = new ArrayList <ArrayList <State>>(m_st.maze.getHeight());
       for (int i = 0; i < m_st.maze.getHeight(); i++) {
         m_st.state_maze.add(new ArrayList <State>(m_st.maze.getWidth()));
         for (int j = 0; j < m_st.maze.getWidth(); j++)
@@ -123,16 +130,22 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
       // utilizarla como un estado más, luego en el método getNextMovement() se
       // encarga de moverse al exterior si está en el punto al lado de la salida
       m_st.exit = real_maze.getExit();
-      if (m_st.exit.x < 0) m_st.exit.x++;
-      else if (m_st.exit.x == m_st.maze.getWidth()) m_st.exit.x--;
-      else if (m_st.exit.y < 0) m_st.exit.y++;
-      else /*m_st.exit.y == m_st.maze.getHeight()*/ m_st.exit.y--;
+      if (m_st.exit.x < 0)
+        m_st.exit.x++;
+      else if (m_st.exit.x == m_st.maze.getWidth())
+        m_st.exit.x--;
+      else if (m_st.exit.y < 0)
+        m_st.exit.y++;
+      else
+        /* m_st.exit.y == m_st.maze.getHeight() */m_st.exit.y--;
 
       BLACKBOARD_CHANNEL = mgr.addBlackboard(m_st, BLACKBOARD_CHANNEL);
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getNextMovement()
    */
   @Override
@@ -194,14 +207,16 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#resetMemory()
    */
   @Override
   public void resetMemory () {
     if (m_st != null) {
       if (m_st.state_maze != null) {
-        for (ArrayList<State> l: m_st.state_maze)
+        for (ArrayList <State> l: m_st.state_maze)
           for (State s: l)
             s.reset();
       }
@@ -210,11 +225,13 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
         for (int j = 0; j < m_st.maze.getWidth(); j++)
           m_st.maze.get(i, j).removeWalls();
 
-      m_st.open = new PriorityQueue<State>();
+      m_st.open = new PriorityQueue <State>();
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getConfigurationPanel()
    */
   @Override
@@ -232,7 +249,8 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
       }
 
       @Override
-      protected void cancel () {}
+      protected void cancel () {
+      }
 
       @Override
       protected boolean accept () {
@@ -242,7 +260,9 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
     };
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#clone()
    */
   @Override
@@ -252,7 +272,9 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
     return ag;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see es.ull.mazesolver.agent.util.BlackboardCommunication#getBlackboard()
    */
   @Override
@@ -260,8 +282,12 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
     return m_st.state_maze;
   }
 
-  /* (non-Javadoc)
-   * @see es.ull.mazesolver.agent.util.BlackboardCommunication#setBlackboard(java.lang.Object)
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * es.ull.mazesolver.agent.util.BlackboardCommunication#setBlackboard(java
+   * .lang.Object)
    */
   @Override
   public void setBlackboard (Object blackboard) {
@@ -285,20 +311,22 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   /**
    * Representa un estado dentro del algoritmo D*.
    */
-  private class State implements Comparable<State> {
-    // No nos vale Double.MAX_VALUE porque Double.MAX_VALUE + 1.0 == Double.MAX_VALUE
+  private class State implements Comparable <State> {
+    // No nos vale Double.MAX_VALUE porque Double.MAX_VALUE + 1.0 ==
+    // Double.MAX_VALUE
     private static final double BIG_COST = 1000000.0;
 
     public Point point;
-    public State backpointer;    // b(X)
-    public Tag tag;              // t(X)
-    public double path_cost;     // h(X)
+    public State backpointer; // b(X)
+    public Tag tag; // t(X)
+    public double path_cost; // h(X)
     public double previous_cost; // p(X)
-    public double key_value;     // k(X)
+    public double key_value; // k(X)
 
     /**
      * Crea un estado a partir de su posición en el laberinto. Se marca como
      * "nuevo" y se le asignan costes de infinito para todas sus propiedades.
+     *
      * @param pos
      */
     public State (Point pos) {
@@ -315,7 +343,9 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
       path_cost = previous_cost = key_value = BIG_COST;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -327,10 +357,11 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
      * Analiza los vecinos que tiene en todas las direcciones y devuelve todos
      * aquellos que existen. Es decir, las celdas adyacentes que están dentro
      * del laberinto.
+     *
      * @return Una lista con los vecinos del estado.
      */
-    public ArrayList<State> getNeighbours () {
-      ArrayList <State> neighbours = new ArrayList<State>();
+    public ArrayList <State> getNeighbours () {
+      ArrayList <State> neighbours = new ArrayList <State>();
 
       for (int i = 1; i < Direction.MAX_DIRECTIONS; i++) {
         Direction dir = Direction.fromIndex(i);
@@ -345,8 +376,8 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
 
   /**
    * Recalcula la ruta hasta la salida desde el punto actual. Utiliza el
-   * conocimiento que se tiene actualmente sobre el laberinto para hacerlo.
-   * Este método crea desde cero la estructura de estados, por lo que se debe
+   * conocimiento que se tiene actualmente sobre el laberinto para hacerlo. Este
+   * método crea desde cero la estructura de estados, por lo que se debe
    * utilizar sólo una vez por entorno.
    */
   private void calculatePath () {
@@ -364,8 +395,8 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   /**
    * Una vez se encuentra un obstáculo nuevo y se llama a {@code modifyCost()},
    * se debe llamar a este método para que recalcule el camino hacia la salida
-   * de una forma mucho más eficiente que utilizar {@code calculatePath()}.
-   * Sólo recalcula aquella parte del camino previamente calculado que ha sido
+   * de una forma mucho más eficiente que utilizar {@code calculatePath()}. Sólo
+   * recalcula aquella parte del camino previamente calculado que ha sido
    * invalidada tras la modificación.
    */
   private void calculatePartialPath (State x) {
@@ -385,6 +416,7 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   /**
    * Computa los costes del nodo actual hacia el destino cuando se ejecuta
    * repetidamente hasta que el nodo actual se etiqueta como "cerrado".
+   *
    * @return El valor de Kmin. Devolverá -1 si no hay ninguna solución factible.
    */
   private double processState () {
@@ -395,13 +427,13 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
     m_st.k_old = getKmin();
     delete(x);
 
-    ArrayList<State> neighbours = x.getNeighbours();
+    ArrayList <State> neighbours = x.getNeighbours();
 
     // Reducimos el coste del nodo actual si se puede desde alguno de sus
     // vecinos, pero sólo si el camino actual a los vecinos es óptimo
     for (State y: neighbours) {
-      if (y.tag == Tag.CLOSED && y.path_cost <= m_st.k_old &&
-          x.path_cost > y.path_cost + distance(y, x)) {
+      if (y.tag == Tag.CLOSED && y.path_cost <= m_st.k_old
+          && x.path_cost > y.path_cost + distance(y, x)) {
         x.backpointer = y;
         x.path_cost = y.path_cost + distance(y, x);
       }
@@ -448,8 +480,8 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
             }
           }
           else {
-            if (y.backpointer != x && x.path_cost > y.path_cost + distance(y, x) &&
-                y.tag == Tag.CLOSED && y.path_cost > m_st.k_old) {
+            if (y.backpointer != x && x.path_cost > y.path_cost + distance(y, x)
+                && y.tag == Tag.CLOSED && y.path_cost > m_st.k_old) {
               y.previous_cost = y.path_cost;
               insert(y);
             }
@@ -466,8 +498,10 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
    * distancias que se utilizaron al procesar el nodo X y lo que han medido los
    * sensores, de manera que lo introduce en la lista abierta para volver a ser
    * tratado.
-   * @param x Estado que ha detectado incoherencia entre su representación del
-   * entorno y lo detectado por sus sensores.
+   *
+   * @param x
+   *          Estado que ha detectado incoherencia entre su representación del
+   *          entorno y lo detectado por sus sensores.
    * @return El valor de Kmin.
    */
   private double modifyCost (State x) {
@@ -496,7 +530,9 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   /**
    * Se elimina el estado indicado de la lista abierta y se modifica su etiqueta
    * por "cerrado".
-   * @param s Estado que eliminar.
+   *
+   * @param s
+   *          Estado que eliminar.
    */
   private void delete (State s) {
     m_st.open.remove(s);
@@ -506,7 +542,9 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   /**
    * Se inserta el estado en la lista abierta, modificando su etiqueta y
    * calculando el valor de k que tiene asociado a partir de h y p.
-   * @param s Estado que insertar.
+   *
+   * @param s
+   *          Estado que insertar.
    */
   private void insert (State s) {
     // Reposicionamiento del elemento si ya estaba, en lugar de inserción
@@ -521,8 +559,11 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   /**
    * Calcula la distancia entre dos estados vecinos teniendo en cuenta que si
    * hay una pared que los separa, la distancia es infinita.
-   * @param x Estado X.
-   * @param y Estado Y.
+   *
+   * @param x
+   *          Estado X.
+   * @param y
+   *          Estado Y.
    * @return El valor de la distancia entre ambos estados.
    */
   private double distance (State x, State y) {

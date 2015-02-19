@@ -37,7 +37,9 @@ public interface BlackboardCommunication {
 
   /**
    * Cambia la pizarra que tiene el agente.
-   * @param blackboard Nueva pizarra para el agente.
+   *
+   * @param blackboard
+   *          Nueva pizarra para el agente.
    */
   public void setBlackboard (Object blackboard);
 }

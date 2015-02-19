@@ -53,19 +53,23 @@ public class HillClimbAgent extends HeuristicAgent {
 
   private transient boolean m_backtracking;
   private transient Stack <Direction> m_stack;
-  private transient boolean[][] m_visited;
+  private transient boolean [][] m_visited;
 
   /**
    * Crea el agente en el entorno indicado y con la distancia de Manhattan por
    * defecto.
-   * @param env Entorno en el que se quiere colocar.
+   *
+   * @param env
+   *          Entorno en el que se quiere colocar.
    */
   public HillClimbAgent (Environment env) {
     super(env);
-    m_stack = new Stack<Direction>();
+    m_stack = new Stack <Direction>();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#setEnvironment(gui.environment.Environment)
    */
   @Override
@@ -73,10 +77,12 @@ public class HillClimbAgent extends HeuristicAgent {
     super.setEnvironment(env);
 
     Maze maze = env.getMaze();
-    m_visited = new boolean[maze.getHeight()][maze.getWidth()];
+    m_visited = new boolean [maze.getHeight()] [maze.getWidth()];
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getAlgorithmName()
    */
   @Override
@@ -84,7 +90,9 @@ public class HillClimbAgent extends HeuristicAgent {
     return "Hill Climbing";
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getNextMovement()
    */
   @Override
@@ -101,7 +109,9 @@ public class HillClimbAgent extends HeuristicAgent {
     return dir;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#doMovement(maze.Direction)
    */
   @Override
@@ -118,7 +128,9 @@ public class HillClimbAgent extends HeuristicAgent {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#setPosition(java.awt.Point)
    */
   @Override
@@ -127,7 +139,9 @@ public class HillClimbAgent extends HeuristicAgent {
     super.setPosition(pos);
   };
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#resetMemory()
    */
   @Override
@@ -139,7 +153,9 @@ public class HillClimbAgent extends HeuristicAgent {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getConfigurationPanel()
    */
   @Override
@@ -157,7 +173,8 @@ public class HillClimbAgent extends HeuristicAgent {
       }
 
       @Override
-      protected void cancel () {}
+      protected void cancel () {
+      }
 
       @Override
       protected boolean accept () {
@@ -167,7 +184,9 @@ public class HillClimbAgent extends HeuristicAgent {
     };
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#clone()
    */
   @Override
@@ -180,6 +199,7 @@ public class HillClimbAgent extends HeuristicAgent {
   /**
    * Elige la dirección que le lleva a la celda más cercana no visitada que no
    * tiene una pared delante.
+   *
    * @return La dirección seleccionada. Devuelve {@code Direction.NONE} si no
    *         hay ninguna celda adyacente accesible no visitada.
    */
@@ -199,7 +219,7 @@ public class HillClimbAgent extends HeuristicAgent {
 
     Direction closest = Direction.NONE;
     double closest_val = Double.MAX_VALUE;
-    for (Entry<Direction, Double> entry: costs.entrySet()) {
+    for (Entry <Direction, Double> entry: costs.entrySet()) {
       if (entry.getValue() < closest_val) {
         closest_val = entry.getValue();
         closest = entry.getKey();
@@ -212,11 +232,15 @@ public class HillClimbAgent extends HeuristicAgent {
   /**
    * Extrae la información del objeto a partir de una forma serializada del
    * mismo.
-   * @param input Flujo de entrada con la información del objeto.
-   * @throws ClassNotFoundException Si se trata de un objeto de otra clase.
-   * @throws IOException Si no se puede leer el flujo de entrada.
+   *
+   * @param input
+   *          Flujo de entrada con la información del objeto.
+   * @throws ClassNotFoundException
+   *           Si se trata de un objeto de otra clase.
+   * @throws IOException
+   *           Si no se puede leer el flujo de entrada.
    */
-  private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+  private void readObject (ObjectInputStream input) throws ClassNotFoundException, IOException {
     input.defaultReadObject();
     m_stack = new Stack <Direction>();
   }

@@ -68,7 +68,7 @@ public class MazeSelectorDialog extends JDialog {
   private static final int MAX_MAZE_SIZE = 100;
 
   private JButton m_ok, m_cancel;
-  private JComboBox<String> m_algorithms;
+  private JComboBox <String> m_algorithms;
   private JSpinner m_rows, m_columns;
 
   private ButtonGroup m_type;
@@ -78,11 +78,12 @@ public class MazeSelectorDialog extends JDialog {
   private Maze m_result;
 
   public MazeSelectorDialog (Window parent) {
-    super(parent,"Create a new maze");
+    super(parent, "Create a new maze");
 
-    String[] algos = {"Aldous Broder", "Hunt and Kill", "Kruskal", "Prim",
-                      "Recursive Backtracking","Recursive Division","Wilson"};
-    m_algorithms = new JComboBox<String>(algos);
+    String [] algos =
+        {"Aldous Broder", "Hunt and Kill", "Kruskal", "Prim", "Recursive Backtracking",
+            "Recursive Division", "Wilson"};
+    m_algorithms = new JComboBox <String>(algos);
 
     buildInterface();
     setupListeners();
@@ -102,10 +103,9 @@ public class MazeSelectorDialog extends JDialog {
     JPanel basic_labels = new JPanel(new GridLayout(3, 1, 5, 5));
     JPanel basic_controls = new JPanel(new GridLayout(3, 1, 5, 5));
 
-    m_rows = new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE, MIN_MAZE_SIZE,
-        MAX_MAZE_SIZE, 1));
-    m_columns = new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE,
-        MIN_MAZE_SIZE, MAX_MAZE_SIZE, 1));
+    m_rows = new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE, MIN_MAZE_SIZE, MAX_MAZE_SIZE, 1));
+    m_columns =
+        new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE, MIN_MAZE_SIZE, MAX_MAZE_SIZE, 1));
 
     basic_labels.add(new JLabel("Algorithm:"));
     basic_controls.add(m_algorithms);
@@ -116,13 +116,9 @@ public class MazeSelectorDialog extends JDialog {
 
     basic_global.add(basic_labels, BorderLayout.WEST);
     basic_global.add(basic_controls, BorderLayout.CENTER);
-    basic_global.setBorder(BorderFactory.createCompoundBorder(
-      BorderFactory.createEmptyBorder(2, 5, 0, 5),
-      BorderFactory.createTitledBorder(
-        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-        "Basic configuration"
-      )
-    ));
+    basic_global.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 5,
+        0, 5), BorderFactory.createTitledBorder(
+        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Basic configuration")));
 
     JPanel adv_global = new JPanel(new BorderLayout());
     JPanel adv_labels = new JPanel(new GridLayout(3, 1));
@@ -140,10 +136,12 @@ public class MazeSelectorDialog extends JDialog {
     m_type.add(m_add_cycles);
     m_type.add(m_add_components);
 
-    m_cycles = new JSpinner(new SpinnerNumberModel(0, 0,
-        (int) Math.round(Maze.perfectMazeWalls(MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
-    m_components = new JSpinner(new SpinnerNumberModel(0, 0,
-        (int) Math.round(Maze.perfectMazeEdges(MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
+    m_cycles =
+        new JSpinner(new SpinnerNumberModel(0, 0, (int) Math.round(Maze.perfectMazeWalls(
+            MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
+    m_components =
+        new JSpinner(new SpinnerNumberModel(0, 0, (int) Math.round(Maze.perfectMazeEdges(
+            MIN_MAZE_SIZE, MIN_MAZE_SIZE) * 0.75), 1));
 
     m_cycles.setEnabled(false);
     m_components.setEnabled(false);
@@ -157,13 +155,9 @@ public class MazeSelectorDialog extends JDialog {
 
     adv_global.add(adv_labels, BorderLayout.WEST);
     adv_global.add(adv_controls, BorderLayout.CENTER);
-    adv_global.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createEmptyBorder(2, 5, 0, 5),
-        BorderFactory.createTitledBorder(
-          BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-          "Maze type"
-        )
-      ));
+    adv_global.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 5,
+        0, 5), BorderFactory.createTitledBorder(
+        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Maze type")));
 
     m_ok = new JButton("OK");
     m_cancel = new JButton("Cancel");
@@ -191,8 +185,8 @@ public class MazeSelectorDialog extends JDialog {
         int max_cycles = (int) Math.round(Maze.perfectMazeWalls(rows, columns) * 0.75);
         int max_components = (int) Math.round(Maze.perfectMazeEdges(rows, columns) * 0.75);
 
-        SpinnerNumberModel cycles_model = (SpinnerNumberModel)m_cycles.getModel();
-        SpinnerNumberModel components_model = (SpinnerNumberModel)m_components.getModel();
+        SpinnerNumberModel cycles_model = (SpinnerNumberModel) m_cycles.getModel();
+        SpinnerNumberModel components_model = (SpinnerNumberModel) m_components.getModel();
 
         cycles_model.setMaximum(max_cycles);
         components_model.setMaximum(max_components);

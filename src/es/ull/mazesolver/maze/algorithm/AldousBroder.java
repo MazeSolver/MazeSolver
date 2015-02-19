@@ -40,8 +40,10 @@ public class AldousBroder extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
-   * @param rows Número de filas del laberinto.
-   * @param columns Número de columnas del laberinto.
+   * @param rows
+   *          Número de filas del laberinto.
+   * @param columns
+   *          Número de columnas del laberinto.
    */
   public AldousBroder (int rows, int columns) {
     super(rows, columns);
@@ -57,7 +59,9 @@ public class AldousBroder extends MazeCreationAlgorithm {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see maze.MazeCreationAlgorithm#runCreationAlgorithm()
    */
   @Override
@@ -78,8 +82,10 @@ public class AldousBroder extends MazeCreationAlgorithm {
   }
 
   /**
-   * @param y Posición en el eje Y desde la que se quiere partir.
-   * @param x Posición en el eje X desde la que se quiere partir.
+   * @param y
+   *          Posición en el eje Y desde la que se quiere partir.
+   * @param x
+   *          Posición en el eje X desde la que se quiere partir.
    * @return Dirección aleatoria hacia la que el agente se puede mover.
    */
   private Direction getRandomDirection (int y, int x) {

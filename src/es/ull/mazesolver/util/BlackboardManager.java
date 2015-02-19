@@ -29,8 +29,8 @@ import java.util.HashMap;
 
 /**
  * Clase que gestiona el sistema de pizarras por canales utilizado por los
- * entornos para permitir la compartición de las pizarras sólo a subconjuntos
- * de agentes.
+ * entornos para permitir la compartición de las pizarras sólo a subconjuntos de
+ * agentes.
  */
 public class BlackboardManager {
   private HashMap <String, Object> m_blackboards;
@@ -39,12 +39,14 @@ public class BlackboardManager {
    * Inicializa el gestor de pizarras.
    */
   public BlackboardManager () {
-    m_blackboards = new HashMap<String, Object>();
+    m_blackboards = new HashMap <String, Object>();
   }
 
   /**
    * Obtiene la pizarra que hay en el canal indicado.
-   * @param channel Canal del que se quiere obtener la pizarra.
+   *
+   * @param channel
+   *          Canal del que se quiere obtener la pizarra.
    * @return El objeto pizarra del canal.
    */
   public Object getBlackboard (String channel) {
@@ -53,16 +55,19 @@ public class BlackboardManager {
 
   /**
    * Añade una nueva pizarra al gestor.
-   * @param blackboard Objeto que representa la nueva pizarra. Las
-   * modificaciones realizadas a este objeto son visibles para todos los agentes
-   * que posean una referencia a la misma.
+   *
+   * @param blackboard
+   *          Objeto que representa la nueva pizarra. Las modificaciones
+   *          realizadas a este objeto son visibles para todos los agentes que
+   *          posean una referencia a la misma.
    * @return El nombre del nuevo canal donde se ha colocado la pizarra.
    */
   public String addBlackboard (Object blackboard) {
     String name = "";
     do {
-      name = Long.toUnsignedString(((Double)(Math.random() * Long.MAX_VALUE)).longValue());
-    } while (m_blackboards.containsKey(name));
+      name = Long.toUnsignedString(((Double) (Math.random() * Long.MAX_VALUE)).longValue());
+    }
+    while (m_blackboards.containsKey(name));
 
     m_blackboards.put(name, blackboard);
     return name;
@@ -71,8 +76,11 @@ public class BlackboardManager {
   /**
    * Intenta añadir la pizarra al canal deseado. Esto será posible sólo si el
    * canal no está ya ocupado.
-   * @param blackboard Objeto que representa la pizarra.
-   * @param desired_channel Canal donde se quiere colocar la pizarra.
+   *
+   * @param blackboard
+   *          Objeto que representa la pizarra.
+   * @param desired_channel
+   *          Canal donde se quiere colocar la pizarra.
    * @return Canal donde finalmente se ha colocado la pizarra.
    */
   public String addBlackboard (Object blackboard, String desired_channel) {
@@ -86,10 +94,13 @@ public class BlackboardManager {
 
   /**
    * Cambia el objeto pizarra asociado a un canal ya creado.
-   * @param channel Canal en el que modificar la pizarra.
-   * @param blackboard Nueva pizarra que colocar en el canal.
+   *
+   * @param channel
+   *          Canal en el que modificar la pizarra.
+   * @param blackboard
+   *          Nueva pizarra que colocar en el canal.
    * @return {@code true} si se ha realizado el cambio y {@code false} si el
-   * canal indicado no existía.
+   *         canal indicado no existía.
    */
   public boolean changeBlackboard (String channel, Object blackboard) {
     if (m_blackboards.containsKey(channel)) {
@@ -101,9 +112,11 @@ public class BlackboardManager {
 
   /**
    * Elimina un canal del gestor de pizarras.
-   * @param channel Canal que eliminar.
+   *
+   * @param channel
+   *          Canal que eliminar.
    * @return {@code true} si se ha realizado la eliminación y {@code false} si
-   * el canal indicado no existía.
+   *         el canal indicado no existía.
    */
   public boolean removeBlackboard (String channel) {
     if (m_blackboards.containsKey(channel)) {
@@ -114,7 +127,8 @@ public class BlackboardManager {
   }
 
   /**
-   * @param channel Canal que consultar.
+   * @param channel
+   *          Canal que consultar.
    * @return Si el canal consultado existe para este gestor.
    */
   boolean channelUsed (String channel) {

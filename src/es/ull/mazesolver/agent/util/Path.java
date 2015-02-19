@@ -39,14 +39,17 @@ public class Path {
   private Stack <Point> m_path;
   private double m_cost;
 
-  private Path () {}
+  private Path () {
+  }
 
   /**
    * Crea una nueva trayectoria.
-   * @param initial Punto inicial de la trayectoria.
+   *
+   * @param initial
+   *          Punto inicial de la trayectoria.
    */
   public Path (Point initial) {
-    m_path = new Stack<Point>();
+    m_path = new Stack <Point>();
     m_path.push(new Point(initial));
     m_cost = 0.0;
   }
@@ -54,8 +57,8 @@ public class Path {
   /**
    * @return La lista de pasos.
    */
-  public ArrayList<Point> getPath () {
-    ArrayList<Point> result = new ArrayList<Point>();
+  public ArrayList <Point> getPath () {
+    ArrayList <Point> result = new ArrayList <Point>();
     result.addAll(m_path);
     return result;
   }
@@ -76,7 +79,9 @@ public class Path {
 
   /**
    * Accede a una posición específica dentro de la trayectoria.
-   * @param index Índice del punto.
+   *
+   * @param index
+   *          Índice del punto.
    * @return El punto en esa posición de la trayectoria.
    */
   public Point getPoint (int index) {
@@ -99,14 +104,17 @@ public class Path {
 
   /**
    * Añade un nuevo paso a la trayectoria sin modificar la clase original.
-   * @param dir Dirección hacia la que realizar el paso.
-   * @param cost Coste de llevar a cabo el paso.
+   *
+   * @param dir
+   *          Dirección hacia la que realizar el paso.
+   * @param cost
+   *          Coste de llevar a cabo el paso.
    * @return Nueva trayectoria con el paso dado.
    */
   @SuppressWarnings ("unchecked")
   public Path addStep (Direction dir, double cost) {
     Path result = new Path();
-    result.m_path = (Stack<Point>) m_path.clone();
+    result.m_path = (Stack <Point>) m_path.clone();
     result.m_path.push(dir.movePoint(m_path.peek()));
     result.m_cost = m_cost + cost;
     return result;
@@ -114,7 +122,9 @@ public class Path {
 
   /**
    * Comprueba si las dos trayectorias acaban en el mismo punto.
-   * @param other Trayectoria con la que realizar la comparación.
+   *
+   * @param other
+   *          Trayectoria con la que realizar la comparación.
    * @return Si acaban en el mismo punto o no.
    */
   public boolean endsInTheSamePoint (Path other) {

@@ -132,43 +132,53 @@ public class LoggingConsole extends JPanel {
     setLayout(new BorderLayout());
     add(top, BorderLayout.NORTH);
     add(text_scroll, BorderLayout.CENTER);
-    setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Log"));
+    setBorder(BorderFactory.createTitledBorder(
+        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Log"));
   }
 
   /**
    * Muestra en la consola un mensaje de información.
-   * @param info Mensaje que se desea mostrar.
+   *
+   * @param info
+   *          Mensaje que se desea mostrar.
    */
   public void writeInfo (String info) {
     StyledDocument doc = m_text.getStyledDocument();
     try {
       doc.insertString(doc.getLength(), info + "\n", m_info_style);
     }
-    catch (BadLocationException e) {}
+    catch (BadLocationException e) {
+    }
   }
 
   /**
    * Muestra en la consola un mensaje de advertencia.
-   * @param warning Mensaje que se desea mostrar.
+   *
+   * @param warning
+   *          Mensaje que se desea mostrar.
    */
   public void writeWarning (String warning) {
     StyledDocument doc = m_text.getStyledDocument();
     try {
       doc.insertString(doc.getLength(), warning + "\n", m_warning_style);
     }
-    catch (BadLocationException e) {}
+    catch (BadLocationException e) {
+    }
   }
 
   /**
    * Muestra en la consola un mensaje de error.
-   * @param error Mensaje que se desea mostrar.
+   *
+   * @param error
+   *          Mensaje que se desea mostrar.
    */
   public void writeError (String error) {
     StyledDocument doc = m_text.getStyledDocument();
     try {
       doc.insertString(doc.getLength(), error + "\n", m_error_style);
     }
-    catch (BadLocationException e) {}
+    catch (BadLocationException e) {
+    }
   }
 
   /**

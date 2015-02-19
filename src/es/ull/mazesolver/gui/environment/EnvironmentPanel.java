@@ -59,7 +59,9 @@ public class EnvironmentPanel extends JPanel {
   public EnvironmentPanel (Environment env) {
     setEnvironment(env);
     addMouseListener(new MouseAdapter() {
-      /* (non-Javadoc)
+      /*
+       * (non-Javadoc)
+       *
        * @see java.awt.event.MouseAdapter#mouseExited(java.awt.event.MouseEvent)
        */
       @Override
@@ -111,8 +113,8 @@ public class EnvironmentPanel extends JPanel {
    * @return Posición (x, y) dentro de la matriz del laberinto.
    */
   public static Point screenCoordToGrid (final Point coord) {
-    return new Point((int)(coord.x / (CELL_SIZE_PX * s_zoom)) - 1,
-                     (int)(coord.y / (CELL_SIZE_PX * s_zoom)) - 1);
+    return new Point((int) (coord.x / (CELL_SIZE_PX * s_zoom)) - 1,
+        (int) (coord.y / (CELL_SIZE_PX * s_zoom)) - 1);
   }
 
   /*
@@ -141,7 +143,8 @@ public class EnvironmentPanel extends JPanel {
     for (int x = 0; x < maze.getWidth(); x++) {
       for (int y = 0; y < maze.getHeight(); y++) {
         final MazeCell actual = maze.get(y, x);
-        Point pos = new Point((int) Math.round((x+1) * cell_size), (int) Math.round((y+1) * cell_size));
+        Point pos =
+            new Point((int) Math.round((x + 1) * cell_size), (int) Math.round((y + 1) * cell_size));
 
         if (actual.hasWall(Direction.UP))
           g.drawLine(pos.x, pos.y, (int) Math.round(pos.x + cell_size), pos.y);
@@ -170,8 +173,8 @@ public class EnvironmentPanel extends JPanel {
     Agent hovered = m_env.getHoveredAgent();
     if (hovered != null) {
       g.setColor(Color.GREEN);
-      g.drawOval((int) Math.round((hovered.getX()+1) * cell_size),
-          (int) Math.round((hovered.getY()+1) * cell_size), (int) Math.round(cell_size - 1),
+      g.drawOval((int) Math.round((hovered.getX() + 1) * cell_size),
+          (int) Math.round((hovered.getY() + 1) * cell_size), (int) Math.round(cell_size - 1),
           (int) Math.round(cell_size - 1));
 
       if (m_last_hovered != hovered) {
@@ -197,26 +200,30 @@ public class EnvironmentPanel extends JPanel {
   }
 
   /**
-   * Cierra el popup si está abierto y deja todo listo para detectar de nuevo
-   * la selección de los agentes.
+   * Cierra el popup si está abierto y deja todo listo para detectar de nuevo la
+   * selección de los agentes.
    */
   private synchronized void resetPopup () {
-   PopupTip.hide();
+    PopupTip.hide();
     m_last_hovered = null;
   }
 
   /**
    * Dibuja un agente en el panel.
-   * @param ag Agente que dibujar.
-   * @param col Color en el que dibujar el agente.
-   * @param g "Pincel" con el que hacer el dibujado.
-   * @param cell_size Tamaño de las celdas en el panel.
+   *
+   * @param ag
+   *          Agente que dibujar.
+   * @param col
+   *          Color en el que dibujar el agente.
+   * @param g
+   *          "Pincel" con el que hacer el dibujado.
+   * @param cell_size
+   *          Tamaño de las celdas en el panel.
    */
   private void drawAgent (Agent ag, Color col, Graphics g, double cell_size) {
     g.setColor(col);
-    g.fillOval((int) Math.round((ag.getX()+1) * cell_size),
-               (int) Math.round((ag.getY()+1) * cell_size),
-               (int) Math.round(cell_size - 1),
-               (int) Math.round(cell_size - 1));
+    g.fillOval((int) Math.round((ag.getX() + 1) * cell_size),
+        (int) Math.round((ag.getY() + 1) * cell_size), (int) Math.round(cell_size - 1),
+        (int) Math.round(cell_size - 1));
   }
 }

@@ -28,25 +28,24 @@ package es.ull.mazesolver.util;
 /**
  * Clase que representa a un par de valores.
  */
-public class Pair<T1, T2> {
+public class Pair <T1, T2> {
   public T1 first;
   public T2 second;
 
-  public Pair(T1 f, T2 s) {
+  public Pair (T1 f, T2 s) {
     first = f;
     second = s;
   }
 
   @Override
   public int hashCode () {
-    return (first != null? first.hashCode() : 0) *
-           (second != null? second.hashCode() : 0);
+    return (first != null? first.hashCode() : 0) * (second != null? second.hashCode() : 0);
   }
 
   @Override
   public boolean equals (Object obj) {
     if (obj instanceof Pair) {
-      Pair <?,?> o = (Pair<?,?>) obj;
+      Pair <?, ?> o = (Pair <?, ?>) obj;
       try {
         return first.equals(o.first) && second.equals(o.second);
       }

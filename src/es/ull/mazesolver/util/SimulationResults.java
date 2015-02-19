@@ -39,8 +39,8 @@ import es.ull.mazesolver.maze.Maze;
  */
 public class SimulationResults {
   /**
-   * Clase de utilidad para contener toda la información de una simulación en
-   * un entorno determinado.
+   * Clase de utilidad para contener toda la información de una simulación en un
+   * entorno determinado.
    */
   private class EnvironmentSimulationInfo {
     public Map <Agent, Integer> steps;
@@ -92,7 +92,9 @@ public class SimulationResults {
 
   /**
    * Se indica a las estadísticas que un agente ha salido del laberinto.
-   * @param agent Agente que salió del laberinto.
+   *
+   * @param agent
+   *          Agente que salió del laberinto.
    */
   public void agentFinished (Agent agent) {
     EnvironmentSimulationInfo info = getInfoFromAgentsEnvironment(agent);
@@ -109,7 +111,9 @@ public class SimulationResults {
 
   /**
    * Indica a las estadísticas que un agente ha realizado un paso.
-   * @param agent Agente que ha realizado el paso.
+   *
+   * @param agent
+   *          Agente que ha realizado el paso.
    */
   public void agentWalked (Agent agent) {
     EnvironmentSimulationInfo info = getInfoFromAgentsEnvironment(agent);
@@ -124,7 +128,9 @@ public class SimulationResults {
   /**
    * Busca el agente que salió antes del laberinto en el entorno, si alguno ha
    * salido.
-   * @param env Entorno en el que buscar al ganador.
+   *
+   * @param env
+   *          Entorno en el que buscar al ganador.
    * @return El agente que salió antes del laberinto en el entorno.
    */
   public Agent getWinner (Environment env) {
@@ -135,7 +141,9 @@ public class SimulationResults {
   /**
    * Busca el agente colocado en el laberinto especificado que salió antes del
    * mismo, esté en el entorno que esté.
-   * @param maze Laberinto del que salió.
+   *
+   * @param maze
+   *          Laberinto del que salió.
    * @return Agente que salió primero del laberinto, si alguno ha salido.
    */
   public Agent getWinner (Maze maze) {
@@ -164,7 +172,8 @@ public class SimulationResults {
   }
 
   /**
-   * @param env Entorno en el que inspeccionar los agentes.
+   * @param env
+   *          Entorno en el que inspeccionar los agentes.
    * @return Número de pasos que ha realizado cada agente en el entorno.
    */
   public Map <Agent, Integer> getSteps (Environment env) {
@@ -173,8 +182,8 @@ public class SimulationResults {
     EnvironmentSimulationInfo info = m_info.get(env);
 
     if (info != null) {
-      HashMap <Agent, Integer> steps = new HashMap<Agent, Integer>();
-      for (Map.Entry<Agent, Integer> entry: info.steps.entrySet())
+      HashMap <Agent, Integer> steps = new HashMap <Agent, Integer>();
+      for (Map.Entry <Agent, Integer> entry: info.steps.entrySet())
         steps.put(entry.getKey(), entry.getValue());
 
       for (int i = 0; i < env.getAgentCount(); i++)
@@ -184,11 +193,12 @@ public class SimulationResults {
       return steps;
     }
     else
-      return new HashMap<Agent, Integer>();
+      return new HashMap <Agent, Integer>();
   }
 
   /**
-   * @param env Entorno en el que evaluar los agentes.
+   * @param env
+   *          Entorno en el que evaluar los agentes.
    * @return Tiempo que le llevó salir del laberinto al primero que salió.
    */
   public long timeTakenFirst (Environment env) {
@@ -199,7 +209,9 @@ public class SimulationResults {
   /**
    * Indica la cantidad de tiempo que tardó el agente más rápido en resolver el
    * laberinto, independientemente del entorno en el que se encontrara.
-   * @param maze Laberinto del que salió.
+   *
+   * @param maze
+   *          Laberinto del que salió.
    * @return Tiempo que le llevó salir del laberinto al primero que salió.
    */
   public long timeTakenFirst (Maze maze) {
@@ -217,7 +229,8 @@ public class SimulationResults {
   }
 
   /**
-   * @param env Entorno en el que evaluar los agentes.
+   * @param env
+   *          Entorno en el que evaluar los agentes.
    * @return Tiempo que le llevó salir del laberinto al último que salió.
    */
   public long timeTakenLast (Environment env) {
@@ -228,7 +241,9 @@ public class SimulationResults {
   /**
    * Indica la cantidad de tiempo que tardó el agente más lento en resolver el
    * laberinto, independientemente del entorno en el que se encontrara.
-   * @param maze Laberinto del que salió.
+   *
+   * @param maze
+   *          Laberinto del que salió.
    * @return Tiempo que le llevó salir del laberinto al último que salió.
    */
   public long timeTakenLast (Maze maze) {
@@ -248,7 +263,9 @@ public class SimulationResults {
   /**
    * Busca en m_info la información del entorno asociado al agente indicado. Si
    * no lo encuentra, lo crea.
-   * @param agent Agente de cuyo entorno se quiere extraer la infomación.
+   *
+   * @param agent
+   *          Agente de cuyo entorno se quiere extraer la infomación.
    * @return Información de la simulación.
    */
   private EnvironmentSimulationInfo getInfoFromAgentsEnvironment (Agent agent) {

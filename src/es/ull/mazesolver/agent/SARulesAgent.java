@@ -70,35 +70,33 @@ public class SARulesAgent extends Agent {
   public static final int MINIMUM_WIDTH = 300;
   public static final int MINIMUM_HEIGHT = 100;
   public static final String DEFAULT_AGENT_SRC =
-        "// Reglas de máxima prioridad para salir del laberinto\n"
-      + "DOWN OFFLIMITS -> MOVE DOWN.\n"
-      + "RIGHT OFFLIMITS -> MOVE RIGHT.\n"
-      + "LEFT OFFLIMITS -> MOVE LEFT.\n"
-      + "UP OFFLIMITS -> MOVE UP.\n\n"
+      "// Reglas de máxima prioridad para salir del laberinto\n" + "DOWN OFFLIMITS -> MOVE DOWN.\n"
+          + "RIGHT OFFLIMITS -> MOVE RIGHT.\n" + "LEFT OFFLIMITS -> MOVE LEFT.\n"
+          + "UP OFFLIMITS -> MOVE UP.\n\n"
 
-      + "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
-      + "// Siempre intenta acercarse a la esquina inferior derecha\n"
-      + "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
-      + "RIGHT FREE & RIGHT ~VISITED => GO RIGHT.\n"
-      + "LEFT FREE & LEFT ~VISITED => GO LEFT.\n"
-      + "UP FREE & UP ~VISITED => GO UP.\n\n"
+          + "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
+          + "// Siempre intenta acercarse a la esquina inferior derecha\n"
+          + "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
+          + "RIGHT FREE & RIGHT ~VISITED => GO RIGHT.\n"
+          + "LEFT FREE & LEFT ~VISITED => GO LEFT.\n" + "UP FREE & UP ~VISITED => GO UP.\n\n"
 
-      + "// Reglas para mover al agente si todo alrededor está visitado u\n"
-      + "// ocupado. Utilizamos varias operaciones lógicas para demostrar\n"
-      + "// la flexibilidad del lenguaje. Se pueden traducir como:\n"
-      + "//     <dirección> FREE -> MOVE <dirección>.\n"
-      + "Up Not Wall and Up ~Agent -> MOVE up.\n"
-      + "not (left wall OR left agent) -> move left.\n"
-      + "right !wall And right !agent -> move right.\n"
-      + "!(down wall or down agent) -> move down.\n";
+          + "// Reglas para mover al agente si todo alrededor está visitado u\n"
+          + "// ocupado. Utilizamos varias operaciones lógicas para demostrar\n"
+          + "// la flexibilidad del lenguaje. Se pueden traducir como:\n"
+          + "//     <dirección> FREE -> MOVE <dirección>.\n"
+          + "Up Not Wall and Up ~Agent -> MOVE up.\n"
+          + "not (left wall OR left agent) -> move left.\n"
+          + "right !wall And right !agent -> move right.\n"
+          + "!(down wall or down agent) -> move down.\n";
 
   private String m_code;
   private transient SituationActionErrorHandler m_error_handler;
   private transient ArrayList <SituationActionRule> m_rules;
-  private transient boolean[][] m_visited;
+  private transient boolean [][] m_visited;
 
   /**
-   * @param env Entorno donde se sitúa el agente.
+   * @param env
+   *          Entorno donde se sitúa el agente.
    */
   public SARulesAgent (Environment env) {
     super(env);
@@ -108,16 +106,20 @@ public class SARulesAgent extends Agent {
     compileCode();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#setEnvironment(Environment)
    */
   public void setEnvironment (Environment env) {
     super.setEnvironment(env);
     Maze maze = m_env.getMaze();
-    m_visited = new boolean[maze.getHeight()][maze.getWidth()];
+    m_visited = new boolean [maze.getHeight()] [maze.getWidth()];
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getAlgorithmName()
    */
   @Override
@@ -125,7 +127,9 @@ public class SARulesAgent extends Agent {
     return "Situation-Action Rules";
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getNextMovement()
    */
   @Override
@@ -140,7 +144,9 @@ public class SARulesAgent extends Agent {
     return Direction.NONE;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#doMovement(maze.Direction)
    */
   @Override
@@ -150,16 +156,20 @@ public class SARulesAgent extends Agent {
     super.doMovement(dir);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#resetMemory()
    */
   public void resetMemory () {
-    for (boolean[] i: m_visited)
+    for (boolean [] i: m_visited)
       for (int j = 0; j < i.length; j++)
         i[j] = false;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#getConfigurationPanel()
    */
   @Override
@@ -187,15 +197,15 @@ public class SARulesAgent extends Agent {
         popup.add(actions.get(DefaultEditorKit.selectAllAction));
 
         m_text.addMouseListener(new MouseAdapter() {
-          public void mousePressed(MouseEvent e) {
+          public void mousePressed (MouseEvent e) {
             maybeShowPopup(e);
           }
 
-          public void mouseReleased(MouseEvent e) {
+          public void mouseReleased (MouseEvent e) {
             maybeShowPopup(e);
           }
 
-          private void maybeShowPopup(MouseEvent e) {
+          private void maybeShowPopup (MouseEvent e) {
             if (e.isPopupTrigger()) {
               popup.show(e.getComponent(), e.getX(), e.getY());
             }
@@ -210,7 +220,8 @@ public class SARulesAgent extends Agent {
       }
 
       @Override
-      public void cancel () {}
+      public void cancel () {
+      }
 
       @Override
       public boolean accept () {
@@ -235,7 +246,8 @@ public class SARulesAgent extends Agent {
   }
 
   /**
-   * @param dir Dirección en la que hay que mirar.
+   * @param dir
+   *          Dirección en la que hay que mirar.
    * @return Si la celda adyacente en esa dirección ha sido visitada o no.
    */
   public boolean hasVisited (Direction dir) {
@@ -251,6 +263,7 @@ public class SARulesAgent extends Agent {
   /**
    * Convierte el código fuente guardado en m_code en la representación de las
    * reglas de situación-acción.
+   *
    * @return true si la compilación fue exitosa y false si no.
    */
   protected boolean compileCode () {
@@ -286,7 +299,9 @@ public class SARulesAgent extends Agent {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.Agent#duplicate()
    */
   @Override
@@ -304,11 +319,15 @@ public class SARulesAgent extends Agent {
   /**
    * Extrae la información del objeto a partir de una forma serializada del
    * mismo.
-   * @param input Flujo de entrada con la información del objeto.
-   * @throws ClassNotFoundException Si se trata de un objeto de otra clase.
-   * @throws IOException Si no se puede leer el flujo de entrada.
+   *
+   * @param input
+   *          Flujo de entrada con la información del objeto.
+   * @throws ClassNotFoundException
+   *           Si se trata de un objeto de otra clase.
+   * @throws IOException
+   *           Si no se puede leer el flujo de entrada.
    */
-  private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
+  private void readObject (ObjectInputStream input) throws ClassNotFoundException, IOException {
     input.defaultReadObject();
 
     m_error_handler = new SituationActionErrorHandler();

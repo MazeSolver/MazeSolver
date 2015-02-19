@@ -100,12 +100,15 @@ public abstract class RulePredicate implements Cloneable {
   }
 
   /**
-   * @param ag Agente sobre el que se quiere evaluar el predicado.
+   * @param ag
+   *          Agente sobre el que se quiere evaluar el predicado.
    * @return Si la situación representada se da para el agente indicado.
    */
   public abstract boolean evaluate (SARulesAgent ag);
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.lang.Object#clone()
    */
   @Override
@@ -139,7 +142,8 @@ public abstract class RulePredicate implements Cloneable {
         dir = Direction.DOWN;
       else if (ctx.LEFT() != null)
         dir = Direction.LEFT;
-      else // RIGHT
+      else
+        // RIGHT
         dir = Direction.RIGHT;
 
       // Extraemos el estado de la celda
@@ -169,6 +173,7 @@ public abstract class RulePredicate implements Cloneable {
     /**
      * Crea un predicado que hace referencia a que en la dirección indicada se
      * tiene una visión específica.
+     *
      * @param dir
      *          Dirección a la que hace referencia el término.
      * @param st
@@ -182,7 +187,9 @@ public abstract class RulePredicate implements Cloneable {
     /**
      * Crea un predicado que hace referencia a que la dirección indicada ha sido
      * visitada.
-     * @param dir Dirección a la que hace referencia el término.
+     *
+     * @param dir
+     *          Dirección a la que hace referencia el término.
      */
     public SimpleRulePredicate (Direction dir) {
       m_direction = dir;
@@ -208,7 +215,9 @@ public abstract class RulePredicate implements Cloneable {
       return result ^ m_negated;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Object#clone()
      */
     @Override
@@ -261,14 +270,16 @@ public abstract class RulePredicate implements Cloneable {
       return result ^ m_negated;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Object#clone()
      */
     @Override
     public Object clone () {
-      ComplexRulePredicate pred = new ComplexRulePredicate(
-          (RulePredicate) m_p1.clone(), (RulePredicate) m_p2.clone(),
-          m_connector);
+      ComplexRulePredicate pred =
+          new ComplexRulePredicate((RulePredicate) m_p1.clone(), (RulePredicate) m_p2.clone(),
+              m_connector);
       pred.m_negated = m_negated;
       return pred;
     }

@@ -33,15 +33,20 @@ import java.awt.Point;
 public class EuclideanDistance extends DistanceCalculator {
   private static final long serialVersionUID = 3873048442851862831L;
 
-  /* (non-Javadoc)
-   * @see agent.distance.DistanceCalculator#distance(java.awt.Point, java.awt.Point)
+  /*
+   * (non-Javadoc)
+   *
+   * @see agent.distance.DistanceCalculator#distance(java.awt.Point,
+   * java.awt.Point)
    */
   @Override
   public double distance (Point p1, Point p2) {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.distance.DistanceCalculator#getType()
    */
   @Override
@@ -49,7 +54,9 @@ public class EuclideanDistance extends DistanceCalculator {
     return DistanceType.EUCLIDEAN;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see agent.distance.DistanceCalculator#clone()
    */
   @Override
