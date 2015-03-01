@@ -34,6 +34,8 @@ import es.ull.mazesolver.maze.MazeCreationAlgorithm;
 public class EmptyMaze extends MazeCreationAlgorithm {
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto que se genere.
    * @param columns

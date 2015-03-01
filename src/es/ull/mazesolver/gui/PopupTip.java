@@ -100,9 +100,9 @@ public class PopupTip {
    * @param msg
    *          Mensaje que se va a mostrar en el popup.
    * @param x
-   *          Posición absoluta en X.
+   *          Posición absoluta de la pantalla en X.
    * @param y
-   *          Posición absoluta en Y.
+   *          Posición absoluta de la pantalla en Y.
    * @param time_ms
    *          Tiempo en milisegundos que el popup va a estar mostrándose.
    */
@@ -131,9 +131,9 @@ public class PopupTip {
    * @param msg
    *          Mensaje que se va a mostrar en el popup.
    * @param x
-   *          Posición absoluta en X.
+   *          Posición absoluta de la pantalla en X.
    * @param y
-   *          Posición absoluta en Y.
+   *          Posición absoluta de la pantalla en Y.
    */
   public static void show (Component owner, String msg, int x, int y) {
     show(owner, msg, x, y, DEFAULT_POPUP_DURATION_MS);

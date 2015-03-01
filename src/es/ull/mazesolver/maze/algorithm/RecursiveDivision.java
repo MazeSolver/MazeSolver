@@ -33,7 +33,7 @@ import es.ull.mazesolver.util.Pair;
 
 /**
  * Implementación de algoritmo Division Recursiva para la generación aleatoria
- * de laberintos perfectos. (implementado de forma iterativa)
+ * de laberintos perfectos.
  */
 public class RecursiveDivision extends MazeCreationAlgorithm {
 
@@ -41,6 +41,8 @@ public class RecursiveDivision extends MazeCreationAlgorithm {
   private final static int VERTICAL = 1;
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto.
    * @param columns
@@ -70,7 +72,7 @@ public class RecursiveDivision extends MazeCreationAlgorithm {
   }
 
   /**
-   * Funcion principal recursiva que va generando sub laberintos
+   * Función principal recursiva que va generando sub-laberintos.
    *
    * @param x
    *          Posición en el eje X desde la que se quiere partir.
@@ -137,7 +139,7 @@ public class RecursiveDivision extends MazeCreationAlgorithm {
    *          Número de columnas del Laberinto.
    * @param height
    *          Número de filas del laberinto.
-   * @return orientación a seguir para ir dividiendo el laberinto.
+   * @return Orientación a seguir para ir dividiendo el laberinto.
    */
   private int chooseOrientation (int width, int height) {
     if (width < height)

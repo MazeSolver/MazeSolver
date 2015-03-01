@@ -42,7 +42,8 @@ public interface MessageCommunication {
   }
 
   /**
-   * Representa un mensaje que se puede transmitir por los agentes.
+   * Representa un mensaje que se puede transmitir por los agentes. Contiene un
+   * tipo y un contenido.
    */
   public static class Message {
     private MessageType m_type;
@@ -73,6 +74,8 @@ public interface MessageCommunication {
     }
 
     /**
+     * Obtiene el tipo del mensaje.
+     *
      * @return Tipo de mensaje.
      */
     public MessageType getType () {
@@ -80,6 +83,8 @@ public interface MessageCommunication {
     }
 
     /**
+     * Obtiene el contenido del mensaje.
+     *
      * @return Contenido del mensaje. Será {@code null} si no tiene contenido.
      */
     public Object getContent () {

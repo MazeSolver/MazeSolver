@@ -88,10 +88,10 @@ public class MessageManager {
 
   /**
    * Pone un mensaje a la cola de un grupo para ser enviado posteriormente
-   * cuando se llame a {@code flushMessageQueues()}. Que la inserción se realice
+   * cuando se llame a {@link #flushMessageQueues}. Que la inserción se realice
    * satisfactoriamente no implica que el mensaje sea enviado.
    *
-   * @see #flushMessageQueues()
+   * @see #flushMessageQueues
    * @param sender
    *          Agente que envía el mensaje.
    * @param group
@@ -131,6 +131,8 @@ public class MessageManager {
   }
 
   /**
+   * Indica si un grupo ya ha sido creado.
+   *
    * @param group
    *          Grupo del cual se quiere comprobar su existencia.
    * @return Si el grupo existe o no.

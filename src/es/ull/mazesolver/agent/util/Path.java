@@ -55,6 +55,8 @@ public class Path {
   }
 
   /**
+   * Obtiene la trayectoria o lista de pasos.
+   *
    * @return La lista de pasos.
    */
   public ArrayList <Point> getPath () {
@@ -64,6 +66,8 @@ public class Path {
   }
 
   /**
+   * Obtiene el punto inicial de la trayectoria.
+   *
    * @return El punto inicial de la trayectoria.
    */
   public Point getStartPoint () {
@@ -71,6 +75,8 @@ public class Path {
   }
 
   /**
+   * Obtiene el punto final de la trayectoria.
+   *
    * @return El punto final de la trayectoria.
    */
   public Point getEndPoint () {
@@ -89,6 +95,8 @@ public class Path {
   }
 
   /**
+   * Obtiene el coste total de la trayectoria.
+   *
    * @return El coste de la trayectoria.
    */
   public double getCost () {
@@ -96,6 +104,8 @@ public class Path {
   }
 
   /**
+   * Obtiene el número de pasos que componen la trayectoria.
+   *
    * @return El número de pasos de los que se compone la trayectoria.
    */
   public int getLength () {

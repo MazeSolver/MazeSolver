@@ -48,17 +48,25 @@ public abstract class AgentConfigurationPanel extends JPanel {
   private JPanel m_root;
   private ArrayList <EventListener> m_listeners;
 
+  /**
+   * Lista de mensajes de error obtenidos al intentar guardar la configuración
+   * de un agente.
+   */
   protected ArrayList <String> m_errors;
+
+  /**
+   * Lista de mensajes de éxito obtenidos tras guardar la configuración de un
+   * agente.
+   */
   protected ArrayList <String> m_success;
 
   /**
-   * Interfaz de escucha de eventos de tipo "Exitoso". Estos eventos son
-   * notificados cuando se llama a {@code onSuccess()}.
+   * Interfaz de escucha de eventos.
    */
   public static interface EventListener {
     /**
      * LLamado cuando ocurre el evento de tipo "Exitoso". Estos eventos son
-     * notificados cuando se llama a {@code onSuccess()}.
+     * notificados cuando se guarda el agente y el cambio es aceptado.
      *
      * @param msgs
      *          Lista de mensajes que se quieren mostrar al usuario.
@@ -67,13 +75,13 @@ public abstract class AgentConfigurationPanel extends JPanel {
 
     /**
      * LLamado cuando ocurre el evento de tipo "Cancelar". Estos eventos son
-     * notificados cuando se llama a {@code onCancel()}.
+     * notificados cuando se cancela la edición de las propiedades.
      */
     public void onCancel ();
 
     /**
      * LLamado cuando ocurre el evento de tipo "Error". Estos eventos son
-     * notificados cuando se llama a {@code onError()}.
+     * notificados cuando se intenta guardar y no se aceptan las modificaciones.
      *
      * @param errors
      *          Lista de mensajes de error a mostrar al usuario.
@@ -140,7 +148,7 @@ public abstract class AgentConfigurationPanel extends JPanel {
   /**
    * Crea la interfaz gráfica de usuario, que es la que se mostrará al mismo.
    * Estará personalizada para el agente específico, pero no incluirá los
-   * botones de "Aceptar" y "Cancelar".
+   * botones de "Aceptar" y "Cancelar", que se proporcionan por defecto.
    *
    * @param root
    *          Panel padre de todos los elementos que se creen. Si se intenta
@@ -188,7 +196,7 @@ public abstract class AgentConfigurationPanel extends JPanel {
 
   /**
    * Método llamado cuando el usuario aplica los cambios y éstos son guardados
-   * correctamente. Notifica a todos los {@code SuccessListener}.
+   * correctamente. Notifica a los {@link EventListener#onSuccess}.
    */
   private void onSuccess () {
     for (EventListener listener: m_listeners)
@@ -197,7 +205,7 @@ public abstract class AgentConfigurationPanel extends JPanel {
 
   /**
    * Método llamado cuando el usuario cancela la operación y el agente ha
-   * quedado como al principio. Notifica a todos los {@code CancelListener}.
+   * quedado como al principio. Notifica a los {@link EventListener#onCancel}.
    */
   private void onCancel () {
     for (EventListener listener: m_listeners)
@@ -206,8 +214,8 @@ public abstract class AgentConfigurationPanel extends JPanel {
 
   /**
    * Método llamado cuando el usuario intenta aplicar los cambios y no es
-   * posible porque la configuración no es válida. Notifica a todos los
-   * {@code ErrorListener}.
+   * posible porque la configuración no es válida. Notifica a los {@link
+   * EventListener#onError}.
    */
   private void onError () {
     for (EventListener listener: m_listeners)

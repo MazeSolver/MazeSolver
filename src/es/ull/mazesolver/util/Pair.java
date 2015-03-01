@@ -32,16 +32,32 @@ public class Pair <T1, T2> {
   public T1 first;
   public T2 second;
 
+  /**
+   * Construye un par de valores
+   *
+   * @param f Primer valor del par.
+   * @param s Segundo valor del par.
+   */
   public Pair (T1 f, T2 s) {
     first = f;
     second = s;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode () {
     return (first != null? first.hashCode() : 0) * (second != null? second.hashCode() : 0);
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals (Object obj) {
     if (obj instanceof Pair) {

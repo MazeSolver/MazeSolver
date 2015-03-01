@@ -41,6 +41,9 @@ public class Maze {
   private Point m_exit;
 
   /**
+   * Crea un laberinto a partir de un algoritmo de generación de laberintos
+   * ya inicializado.
+   *
    * @param alg
    *          Algoritmo de creación de laberintos ya inicializado
    */
@@ -54,6 +57,8 @@ public class Maze {
   }
 
   /**
+   * Crea un laberinto a partir de su versión serializada en un fichero.
+   *
    * @param fileName
    *          Nombre del fichero del que cargar el laberinto.
    * @throws IOException
@@ -65,6 +70,8 @@ public class Maze {
   }
 
   /**
+   * Obtiene la celda situada en una posición concreta del laberinto.
+   *
    * @param row
    *          Fila.
    * @param column
@@ -76,6 +83,8 @@ public class Maze {
   }
 
   /**
+   * Establece el contenido de una celda en el laberinto.
+   *
    * @param row
    *          Fila.
    * @param column
@@ -88,6 +97,8 @@ public class Maze {
   }
 
   /**
+   * Obtiene el número de columnas (anchura) del laberinto.
+   *
    * @return Anchura (en celdas) del laberinto.
    */
   public int getWidth () {
@@ -95,6 +106,8 @@ public class Maze {
   }
 
   /**
+   * Obtiene el número de filas (altura) del laberinto.
+   *
    * @return Altura (en celdas) del laberinto.
    */
   public int getHeight () {
@@ -102,6 +115,8 @@ public class Maze {
   }
 
   /**
+   * Obtiene una copia del lugar donde está la salida del laberinto.
+   *
    * @return La posición donde se encuentra la salida al laberinto.
    */
   public Point getExit () {
@@ -120,6 +135,9 @@ public class Maze {
   }
 
   /**
+   * Carga una instancia de laberinto de un fichero que contiene una instancia
+   * de esta clase serializada.
+   *
    * @param fileName
    *          Nombre del fichero del que cargar el laberinto.
    * @throws IOException
@@ -142,6 +160,9 @@ public class Maze {
   }
 
   /**
+   * Guarda la actual instancia de la clase {@link Maze} en un fichero mediante
+   * su serialización.
+   *
    * @param fileName
    *          Nombre del fichero donde guardar el laberinto.
    * @throws IOException

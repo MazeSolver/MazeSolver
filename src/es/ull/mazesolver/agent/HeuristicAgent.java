@@ -44,6 +44,9 @@ import es.ull.mazesolver.gui.environment.Environment;
 public abstract class HeuristicAgent extends Agent {
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Algoritmo de medición de distancias que utiliza el agente.
+   */
   protected DistanceCalculator m_dist;
 
   /**

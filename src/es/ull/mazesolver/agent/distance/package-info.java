@@ -20,36 +20,11 @@
  */
 
 /**
- * @file RotationDirection.java
- * @date 13/12/2014
+ * @file package-info.java
+ * @date 1/3/2015
  */
-package es.ull.mazesolver.util;
 
 /**
- * Representa un sentido de rotación, que puede ser horario o antihorario.
+ * Contiene las clases de cálculo de distancias entre 2 puntos.
  */
-public enum Rotation {
-  CLOCKWISE, COUNTER_CLOCKWISE;
-
-  /**
-   * Obtiene la rotación contraria a la actual.
-   *
-   * @return La dirección contraria a la actual.
-   */
-  public Rotation getOpposite () {
-    if (this == CLOCKWISE)
-      return COUNTER_CLOCKWISE;
-    else
-      return CLOCKWISE;
-  }
-
-  /**
-   * Alias equivalente a {@code Rotation.CLOCKWISE}.
-   */
-  public static Rotation CW = CLOCKWISE;
-
-  /**
-   * Alias equivalente a {@code Rotation.COUNTER_CLOCKWISE}.
-   */
-  public static Rotation CCW = COUNTER_CLOCKWISE;
-}
+package es.ull.mazesolver.agent.distance;

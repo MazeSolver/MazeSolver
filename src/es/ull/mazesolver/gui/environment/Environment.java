@@ -127,6 +127,8 @@ public class Environment extends BaseInternalFrame {
   }
 
   /**
+   * Obtiene el laberinto contenido en el entorno.
+   *
    * @return Laberinto base del entorno.
    */
   public Maze getMaze () {
@@ -134,10 +136,12 @@ public class Environment extends BaseInternalFrame {
   }
 
   /**
-   * Cambia el laberinto del entorno. La memoria almacenada del/los agentes
-   * sería inválida en caso de que contuviera información sobre la ruta a llevar
-   * a cabo en el entorno, pero no cuando la memoria fuera un conjunto de reglas
-   * o una tabla de percepción-acción.
+   * Cambia el laberinto del entorno.
+   * <br/><br/>
+   * Esta operación invalidaría la memoria almacenada del/los agentes en caso
+   * de que éstos contuvieran información sobre la ruta a llevar a cabo en el
+   * entorno, pero no cuando la memoria fuera un conjunto de reglas o una tabla
+   * de percepción-acción o cuando el agente no tuviera ninguna memoria.
    *
    * @param maze
    *          Laberinto en el que se basa el entorno.
@@ -341,6 +345,8 @@ public class Environment extends BaseInternalFrame {
   }
 
   /**
+   * Obtiene el número de agentes que se encuentran en el entorno.
+   *
    * @return Número de agentes actualmente en el entorno.
    */
   public int getAgentCount () {
@@ -348,6 +354,8 @@ public class Environment extends BaseInternalFrame {
   }
 
   /**
+   * Obtiene el gestor de pizarras del entorno.
+   *
    * @return El gestor de pizarras del entorno.
    */
   public BlackboardManager getBlackboardManager () {
@@ -355,6 +363,8 @@ public class Environment extends BaseInternalFrame {
   }
 
   /**
+   * Obtiene el gestor de mensajes del entorno.
+   *
    * @return El gestor de mensajes del entorno.
    */
   public MessageManager getMessageManager () {
@@ -404,6 +414,9 @@ public class Environment extends BaseInternalFrame {
   }
 
   /**
+   * Obtiene el índice de la lista de agentes del agente que está situado bajo
+   * el cursor.
+   *
    * @param mouse_pos
    *          Posición del ratón.
    * @return Índice del agente colocado en la posición indicada dentro del

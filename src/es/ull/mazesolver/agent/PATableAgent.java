@@ -167,6 +167,7 @@ public class PATableAgent extends Agent {
 
   /**
    * Traduce una visión a índice entre 0 y 1.
+   *
    * @param vision Visión a traducir.
    * @return Índice asociado a la visión.
    */
@@ -185,6 +186,7 @@ public class PATableAgent extends Agent {
 
   /**
    * Traduce un valor de índice en la visión asociada.
+   *
    * @param index Índice a traducir.
    * @return Visión asociada al índice.
    */
@@ -194,6 +196,7 @@ public class PATableAgent extends Agent {
 
   /**
    * Hace una copia profunda de la configuración de un agente.
+   *
    * @param data Array tetra-dimensional con las direcciones asociadas a cada
    *        percepción del agente.
    * @return Copia profunda del array de datos de entrada.
@@ -220,6 +223,7 @@ public class PATableAgent extends Agent {
 
     /**
      * Construye el modelo de la tabla y lo rellena con los datos del agente.
+     *
      * @param ag Agente a partir del cual cargar los datos inicialmente.
      */
     public PerceptionActionTableModel (PATableAgent ag) {
@@ -229,6 +233,7 @@ public class PATableAgent extends Agent {
     /**
      * Accede a los datos almacenados en la tabla, listos para su uso por el
      * agente.
+     *
      * @return Array tetra-dimensional con las acciones asociadas a cada
      *         percepción
      */
@@ -244,7 +249,9 @@ public class PATableAgent extends Agent {
       return N_ENTRIES;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.swing.table.TableModel#getColumnCount()
      */
     @Override
@@ -252,7 +259,9 @@ public class PATableAgent extends Agent {
       return N_FIELDS;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.swing.table.AbstractTableModel#getColumnName(int)
      */
     @Override
@@ -260,7 +269,9 @@ public class PATableAgent extends Agent {
       return COLUMN_NAMES[column];
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
      */
     @Override
@@ -268,7 +279,9 @@ public class PATableAgent extends Agent {
       return column != N_FIELDS - 1? Vision.class : Direction.class;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
      */
     @Override
@@ -276,7 +289,9 @@ public class PATableAgent extends Agent {
       return column == N_FIELDS-1;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
     @Override
@@ -289,7 +304,9 @@ public class PATableAgent extends Agent {
         return m_data[dec[0]][dec[1]][dec[2]][dec[3]];
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
      */
     @Override
@@ -303,6 +320,7 @@ public class PATableAgent extends Agent {
     /**
      * Calcula a partir de la fila la asignación de visiones (U,D,L,R)
      * que le corresponde.
+     *
      * @param row Fila que decodificar.
      * @return Array con la asignación para cada dirección. Un valor de 1
      *         significa que en esa dirección se ve un obstáculo. Un 0 significa

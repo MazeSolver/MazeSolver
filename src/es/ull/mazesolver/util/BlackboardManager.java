@@ -127,6 +127,8 @@ public class BlackboardManager {
   }
 
   /**
+   * Indica si un canal está ocupado.
+   *
    * @param channel
    *          Canal que consultar.
    * @return Si el canal consultado existe para este gestor.

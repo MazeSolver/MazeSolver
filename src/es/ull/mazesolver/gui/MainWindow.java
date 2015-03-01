@@ -82,6 +82,8 @@ public class MainWindow extends JFrame implements Observer {
   private static MainWindow s_instance;
 
   /**
+   * Inicializa la interfaz gráfica y la muestra por pantalla.
+   *
    * @param args No utilizados.
    */
   public static void main (String [] args) {
@@ -101,6 +103,8 @@ public class MainWindow extends JFrame implements Observer {
   }
 
   /**
+   * Obtiene la instancia única de la clase o la crea si no existe.
+   *
    * @return Instancia única de la clase.
    */
   public static MainWindow getInstance () {
@@ -564,6 +568,7 @@ public class MainWindow extends JFrame implements Observer {
 
   /**
    * Devuelve una referencia a la consola.
+   *
    * @return Referencia a la consola de la ventana.
    */
   public LoggingConsole getConsole () {
@@ -572,6 +577,7 @@ public class MainWindow extends JFrame implements Observer {
 
   /**
    * Devuelve una referencia al conjunto de entornos.
+   *
    * @return Referencia al conjunto de entornos de la ventana.
    */
   public EnvironmentSet getEnvironments () {
@@ -580,6 +586,7 @@ public class MainWindow extends JFrame implements Observer {
 
   /**
    * Abre el panel de configuración.
+   *
    * @param ag_panel Panel de configuración que se quiere abrir.
    */
   public void setConfigurationPanel (final AgentConfigurationPanel ag_panel) {
@@ -693,7 +700,9 @@ public class MainWindow extends JFrame implements Observer {
     m_stop.setEnabled(false);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
    */
   @Override

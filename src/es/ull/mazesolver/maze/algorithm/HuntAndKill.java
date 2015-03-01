@@ -39,6 +39,8 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto.
    * @param columns
@@ -77,11 +79,11 @@ public class HuntAndKill extends MazeCreationAlgorithm {
 
   /**
    * Dada una posición de inicio va explorando dicho camino mientras no
-   * encuentre un nuevo camino.
+   * llegue a un punto sin salida.
    *
    * @param p
-   *          punto con las coordenadas x e y de las cuales se quiere empezar a
-   *          buscar un nuevo camino nuevo
+   *          Punto con las coordenadas x e y de las cuales se quiere empezar a
+   *          buscar un nuevo camino.
    */
   private void walk (Point p) {
     Direction dir = getRandomDirection(p.y, p.x);
@@ -95,11 +97,12 @@ public class HuntAndKill extends MazeCreationAlgorithm {
 
   /**
    * Busca por todo el tablero una casilla explorada y que puede ser el origen
-   * de una nueva exploracion (el metodo walk puede empezar por esa casilla)
-   * Dicha casilla con ese posible camino es explorado por el metodo hunt (kill)
+   * de una nueva exploración (el método {@link HuntAndKill#walk} puede empezar
+   * por esa casilla). Dicha casilla con ese posible camino es explorado por el
+   * método hunt (kill).
    *
-   * @return devuelve una posición por la cual el "cursor" puede seguir
-   *         explorando
+   * @return Devuelve una posición por la cual el "cursor" puede seguir
+   *         explorando.
    */
   private Point hunt () {
     for (int y = 0; y < m_rows; y++) {
@@ -117,14 +120,17 @@ public class HuntAndKill extends MazeCreationAlgorithm {
   }
 
   /**
+   * Obtiene una dirección aleatoria desde la posición indicada que la conecte
+   * con una posición no explorada dentro del laberinto que se está creando.
+   *
    * @param y
    *          Posición en el eje Y desde la que se quiere partir.
    * @param x
    *          Posición en el eje X desde la que se quiere partir.
-   * @return retorna una direccion aleatoria dentro de las posibles a las que ir
-   *         en la casilla dada por las posiciones i y j
+   * @return Una direccion aleatoria dentro de las posibles a las que ir
+   *         en la casilla dada por las posiciones i y j.
    */
-  private Direction getRandomDirection (final int y, final int x) {
+  private Direction getRandomDirection (int y, int x) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
     Point actual = new Point(x, y);
 

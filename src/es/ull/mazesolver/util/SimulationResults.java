@@ -47,6 +47,9 @@ public class SimulationResults {
     public long first_elapsed, last_elapsed;
     public Agent winner_agent;
 
+    /**
+     * Constructor. Crea una nueva instancia de la clase.
+     */
     public EnvironmentSimulationInfo () {
       steps = new HashMap <Agent, Integer>();
       first_elapsed = last_elapsed = -1;
@@ -172,6 +175,9 @@ public class SimulationResults {
   }
 
   /**
+   * Obtiene el número de pasos que ha realizado cada agente en el entorno en la
+   * simulación actual.
+   *
    * @param env
    *          Entorno en el que inspeccionar los agentes.
    * @return Número de pasos que ha realizado cada agente en el entorno.
@@ -197,6 +203,8 @@ public class SimulationResults {
   }
 
   /**
+   * Obtiene el tiempo que tardó el primer agente en salir del laberinto.
+   *
    * @param env
    *          Entorno en el que evaluar los agentes.
    * @return Tiempo que le llevó salir del laberinto al primero que salió.
@@ -229,6 +237,8 @@ public class SimulationResults {
   }
 
   /**
+   * Obtiene el tiempo que tardó el último agente en salir del entorno.
+   *
    * @param env
    *          Entorno en el que evaluar los agentes.
    * @return Tiempo que le llevó salir del laberinto al último que salió.

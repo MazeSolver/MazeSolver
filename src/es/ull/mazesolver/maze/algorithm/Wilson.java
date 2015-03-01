@@ -40,6 +40,8 @@ public class Wilson extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto.
    * @param columns
@@ -84,9 +86,9 @@ public class Wilson extends MazeCreationAlgorithm {
   }
 
   /**
-   * Metodo que calcula un camino ha seguir
+   * Método que calcula un camino a seguir.
    *
-   * @return Lista de puntos con su respectiva Direccion que hemos de seguir
+   * @return Lista de puntos con su respectiva dirección que hemos de seguir
    *         para llegar a una zona visitada.
    */
   private ArrayList <Short []> walk () {
@@ -121,11 +123,15 @@ public class Wilson extends MazeCreationAlgorithm {
   }
 
   /**
+   * Obtiene una dirección aleatoria desde la posición indicada que la conecte
+   * con una posición no explorada dentro del laberinto que se está creando.
+   *
    * @param y
    *          Posición en el eje Y desde la que se quiere partir.
    * @param x
    *          Posición en el eje X desde la que se quiere partir.
-   * @return Dirección aleatoria hacia la que el agente se puede mover.
+   * @return Una direccion aleatoria dentro de las posibles a las que ir
+   *         en la casilla dada por las posiciones i y j.
    */
   private Direction getRandomDirection (int y, int x) {
     ArrayList <Direction> directions = new ArrayList <Direction>();
@@ -148,6 +154,8 @@ public class Wilson extends MazeCreationAlgorithm {
   }
 
   /**
+   * Obtiene un punto inicial de manera aleatoria desde el cual se puede llamar
+   * al método {@link Wilson#walk}.
    *
    * @return Punto inicial aleatorio para metodo walk
    */

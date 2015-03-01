@@ -40,6 +40,8 @@ public class Prim extends MazeCreationAlgorithm {
   private ArrayList <short []> walls;
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto.
    * @param columns
@@ -96,6 +98,8 @@ public class Prim extends MazeCreationAlgorithm {
   }
 
   /**
+   * Añade las celdas adyacentes a la (x, y) a la lista de paredes.
+   *
    * @param y
    *          Posición en el eje Y desde la que se quiere partir.
    * @param x

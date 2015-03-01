@@ -40,6 +40,8 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto.
    * @param columns
@@ -85,11 +87,15 @@ public class RecursiveBacktracking extends MazeCreationAlgorithm {
   }
 
   /**
+   * Obtiene una dirección aleatoria desde la posición indicada que la conecte
+   * con una posición no explorada dentro del laberinto que se está creando.
+   *
    * @param y
    *          Posición en el eje Y desde la que se quiere partir.
    * @param x
    *          Posición en el eje X desde la que se quiere partir.
-   * @return Dirección aleatoria hacia la que el agente se puede mover.
+   * @return Una direccion aleatoria dentro de las posibles a las que ir
+   *         en la casilla dada por las posiciones i y j.
    */
   private Direction getRandomDirection (int y, int x) {
     ArrayList <Direction> directions = new ArrayList <Direction>();

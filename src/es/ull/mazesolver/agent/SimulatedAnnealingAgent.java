@@ -148,6 +148,11 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
       private JSpinner initial_temp;
       private JSpinner cooling_rate;
 
+      /*
+       * (non-Javadoc)
+       *
+       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#createGUI(javax.swing.JPanel)
+       */
       @Override
       protected void createGUI (JPanel root) {
         distance = new DistanceConfigurationPanel();
@@ -178,10 +183,20 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
         root.add(global, BorderLayout.NORTH);
       }
 
+      /*
+       * (non-Javadoc)
+       *
+       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#cancel()
+       */
       @Override
       protected void cancel () {
       }
 
+      /*
+       * (non-Javadoc)
+       *
+       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#accept()
+       */
       @Override
       protected boolean accept () {
         m_dist = DistanceCalculator.fromType(distance.getSelectedType());

@@ -42,17 +42,14 @@ import es.ull.mazesolver.util.Direction;
 import es.ull.mazesolver.util.Rotation;
 
 /**
- * <p>
  * Agente que implementa la funcionalidad de seguir paredes. Una vez se le
  * especifica una dirección (derecha o izquierda) el agente recorre el laberinto
  * como si pegara la mano del lado indicado en la pared y simplemente la
  * siguiera a lo largo de los giros necesarios hasta encontrar la salida.
- * </p>
- * <p>
+ * <br/><br/>
  * Este algoritmo garantiza encontrar la salida del laberinto sólo si se trata
  * de un laberinto perfecto, aunque el número de pasos que requerirá será mucho
  * mayor que el de la mayoría de agentes.
- * </p>
  */
 public class WallFollowerAgent extends Agent {
   private static final long serialVersionUID = -2234924006984636419L;
@@ -78,9 +75,9 @@ public class WallFollowerAgent extends Agent {
    * @param rot
    *          Determina la pared que seguirá el agente.
    *          <ul>
-   *          <li>{@code Rotation.CLOCKWISE}: Sigue la pared a su derecha.</li>
-   *          <li>{@code Rotation.COUNTER_CLOCKWISE}: Sigue la pared a su
-   *          izquierda.</li>
+   *            <li>{@code Rotation.CLOCKWISE}: Sigue la pared a su derecha.</li>
+   *            <li>{@code Rotation.COUNTER_CLOCKWISE}: Sigue la pared a su
+   *                izquierda.</li>
    *          </ul>
    */
   public void setRotation (Rotation rot) {
@@ -88,6 +85,8 @@ public class WallFollowerAgent extends Agent {
   }
 
   /**
+   * Obtiene la pared que sigue el agente.
+   *
    * @return La pared que el agente sigue.
    */
   public Rotation getRotation () {

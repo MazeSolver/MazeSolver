@@ -100,6 +100,8 @@ public abstract class RulePredicate implements Cloneable {
   }
 
   /**
+   * Evalúa la regla para el agente indicado e indica si se cumple o no.
+   *
    * @param ag
    *          Agente sobre el que se quiere evaluar el predicado.
    * @return Si la situación representada se da para el agente indicado.
@@ -238,6 +240,8 @@ public abstract class RulePredicate implements Cloneable {
     private RuleConnector m_connector;
 
     /**
+     * Crea un nuevo predicado compuesto.
+     *
      * @param p1
      *          Regla izquierda.
      * @param p2

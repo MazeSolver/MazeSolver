@@ -35,6 +35,10 @@ import java.io.Serializable;
 public abstract class DistanceCalculator implements Serializable, Cloneable {
   private static final long serialVersionUID = 1L;
 
+  /**
+   * Representa el tipo de distancia. Tiene un campo por cada subclase de
+   * {@link DistanceCalculator}.
+   */
   public static enum DistanceType {
     EUCLIDEAN, MANHATTAN;
 
@@ -98,6 +102,8 @@ public abstract class DistanceCalculator implements Serializable, Cloneable {
   public abstract double distance (Point p1, Point p2);
 
   /**
+   * Obtiene el tipo de la clase.
+   *
    * @return El tipo de la clase.
    */
   public abstract DistanceType getType ();

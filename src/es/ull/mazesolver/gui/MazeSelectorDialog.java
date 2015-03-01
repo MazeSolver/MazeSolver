@@ -77,6 +77,11 @@ public class MazeSelectorDialog extends JDialog {
 
   private Maze m_result;
 
+  /**
+   * Crea el diálogo de creación de laberintos.
+   *
+   * @param parent Ventana padre del diálogo.
+   */
   public MazeSelectorDialog (Window parent) {
     super(parent, "Create a new maze");
 
@@ -91,11 +96,21 @@ public class MazeSelectorDialog extends JDialog {
     setModal(true);
   }
 
+  /**
+   * Muestra el diálogo y devuelve el laberinto creado utilizando la
+   * configuración elegida por el usuario.
+   *
+   * @return El laberinto creado o {@code null} si el usuario cancela la
+   *         creación del laberinto.
+   */
   public Maze showDialog () {
     setVisible(true);
     return m_result;
   }
 
+  /**
+   * Crea los elementos y layouts de la interfaz gráfica.
+   */
   private void buildInterface () {
     setLayout(new BorderLayout());
 
@@ -175,6 +190,9 @@ public class MazeSelectorDialog extends JDialog {
     pack();
   }
 
+  /**
+   * Configura los controladores de la interfaz gráfica.
+   */
   private void setupListeners () {
     ChangeListener dim_change_listener = new ChangeListener() {
       @Override

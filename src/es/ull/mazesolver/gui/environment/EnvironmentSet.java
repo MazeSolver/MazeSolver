@@ -51,6 +51,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
   }
 
   /**
+   * Obtiene el entorno seleccionado actualmente.
+   *
    * @return Entorno seleccionado actualmente o null si no hay ninguno.
    */
   public Environment getSelectedEnvironment () {
@@ -68,6 +70,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
   }
 
   /**
+   * Obtiene el número de entornos que contiene el conjunto de entornos.
+   *
    * @return Número de entornos en el conjunto.
    */
   public int getEnvironmentCount () {
@@ -75,6 +79,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
   }
 
   /**
+   * Añade un nuevo entorno.
+   *
    * @param env
    *          Añade un entorno a la lista.
    */

@@ -194,9 +194,11 @@ public class FileDialog {
   }
 
   /**
-   * @param description
-   * @param extension
-   * @return Un diálogo para seleccionar ficheros con extensión ".maze".
+   * Crea un diálogo para seleccionar ficheros con una extensión concreta.
+   *
+   * @param description Descripción del formato.
+   * @param extension Extensión de los ficheros.
+   * @return Un diálogo para seleccionar ficheros con extensión variable.
    */
   private static JFileChooser createFileChooser (String description, String extension) {
     JFileChooser chooser = new JFileChooser();

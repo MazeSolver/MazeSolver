@@ -71,6 +71,9 @@ public class SimulationManager extends Observable {
   }
 
   /**
+   * Establece la velocidad de simulación al indicar el tiempo que pasa entre
+   * cada paso.
+   *
    * @param msec
    *          Milisegundos que pasarán entre cada paso de la simulación.
    */
@@ -153,6 +156,8 @@ public class SimulationManager extends Observable {
   }
 
   /**
+   * Indica si la simulación se está ejecutando.
+   *
    * @return Si la simulación se está ejecutando.
    */
   public boolean isRunning () {
@@ -160,6 +165,8 @@ public class SimulationManager extends Observable {
   }
 
   /**
+   * Indica si la simulación está pausada.
+   *
    * @return Si la simulación está pausada.
    */
   public boolean isPaused () {
@@ -167,6 +174,8 @@ public class SimulationManager extends Observable {
   }
 
   /**
+   * Indica si la simulación está parada.
+   *
    * @return Si la simulación está parada.
    */
   public boolean isStopped () {
@@ -174,6 +183,9 @@ public class SimulationManager extends Observable {
   }
 
   /**
+   * Indica si la simulación ha finalizado; es decir, que todos los agentes en
+   * los entornos están parados.
+   *
    * @return Si la simulación ha acabado (todos los agentes están parados).
    */
   public boolean isFinished () {
@@ -181,8 +193,10 @@ public class SimulationManager extends Observable {
   }
 
   /**
-   * @return Resultados de la simulación actual. Puede ser que sean incompletos,
-   *         dado que puede ser que la simulación no haya acabado.
+   * Devuelve los resultados de la simulación actual. Puede ser que sean incompletos,
+   * dado que puede ser que la simulación no haya acabado.
+   *
+   * @return Resultados de la simulación actual.
    */
   public final SimulationResults getResults () {
     return m_results;

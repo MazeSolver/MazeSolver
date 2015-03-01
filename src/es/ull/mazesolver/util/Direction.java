@@ -34,13 +34,23 @@ import java.io.Serializable;
  * varias direcciones en la misma variable simultáneamente.
  */
 public enum Direction implements Serializable {
-  NONE ((short) 0x00), UP ((short) 0x01), DOWN ((short) 0x02), LEFT ((short) 0x04), RIGHT (
-      (short) 0x08);
+  NONE  ((short) 0x00),
+  UP    ((short) 0x01),
+  DOWN  ((short) 0x02),
+  LEFT  ((short) 0x04),
+  RIGHT ((short) 0x08);
 
+  /**
+   * Número máximo de direcciones.
+   */
   public static int MAX_DIRECTIONS = 5;
-  private static Direction [] values = Direction.values();
 
+  /**
+   * Valor asociado a una dirección (campo de bits).
+   */
   public short val;
+
+  private static Direction [] values = Direction.values();
 
   private Direction (short val) {
     this.val = val;
@@ -67,11 +77,11 @@ public enum Direction implements Serializable {
    * @param index
    *          Índice de la dirección. El orden es el siguiente:
    *          <ol start="0">
-   *          <li>NONE</li>
-   *          <li>UP</li>
-   *          <li>DOWN</li>
-   *          <li>LEFT</li>
-   *          <li>RIGHT</li>
+   *            <li>NONE</li>
+   *            <li>UP</li>
+   *            <li>DOWN</li>
+   *            <li>LEFT</li>
+   *            <li>RIGHT</li>
    *          </ol>
    * @return Dirección asociada al índice.
    */
@@ -113,7 +123,7 @@ public enum Direction implements Serializable {
   /**
    * Crea una dirección de forma aleatoria.
    *
-   * @return Una dirección aleatoria. No va a ser Direction.NONE.
+   * @return Una dirección aleatoria. No va a ser {@code Direction.NONE}.
    */
   public static Direction random () {
     return values[1 + (int) (Math.random() * 4.0)];

@@ -38,8 +38,7 @@ public class MazeCell implements Serializable {
   private short m_cell;
 
   /**
-   * Constructor por defecto. La celda creada esta rodeada de muros m_cell =
-   * 0x1111;
+   * Constructor por defecto. La celda creada está rodeada de muros.
    */
   public MazeCell () {
     m_cell |= Direction.UP.val;
@@ -90,6 +89,8 @@ public class MazeCell implements Serializable {
   }
 
   /**
+   * Indica si hay un muro en la dirección indicada.
+   *
    * @param dir
    *          Lado de la celda que se quiere consultar.
    * @return Si hay una celda en esa dirección o no.

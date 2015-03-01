@@ -31,6 +31,8 @@ package es.ull.mazesolver.agent.util;
  */
 public interface BlackboardCommunication {
   /**
+   * Obtiene la pizarra asociada al agente.
+   *
    * @return Pizarra que contiene actualmente el agente.
    */
   public Object getBlackboard ();

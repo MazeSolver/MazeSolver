@@ -70,24 +70,26 @@ public class SARulesAgent extends Agent {
   public static final int MINIMUM_WIDTH = 300;
   public static final int MINIMUM_HEIGHT = 100;
   public static final String DEFAULT_AGENT_SRC =
-      "// Reglas de máxima prioridad para salir del laberinto\n" + "DOWN OFFLIMITS -> MOVE DOWN.\n"
-          + "RIGHT OFFLIMITS -> MOVE RIGHT.\n" + "LEFT OFFLIMITS -> MOVE LEFT.\n"
-          + "UP OFFLIMITS -> MOVE UP.\n\n"
+      "// Reglas de máxima prioridad para salir del laberinto\n"
+    + "DOWN OFFLIMITS -> MOVE DOWN.\n"
+    + "RIGHT OFFLIMITS -> MOVE RIGHT.\n"
+    + "LEFT OFFLIMITS -> MOVE LEFT.\n"
+    + "UP OFFLIMITS -> MOVE UP.\n\n"
 
-          + "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
-          + "// Siempre intenta acercarse a la esquina inferior derecha\n"
-          + "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
-          + "RIGHT FREE & RIGHT ~VISITED => GO RIGHT.\n"
-          + "LEFT FREE & LEFT ~VISITED => GO LEFT.\n" + "UP FREE & UP ~VISITED => GO UP.\n\n"
+    + "// Reglas para moverse al primer sitio no visitado donde haya un hueco\n"
+    + "// Siempre intenta acercarse a la esquina inferior derecha\n"
+    + "DOWN FREE & DOWN ~VISITED => GO DOWN.\n"
+    + "RIGHT FREE & RIGHT ~VISITED => GO RIGHT.\n"
+    + "LEFT FREE & LEFT ~VISITED => GO LEFT.\n" + "UP FREE & UP ~VISITED => GO UP.\n\n"
 
-          + "// Reglas para mover al agente si todo alrededor está visitado u\n"
-          + "// ocupado. Utilizamos varias operaciones lógicas para demostrar\n"
-          + "// la flexibilidad del lenguaje. Se pueden traducir como:\n"
-          + "//     <dirección> FREE -> MOVE <dirección>.\n"
-          + "Up Not Wall and Up ~Agent -> MOVE up.\n"
-          + "not (left wall OR left agent) -> move left.\n"
-          + "right !wall And right !agent -> move right.\n"
-          + "!(down wall or down agent) -> move down.\n";
+    + "// Reglas para mover al agente si todo alrededor está visitado u\n"
+    + "// ocupado. Utilizamos varias operaciones lógicas para demostrar\n"
+    + "// la flexibilidad del lenguaje. Se pueden traducir como:\n"
+    + "//     <dirección> FREE -> MOVE <dirección>.\n"
+    + "Up Not Wall and Up ~Agent -> MOVE up.\n"
+    + "not (left wall OR left agent) -> move left.\n"
+    + "right !wall And right !agent -> move right.\n"
+    + "!(down wall or down agent) -> move down.\n";
 
   private String m_code;
   private transient SituationActionErrorHandler m_error_handler;
@@ -95,6 +97,9 @@ public class SARulesAgent extends Agent {
   private transient boolean [][] m_visited;
 
   /**
+   * Crea un agente basado en reglas de situación-acción con el comportamiento
+   * por defecto.
+   *
    * @param env
    *          Entorno donde se sitúa el agente.
    */
@@ -179,6 +184,11 @@ public class SARulesAgent extends Agent {
 
       private JTextArea m_text;
 
+      /*
+       * (non-Javadoc)
+       *
+       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#createGUI(javax.swing.JPanel)
+       */
       @Override
       protected void createGUI (JPanel root) {
         root.setLayout(new BorderLayout());
@@ -219,10 +229,20 @@ public class SARulesAgent extends Agent {
         root.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
       }
 
+      /*
+       * (non-Javadoc)
+       *
+       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#cancel()
+       */
       @Override
       public void cancel () {
       }
 
+      /*
+       * (non-Javadoc)
+       *
+       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#accept()
+       */
       @Override
       public boolean accept () {
         // Cargamos el código nuevo en el agente y guardamos una copia del
@@ -246,6 +266,8 @@ public class SARulesAgent extends Agent {
   }
 
   /**
+   * Indica si una celda adyacente al agente ha sido visitada ya por él mismo.
+   *
    * @param dir
    *          Dirección en la que hay que mirar.
    * @return Si la celda adyacente en esa dirección ha sido visitada o no.
@@ -264,7 +286,7 @@ public class SARulesAgent extends Agent {
    * Convierte el código fuente guardado en m_code en la representación de las
    * reglas de situación-acción.
    *
-   * @return true si la compilación fue exitosa y false si no.
+   * @return {@code true} si la compilación fue exitosa y {@code false} si no.
    */
   protected boolean compileCode () {
     m_error_handler.resetErrorList();

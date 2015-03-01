@@ -61,6 +61,9 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
    * Representa el estado del algoritmo, que es lo que es compartido entre
    * agentes D* como pizarra.
    */
+  /**
+   *
+   */
   private static class AlgorithmState {
     /**
      * No se trata del laberinto en el que el agente se mueve, sino la
@@ -69,16 +72,34 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
      * paredes.
      */
     public Maze maze;
+
+    /**
+     * Posición de la celda del laberinto más cercana a su salida.
+     */
     public Point exit;
+
+    /**
+     * Representa la matriz de posiciones del laberinto con el estado del agente
+     * asociado a cada celda.
+     */
     public ArrayList <ArrayList <State>> state_maze;
 
+    /**
+     * Lista "open" de estados del algoritmo.
+     */
     public PriorityQueue <State> open;
+
+    /**
+     * Valor de "k_old" del algoritmo.
+     */
     public double k_old;
   }
 
   private transient AlgorithmState m_st;
 
   /**
+   * Crea un nuevo agente D* en el entorno indicado.
+   *
    * @param env
    *          Entorno en el que se va a colocar al agente.
    */
@@ -136,8 +157,8 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
         m_st.exit.x--;
       else if (m_st.exit.y < 0)
         m_st.exit.y++;
-      else
-        /* m_st.exit.y == m_st.maze.getHeight() */m_st.exit.y--;
+      else /* m_st.exit.y == m_st.maze.getHeight() */
+        m_st.exit.y--;
 
       BLACKBOARD_CHANNEL = mgr.addBlackboard(m_st, BLACKBOARD_CHANNEL);
     }
@@ -393,14 +414,14 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   }
 
   /**
-   * Una vez se encuentra un obstáculo nuevo y se llama a {@code modifyCost()},
-   * se debe llamar a este método para que recalcule el camino hacia la salida
-   * de una forma mucho más eficiente que utilizar {@code calculatePath()}. Sólo
-   * recalcula aquella parte del camino previamente calculado que ha sido
-   * invalidada tras la modificación.
+   * Una vez se encuentra un obstáculo nuevo y se llama a
+   * {@link DStarAgent#modifyCost}, se debe llamar a este método para que
+   * recalcule el camino hacia la salida de una forma mucho más eficiente que
+   * utilizar {@link DStarAgent#calculatePath}. Sólo recalcula aquella parte del
+   * camino previamente calculado que ha sido invalidada tras la modificación.
    */
   private void calculatePartialPath (State x) {
-    // TODO Cuando no hay camino hasta la salida, nunca acaba el bucle porque
+    // FIXME Cuando no hay camino hasta la salida, nunca acaba el bucle porque
     // el coste de cada posición se aumenta en cada iteración y nunca se saca
     // de OPEN.
 
@@ -513,6 +534,8 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   }
 
   /**
+   * Obtiene el estado "open" con valor menor de k.
+   *
    * @return El estado de la lista abierta con menor valor de k.
    */
   private State minState () {
@@ -520,6 +543,8 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
   }
 
   /**
+   * Obtiene el valor de k más bajo que tiene un estado en "open".
+   *
    * @return El valor de k más pequeño que hay en la lista abierta.
    */
   private double getKmin () {

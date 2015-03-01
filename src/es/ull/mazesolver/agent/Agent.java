@@ -40,8 +40,8 @@ import es.ull.mazesolver.util.Direction;
 
 /**
  * Clase que representa un agente abstracto que se encuentra en algún laberinto.
- * Sus subclases implementan los distintos algoritmos para resolver laberintos.
- *
+ * Sus subclases implementan los distintos algoritmos para resolver laberintos. <br/>
+ * <br/>
  * Cada agente debe implementar los métodos de serialización para poder
  * guardarse y cargarse correctamente, en caso de que requiriesen configuración
  * adicional a la genérica.
@@ -52,10 +52,20 @@ public abstract class Agent implements Cloneable, Serializable {
 
   private transient int m_agent_id;
 
+  /**
+   * Entorno en el que reside el agente.
+   */
   protected transient Environment m_env;
+
+  /**
+   * Posición en la que se encuentra el agente.
+   */
   protected transient Point m_pos;
 
   /**
+   * Crea un nuevo agente en el entorno. Le asigna un ID único y lo coloca en el
+   * punto (0,0).
+   *
    * @param env
    *          Entorno al que va a ser asignado dicho agente.
    */
@@ -66,10 +76,13 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * Establece la posición del agente.
+   * <br/><br/>
+   * Este método se puede sobrecargar en las clases derivadas para mantener
+   * coherente la memoria de la que disponga el mismo.
+   *
    * @param pos
-   *          Nueva posición del agente. Este método se puede sobrecargar en las
-   *          clases derivadas para mantener coherente la memoria de la que
-   *          disponga el mismo.
+   *          Nueva posición del agente.
    */
   public void setPosition (Point pos) {
     m_pos.x = pos.x;
@@ -77,6 +90,8 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * Obtiene la posición en el eje X del agente.
+   *
    * @return Posición en el eje X del agente.
    */
   public int getX () {
@@ -84,6 +99,8 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * Obtiene la posición en el eje Y del agente.
+   *
    * @return Posición en el eje Y de agente.
    */
   public int getY () {
@@ -91,6 +108,8 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * Obtiene la posición del agente.
+   *
    * @return Posición del agente.
    */
   public Point getPos () {
@@ -98,6 +117,8 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * Cambia el entorno en el que se sitúa el agente.
+   * <br/><br/>
    * Este método debería sobrecargarse en las clases derivadas que contengan
    * información acerca del camino a seguir por el agente (un plan) de forma que
    * éste siga siendo coherente tras el cambio de laberinto.
@@ -113,6 +134,8 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * Obtiene el entorno en el que se encuentra el agente.
+   *
    * @return Entorno en el que se encuentra el agente.
    */
   public Environment getEnvironment () {
@@ -120,6 +143,8 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * Obtiene la visión que tiene el agente al mirar en la dirección indicada.
+   *
    * @param dir
    *          Dirección hacia la que mirar.
    * @return Lo que vería el agente si mira en la dirección especificada.
@@ -151,7 +176,7 @@ public abstract class Agent implements Cloneable, Serializable {
   /**
    * Hace que el agente realice el movimiento especificado, sin comprobar que se
    * trata de un movimiento válido.
-   *
+   * <br/><br/>
    * La clase base sólo cambia la posición del agente, si se desea más
    * funcionalidad, se debe sobrecargar en las clases derivadas.
    *
@@ -228,6 +253,8 @@ public abstract class Agent implements Cloneable, Serializable {
   public abstract String getAlgorithmName ();
 
   /**
+   * Obtiene el siguiente movimiento dado el estado actual del agente.
+   *
    * @return La dirección en la que el agente quiere realizar el siguiente
    *         movimiento.
    */
@@ -240,6 +267,8 @@ public abstract class Agent implements Cloneable, Serializable {
   public abstract void resetMemory ();
 
   /**
+   * Obtiene el panel de configuración asociado al agente.
+   *
    * @return Un panel de configuración para el agente.
    */
   public abstract AgentConfigurationPanel getConfigurationPanel ();

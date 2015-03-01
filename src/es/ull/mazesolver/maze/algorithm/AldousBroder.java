@@ -40,6 +40,8 @@ public class AldousBroder extends MazeCreationAlgorithm {
   private ArrayList <ArrayList <Boolean>> m_included_cells;
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto.
    * @param columns
@@ -82,11 +84,14 @@ public class AldousBroder extends MazeCreationAlgorithm {
   }
 
   /**
+   * Obtiene una dirección aleatoria a partir de la posición indicada que no
+   * se sale del tamaño del laberinto.
+   *
    * @param y
    *          Posición en el eje Y desde la que se quiere partir.
    * @param x
    *          Posición en el eje X desde la que se quiere partir.
-   * @return Dirección aleatoria hacia la que el agente se puede mover.
+   * @return Dirección aleatoria dentro del rango.
    */
   private Direction getRandomDirection (int y, int x) {
     Point p = new Point(x, y);

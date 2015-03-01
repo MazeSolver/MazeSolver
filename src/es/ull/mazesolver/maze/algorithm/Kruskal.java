@@ -40,6 +40,8 @@ public class Kruskal extends MazeCreationAlgorithm {
   private ArrayList <short []> walls;
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto.
    * @param columns
@@ -105,51 +107,51 @@ public class Kruskal extends MazeCreationAlgorithm {
   }
 
   /**
+   * Obtiene el índice que representa la posición (x, y).
+   *
    * @param y
    *          Posición en el eje Y.
-   *
    * @param x
    *          Posición en el eje X.
    *
-   * @return la posicion del vector dado por el punto x,y
+   * @return La posición del vector dada por el punto (x, y).
    */
-  private int pos (final int y, final int x) {
+  private int pos (int y, int x) {
+    // FIXME Esto está invertido. La fórmula real sería (y * m_columns) + x
+    // No lo cambio porque no sé si hay código que depende de este
+    // comportamiento erróneo.
     return (x * m_columns) + y;
   }
 
   /**
+   * Une dos conjuntos disjuntos, de la forma siguiente: Todo conjunto que
+   * tenga como valor representativo value_from, lo mueve al conjunto de valor
+   * value_to.
    *
    * @param value_from
-   *          valor representativo del conjunto que se va a ser unido al otro
-   *          conjunto
+   *          Valor representativo del conjunto que se va a ser unido al otro
+   *          conjunto.
    * @param value_to
-   *          valor representativo del conjunto al que se va a unir el otro
-   *          conjunto
-   *
+   *          Valor representativo del conjunto al que se va a unir el otro
+   *          conjunto.
    */
-  private void union (final int value_from, final int value_to) {
-    /*
-     * Une dos conjuntos-disjuntos, de la forma siguiente, todo conjunto que
-     * tenga como valor representativo value_from, lo mueve al conjunto de valor
-     * value_to
-     */
+  private void union (int value_from, int value_to) {
     for (int k = 0; k < disjoint_set.size(); k++)
       if (disjoint_set.get(k) == value_from)
         disjoint_set.set(k, value_to);
   }
 
   /**
+   * Obtiene el valor del conjunto del elemento (x, y).
    *
    * @param y
    *          Posición en el eje Y.
-   *
    * @param x
    *          Posición en el eje X.
    *
-   * @return valor, del conjunto del elemento (x,y). Esta función es simple y
-   *         llanamente para hacer el código mas corto y mas fácil de leer.
+   * @return Valor del conjunto del elemento (x, y).
    */
-  private int value (final int y, final int x) {
+  private int value (int y, int x) {
     return disjoint_set.get(pos(y, x));
   }
 

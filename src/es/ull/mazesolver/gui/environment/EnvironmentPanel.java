@@ -53,6 +53,8 @@ public class EnvironmentPanel extends JPanel {
   private Agent m_last_hovered;
 
   /**
+   * Crea un nuevo panel de dibujo de entornos del entorno especificado.
+   *
    * @param env
    *          Entorno que se dibujará en el panel.
    */
@@ -73,6 +75,8 @@ public class EnvironmentPanel extends JPanel {
   }
 
   /**
+   * Establece el entorno que desea dibujarse en el panel.
+   *
    * @param env
    *          Nuevo entorno que se dibujará en el panel.
    */
@@ -95,6 +99,8 @@ public class EnvironmentPanel extends JPanel {
   }
 
   /**
+   * Establece el nivel de aumento de visualización de todos los entornos.
+   *
    * @param zoom
    *          Nivel de escala que se quiere aplicar a la visualización de los
    *          paneles.

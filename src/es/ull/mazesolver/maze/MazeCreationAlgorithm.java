@@ -35,16 +35,41 @@ import es.ull.mazesolver.util.Pair;
  * Interfaz que encapsula un algoritmo de creación de laberintos.
  */
 public abstract class MazeCreationAlgorithm {
-  public static int MIN_ROWS = 5;
-  public static int MIN_COLUMNS = 5;
+  /**
+   * Número mínimo de filas que puede tener un laberinto (altura mímia).
+   */
+  public static final int MIN_ROWS = 5;
 
-  protected int m_rows, m_columns;
+  /**
+   * Número mínimo de columnas que puede tener un laberinto (anchura mínima).
+   */
+  public static final int MIN_COLUMNS = 5;
+
+  /**
+   * Número de filas del laberinto que se va a crear.
+   */
+  protected int m_rows;
+
+  /**
+   * Numero de columnas del laberinto que se va a crear.
+   */
+  protected int m_columns;
+
+  /**
+   * Matriz de celdas del laberinto que se va a crear o se esá creando.
+   */
   protected ArrayList <ArrayList <MazeCell>> m_maze;
+
+  /**
+   * Punto de salida del laberinto.
+   */
   protected Point m_maze_exit;
 
   private int m_cycles, m_walls;
 
   /**
+   * Constructor. Crea una nueva instancia de la clase.
+   *
    * @param rows
    *          Número de filas del laberinto.
    * @param columns
@@ -69,6 +94,8 @@ public abstract class MazeCreationAlgorithm {
   }
 
   /**
+   * Crea el laberinto, coloca la salida y añade los ciclos y paredes indicados.
+   *
    * @return La matriz que contiene las celdas del laberinto.
    */
   public ArrayList <ArrayList <MazeCell>> createMaze () {
@@ -103,7 +130,7 @@ public abstract class MazeCreationAlgorithm {
 
   /**
    * Ejecuta el algoritmo de creación del laberinto, dejando el resultado en la
-   * variable miembro {@code m_maze}.
+   * variable miembro {@link MazeCreationAlgorithm#m_maze}.
    *
    * Cuando se llama a este método, la variable está inicializada con un mapa en
    * el que todas las celdas están rodeadas de paredes.
@@ -113,7 +140,7 @@ public abstract class MazeCreationAlgorithm {
   /**
    * Este método crea un laberinto vacío a partir del número de filas y columnas
    * especificado en el constructor. Hace más sencillo a las subclases
-   * implementar el método "createMaze()".
+   * implementar el método {@link MazeCreationAlgorithm#createMaze}.
    *
    * @return Un laberinto vacío del tamaño especificado.
    */
@@ -129,15 +156,13 @@ public abstract class MazeCreationAlgorithm {
   }
 
   /**
-   * Abre un pasillo entre la celda (x,y) y su adyacente en la dirección
+   * Abre un pasillo entre la celda (x, y) y su adyacente en la dirección
    * indicada.
    *
    * @param y
    *          Posición en el eje Y (FILA).
-   *
    * @param x
    *          Posición en el eje X (COLUMNA).
-   *
    * @param dir
    *          Dirección hacia la que abrir el camino.
    */

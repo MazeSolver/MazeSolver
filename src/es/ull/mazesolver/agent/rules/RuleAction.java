@@ -76,6 +76,8 @@ public class RuleAction implements Cloneable {
   }
 
   /**
+   * Obtiene la dirección a la que refiere la acción.
+   *
    * @return La dirección hacia la que es el movimiento o la dirección nula si
    *         la regla es de "STOP".
    */

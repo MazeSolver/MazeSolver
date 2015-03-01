@@ -109,10 +109,15 @@ public class AStarAgent extends HeuristicAgent {
     if (m_directions == null || (m_direction_index == m_directions.size() && !m_pos.equals(m_exit)))
       calculatePath();
 
-    return m_directions != null && m_direction_index != m_directions.size()? m_directions
-        .get(m_direction_index) : Direction.NONE;
+    return m_directions != null && m_direction_index != m_directions.size()?
+        m_directions.get(m_direction_index) : Direction.NONE;
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see es.ull.mazesolver.agent.Agent#doMovement(es.ull.mazesolver.util.Direction)
+   */
   @Override
   public void doMovement (Direction dir) {
     super.doMovement(dir);
@@ -174,6 +179,11 @@ public class AStarAgent extends HeuristicAgent {
     return ag;
   }
 
+  /**
+   * Clase comparadora de caminos que tiene en cuenta el coste real del camino
+   * y el coste estimado entre la última posición del camino y el punto en el
+   * que se encuentra la salida del laberinto.
+   */
   private class HeuristicPathComparator implements Comparator <Path> {
     /*
      * (non-Javadoc)
