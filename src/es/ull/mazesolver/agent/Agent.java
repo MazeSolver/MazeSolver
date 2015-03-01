@@ -40,8 +40,8 @@ import es.ull.mazesolver.util.Direction;
 
 /**
  * Clase que representa un agente abstracto que se encuentra en algún laberinto.
- * Sus subclases implementan los distintos algoritmos para resolver laberintos. <br/>
- * <br/>
+ * Sus subclases implementan los distintos algoritmos para resolver laberintos.
+ * <br><br>
  * Cada agente debe implementar los métodos de serialización para poder
  * guardarse y cargarse correctamente, en caso de que requiriesen configuración
  * adicional a la genérica.
@@ -77,7 +77,7 @@ public abstract class Agent implements Cloneable, Serializable {
 
   /**
    * Establece la posición del agente.
-   * <br/><br/>
+   * <br><br>
    * Este método se puede sobrecargar en las clases derivadas para mantener
    * coherente la memoria de la que disponga el mismo.
    *
@@ -118,7 +118,7 @@ public abstract class Agent implements Cloneable, Serializable {
 
   /**
    * Cambia el entorno en el que se sitúa el agente.
-   * <br/><br/>
+   * <br><br>
    * Este método debería sobrecargarse en las clases derivadas que contengan
    * información acerca del camino a seguir por el agente (un plan) de forma que
    * éste siga siendo coherente tras el cambio de laberinto.
@@ -176,7 +176,7 @@ public abstract class Agent implements Cloneable, Serializable {
   /**
    * Hace que el agente realice el movimiento especificado, sin comprobar que se
    * trata de un movimiento válido.
-   * <br/><br/>
+   * <br><br>
    * La clase base sólo cambia la posición del agente, si se desea más
    * funcionalidad, se debe sobrecargar en las clases derivadas.
    *

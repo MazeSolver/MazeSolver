@@ -46,7 +46,7 @@ import es.ull.mazesolver.util.Rotation;
  * especifica una dirección (derecha o izquierda) el agente recorre el laberinto
  * como si pegara la mano del lado indicado en la pared y simplemente la
  * siguiera a lo largo de los giros necesarios hasta encontrar la salida.
- * <br/><br/>
+ * <br><br>
  * Este algoritmo garantiza encontrar la salida del laberinto sólo si se trata
  * de un laberinto perfecto, aunque el número de pasos que requerirá será mucho
  * mayor que el de la mayoría de agentes.

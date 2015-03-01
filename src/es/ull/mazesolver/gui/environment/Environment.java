@@ -137,7 +137,7 @@ public class Environment extends BaseInternalFrame {
 
   /**
    * Cambia el laberinto del entorno.
-   * <br/><br/>
+   * <br><br>
    * Esta operación invalidaría la memoria almacenada del/los agentes en caso
    * de que éstos contuvieran información sobre la ruta a llevar a cabo en el
    * entorno, pero no cuando la memoria fuera un conjunto de reglas o una tabla
