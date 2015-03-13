@@ -56,6 +56,10 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.toolbar.WebToolBar;
+import com.github.rodionmoiseev.c10n.C10N;
+import com.github.rodionmoiseev.c10n.C10NConfigBase;
+import com.github.rodionmoiseev.c10n.annotations.DefaultC10NAnnotations;
+import com.github.rodionmoiseev.c10n.annotations.En;
 
 import es.ull.mazesolver.agent.Agent;
 import es.ull.mazesolver.gui.environment.Environment;
@@ -63,6 +67,7 @@ import es.ull.mazesolver.gui.environment.EnvironmentSet;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.util.SimulationManager;
 import es.ull.mazesolver.util.SimulationResults;
+import es.ull.mazesolver.util.c10n.trGUI;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
@@ -81,16 +86,35 @@ public class MainWindow extends JFrame implements Observer {
   private static final long serialVersionUID = 1L;
   private static MainWindow s_instance;
 
+  private trGUI _trGUI;
+
   /**
    * Inicializa la interfaz gráfica y la muestra por pantalla.
    *
-   * @param args No utilizados.
+   * @param args
+   *          No utilizados.
    */
   public static void main (String [] args) {
     try {
       UIManager.setLookAndFeel(WebLookAndFeel.class.getCanonicalName());
     }
-    catch (Exception e){}
+    catch (Exception e) {
+    }
+
+    C10N.configure(new C10NConfigBase() {
+      @Override
+      protected void configure () {
+        // install default annotations
+        install(new DefaultC10NAnnotations());
+
+        /**
+         * setup c10n to fallback to @En annotation when locale does not match
+         * any other registered annotation, by binding it without specifying the
+         * locale.
+         */
+        bindAnnotation(En.class);
+      }
+    });
 
     MainWindow wnd = MainWindow.getInstance();
 
@@ -131,11 +155,10 @@ public class MainWindow extends JFrame implements Observer {
   private JButton m_run, m_step, m_pause, m_stop;
   private JSlider m_zoom;
   private JMenu m_menu_file, m_menu_maze, m_menu_agent, m_menu_help;
-  private JMenuItem m_itm_maze_new, m_itm_maze_save, m_itm_maze_open,
-                    m_itm_exit;
+  private JMenuItem m_itm_maze_new, m_itm_maze_save, m_itm_maze_open, m_itm_exit;
   private JMenuItem m_itm_maze_clone, m_itm_maze_change, m_itm_maze_close;
-  private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_clone,
-                    m_itm_agent_remove, m_itm_agent_save, m_itm_agent_load;
+  private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_clone, m_itm_agent_remove,
+      m_itm_agent_save, m_itm_agent_load;
   private JMenuItem m_itm_about;
 
   // Representación del modelo
@@ -150,6 +173,7 @@ public class MainWindow extends JFrame implements Observer {
    * para permitir el uso del programa.
    */
   private MainWindow () {
+    _trGUI = C10N.get(trGUI.class);
     createInterface();
     m_simulation = new SimulationManager(m_environments);
     m_simulation.addObserver(this);
@@ -171,7 +195,8 @@ public class MainWindow extends JFrame implements Observer {
     m_split_panel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, null, m_environments);
 
     m_console = new LoggingConsole();
-    final JSplitPane console_split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, m_split_panel, m_console);
+    final JSplitPane console_split =
+        new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, m_split_panel, m_console);
     m_console.addPropertyChangeListener("ConsoleDisplay", new PropertyChangeListener() {
       @Override
       public void propertyChange (PropertyChangeEvent e) {
@@ -201,16 +226,16 @@ public class MainWindow extends JFrame implements Observer {
   private void createMenus () {
     m_menu_bar = new JMenuBar();
 
-    m_menu_file = new JMenu("File");
-    m_menu_maze = new JMenu("Maze");
-    m_menu_agent = new JMenu("Agent");
-    m_menu_help = new JMenu("Help");
+    m_menu_file = new JMenu(_trGUI.File());
+    m_menu_maze = new JMenu(_trGUI.Maze());
+    m_menu_agent = new JMenu(_trGUI.agent());
+    m_menu_help = new JMenu(_trGUI.Help());
 
     // Menú "File"
-    m_itm_maze_new = new JMenuItem("New maze...");
-    m_itm_maze_open = new JMenuItem("Open maze...");
-    m_itm_maze_save = new JMenuItem("Save maze...");
-    m_itm_exit = new JMenuItem("Exit");
+    m_itm_maze_new = new JMenuItem(_trGUI.newAgent() + "...");
+    m_itm_maze_open = new JMenuItem(_trGUI.openMaze() + "...");
+    m_itm_maze_save = new JMenuItem(_trGUI.saveMaze() + "...");
+    m_itm_exit = new JMenuItem(_trGUI.Exit());
 
     m_menu_file.add(m_itm_maze_new);
     m_menu_file.addSeparator();
@@ -220,9 +245,9 @@ public class MainWindow extends JFrame implements Observer {
     m_menu_file.add(m_itm_exit);
 
     // Menú "Maze"
-    m_itm_maze_clone = new JMenuItem("Copy maze");
-    m_itm_maze_change = new JMenuItem("Change maze...");
-    m_itm_maze_close = new JMenuItem("Close maze");
+    m_itm_maze_clone = new JMenuItem(_trGUI.copyMaze() + "...");
+    m_itm_maze_change = new JMenuItem(_trGUI.changeMaze() + "...");
+    m_itm_maze_close = new JMenuItem(_trGUI.closeMaze() + "...");
 
     m_menu_maze.add(m_itm_maze_clone);
     m_menu_maze.add(m_itm_maze_change);
@@ -230,12 +255,12 @@ public class MainWindow extends JFrame implements Observer {
     m_menu_maze.add(m_itm_maze_close);
 
     // Menú "Agent"
-    m_itm_agent_add = new JMenuItem("New agent...");
-    m_itm_agent_clone = new JMenuItem("Clone agent");
-    m_itm_agent_config = new JMenuItem("Configure agent...");
-    m_itm_agent_load = new JMenuItem("Load agent...");
-    m_itm_agent_save = new JMenuItem("Save agent...");
-    m_itm_agent_remove = new JMenuItem("Remove agent");
+    m_itm_agent_add = new JMenuItem(_trGUI.newAgent()+ "...");
+    m_itm_agent_clone = new JMenuItem(_trGUI.cloneAgent());
+    m_itm_agent_config = new JMenuItem(_trGUI.configureAgent()+ "...");
+    m_itm_agent_load = new JMenuItem(_trGUI.loadAgent()+ "...");
+    m_itm_agent_save = new JMenuItem(_trGUI.saveAgent()+ "...");
+    m_itm_agent_remove = new JMenuItem(_trGUI.removeAgent()+ "...");
 
     m_menu_agent.add(m_itm_agent_add);
     m_menu_agent.addSeparator();
@@ -248,7 +273,7 @@ public class MainWindow extends JFrame implements Observer {
     m_menu_agent.add(m_itm_agent_remove);
 
     // Menú "Help"
-    m_itm_about = new JMenuItem("About...");
+    m_itm_about = new JMenuItem(_trGUI.About());
     m_menu_help.add(m_itm_about);
 
     m_menu_bar.add(m_menu_file);
@@ -266,10 +291,10 @@ public class MainWindow extends JFrame implements Observer {
     m_toolbar = new WebToolBar();
     m_toolbar.setFloatable(false);
 
-    m_run = new JButton("Run");
-    m_step = new JButton("Step");
-    m_pause = new JButton("Pause");
-    m_stop = new JButton("Stop");
+    m_run = new JButton(_trGUI.buttonRun());
+    m_step = new JButton(_trGUI.buttonStep());
+    m_pause = new JButton(_trGUI.buttonPause());
+    m_stop = new JButton(_trGUI.buttonStop());
     m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
 
     m_pause.setEnabled(false);
@@ -280,7 +305,7 @@ public class MainWindow extends JFrame implements Observer {
     m_toolbar.add(m_step);
     m_toolbar.add(m_pause);
     m_toolbar.add(m_stop);
-    m_toolbar.addToEnd(new JLabel("Zoom:"));
+    m_toolbar.addToEnd(new JLabel(_trGUI.zoom() + ":"));
     m_toolbar.addToEnd(m_zoom);
 
     setupToolbarListeners();
@@ -291,7 +316,7 @@ public class MainWindow extends JFrame implements Observer {
    */
   private void setupMenuListeners () {
     // Menú "File"
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     m_itm_maze_new.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
@@ -325,7 +350,7 @@ public class MainWindow extends JFrame implements Observer {
       @Override
       public void actionPerformed (ActionEvent e) {
         try {
-          Maze[] mazes = FileDialog.loadMazes();
+          Maze [] mazes = FileDialog.loadMazes();
           for (Maze maze: mazes)
             m_environments.addEnvironment(new Environment(maze));
         }
@@ -339,13 +364,12 @@ public class MainWindow extends JFrame implements Observer {
     m_itm_exit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        dispatchEvent(new WindowEvent(MainWindow.getInstance(),
-            WindowEvent.WINDOW_CLOSING));
+        dispatchEvent(new WindowEvent(MainWindow.getInstance(), WindowEvent.WINDOW_CLOSING));
       }
     });
 
     // Menú "Maze"
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     m_itm_maze_clone.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
@@ -353,8 +377,8 @@ public class MainWindow extends JFrame implements Observer {
         if (env != null)
           m_environments.addEnvironment(new Environment(env.getMaze()));
         else {
-          JOptionPane.showMessageDialog(null, "There are no mazes selected",
-              "Cloning failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null, "There are no mazes selected", "Cloning failed",
+              JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -394,7 +418,7 @@ public class MainWindow extends JFrame implements Observer {
     });
 
     // Menú "Agent"
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     m_itm_agent_add.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
@@ -406,10 +430,11 @@ public class MainWindow extends JFrame implements Observer {
         }
 
         Maze maze = env.getMaze();
-        AgentSelectorDialog dialog = new AgentSelectorDialog(MainWindow.this,
-                    (maze.getHeight() * maze.getWidth()) - env.getAgentCount());
+        AgentSelectorDialog dialog =
+            new AgentSelectorDialog(MainWindow.this, (maze.getHeight() * maze.getWidth())
+                - env.getAgentCount());
         dialog.setLocationRelativeTo(MainWindow.this);
-        Agent[] agents = dialog.showDialog();
+        Agent [] agents = dialog.showDialog();
 
         if (agents != null) {
           for (Agent ag: agents)
@@ -499,23 +524,26 @@ public class MainWindow extends JFrame implements Observer {
     });
 
     // Menú "Help"
-    ///////////////////////////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////////////////////////
     m_itm_about.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        JOptionPane.showMessageDialog(null, "<html><h2>MazeSolver</h2>"
-                                          + "Copyright &copy; 2014 - 2015<br>Sergio M. Afonso Fumero and Kevin I. Robayna Hernández<br><br>"
-                                          + "This program is free software: you can redistribute it and/or modify<br>"
-                                          + "it under the terms of the GNU General Public License as published by<br>"
-                                          + "the Free Software Foundation, either version 3 of the License, or<br>"
-                                          + "(at your option) any later version.<br><br>"
-                                          + "This program is distributed in the hope that it will be useful,<br>"
-                                          + "but WITHOUT ANY WARRANTY; without even the implied warranty of<br>"
-                                          + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>"
-                                          + "GNU General Public License for more details.<br><br>"
-                                          + "You should have received a copy of the GNU General Public License<br>"
-                                          + "along with this program. If not, see &lt;<a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>&gt;.</html>",
-            "About", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane
+            .showMessageDialog(
+                null,
+                "<html><h2>MazeSolver</h2>"
+                    + "Copyright &copy; 2014 - 2015<br>Sergio M. Afonso Fumero and Kevin I. Robayna Hernández<br><br>"
+                    + "This program is free software: you can redistribute it and/or modify<br>"
+                    + "it under the terms of the GNU General Public License as published by<br>"
+                    + "the Free Software Foundation, either version 3 of the License, or<br>"
+                    + "(at your option) any later version.<br><br>"
+                    + "This program is distributed in the hope that it will be useful,<br>"
+                    + "but WITHOUT ANY WARRANTY; without even the implied warranty of<br>"
+                    + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>"
+                    + "GNU General Public License for more details.<br><br>"
+                    + "You should have received a copy of the GNU General Public License<br>"
+                    + "along with this program. If not, see &lt;<a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>&gt;.</html>",
+                "About", JOptionPane.INFORMATION_MESSAGE);
       }
     });
   }
@@ -558,8 +586,7 @@ public class MainWindow extends JFrame implements Observer {
         JSlider src = (JSlider) e.getSource();
 
         // Ajuste lineal del zoom
-        double a = (MAXIMUM_ZOOM_AUG - MINIMUM_ZOOM_AUG) /
-                   (MAXIMUM_ZOOM_VAL - MINIMUM_ZOOM_VAL);
+        double a = (MAXIMUM_ZOOM_AUG - MINIMUM_ZOOM_AUG) / (MAXIMUM_ZOOM_VAL - MINIMUM_ZOOM_VAL);
         double b = MAXIMUM_ZOOM_AUG - a * MAXIMUM_ZOOM_VAL;
         m_environments.setZoom(a * src.getValue() + b);
       }
@@ -587,7 +614,8 @@ public class MainWindow extends JFrame implements Observer {
   /**
    * Abre el panel de configuración.
    *
-   * @param ag_panel Panel de configuración que se quiere abrir.
+   * @param ag_panel
+   *          Panel de configuración que se quiere abrir.
    */
   public void setConfigurationPanel (final AgentConfigurationPanel ag_panel) {
     if (m_config_panel != null)
@@ -713,7 +741,7 @@ public class MainWindow extends JFrame implements Observer {
     SimulationResults results = (SimulationResults) obj;
 
     ArrayList <Environment> envs = m_environments.getEnvironmentList();
-    ArrayList <Maze> mazes = new ArrayList<Maze>();
+    ArrayList <Maze> mazes = new ArrayList <Maze>();
     for (Environment env: envs) {
       if (!mazes.contains(env.getMaze()))
         mazes.add(env.getMaze());
@@ -724,7 +752,8 @@ public class MainWindow extends JFrame implements Observer {
     for (int i = 0; i < mazes.size(); i++) {
       Maze maze = mazes.get(i);
       Agent maze_winner = results.getWinner(maze);
-      m_console.writeInfo("=== Maze " + (i+1) + " (" + maze.getWidth() + "x" + maze.getHeight() + ") ===");
+      m_console.writeInfo("=== Maze " + (i + 1) + " (" + maze.getWidth() + "x" + maze.getHeight()
+          + ") ===");
       m_console.writeInfo("* Time taken first: " + results.timeTakenFirst(maze));
       m_console.writeInfo("* Time taken last: " + results.timeTakenLast(maze));
       m_console.writeInfo("* Winner: " + (maze_winner != null? maze_winner.getName() : "None"));
@@ -741,11 +770,12 @@ public class MainWindow extends JFrame implements Observer {
           m_console.writeInfo("");
           m_console.writeInfo("  * Agents detail:");
 
-          for (Map.Entry<Agent, Integer> entry: results.getSteps(env).entrySet()) {
+          for (Map.Entry <Agent, Integer> entry: results.getSteps(env).entrySet()) {
             Agent ag = entry.getKey();
-            String finished = maze.containsPoint(new Point(ag.getX(), ag.getY()))? "NOT FINISHED" : "FINISHED";
-            m_console.writeInfo("    - " + ag.getName() + ": "+
-                                entry.getValue() + " steps [" + finished + "]");
+            String finished =
+                maze.containsPoint(new Point(ag.getX(), ag.getY()))? "NOT FINISHED" : "FINISHED";
+            m_console.writeInfo("    - " + ag.getName() + ": " + entry.getValue() + " steps ["
+                + finished + "]");
           }
         }
       }
