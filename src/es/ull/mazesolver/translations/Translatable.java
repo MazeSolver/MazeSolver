@@ -20,11 +20,19 @@
  */
 
 /**
- * @file package-info.java
- * @date Mar 13, 2015
+ * @file Translatable.java
+ * @date 19/3/2015
  */
+package es.ull.mazesolver.translations;
+
 /**
- * Contiene los elementos de traducción para usar la libreria c10n que ayuda a
- * traducir de forma mucho mas sencilla, utilizando las interfaces.
+ * Interfaz que implementan las clases que se pueden traducir.
  */
-package es.ull.mazesolver.util.c10n;
+public interface Translatable {
+
+  /**
+   * Traduce las cadenas de texto de la clase.
+   */
+  public void translate (GUITranslations tr);
+
+}

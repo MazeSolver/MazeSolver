@@ -23,7 +23,7 @@
  * @file trGUI.java
  * @date Mar 13, 2015
  */
-package es.ull.mazesolver.util.c10n;
+package es.ull.mazesolver.translations;
 
 import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
@@ -31,11 +31,13 @@ import com.github.rodionmoiseev.c10n.annotations.Es;
 /**
  * Interfaz que dota de los elementos de traduccion de la GUI
  */
-public interface trGUI {
+public interface GUITranslations {
+
+  ConsoleTranslations console();
 
   @En ("File")
   @Es ("Archivo")
-  String File ();
+  String file ();
 
   @En ("New maze")
   @Es ("Nuevo laberinto")
@@ -45,20 +47,20 @@ public interface trGUI {
   @Es ("Abrir laberinto")
   String openMaze ();
 
-  @En ("Guardar maze")
+  @En ("Save maze")
   @Es ("Guardar laberinto")
   String saveMaze ();
 
   @En ("Exit")
   @Es ("Salir")
-  String Exit ();
+  String exit ();
 
   @En ("Maze")
   @Es ("Laberinto")
-  String Maze ();
+  String maze ();
 
-  @En ("New maze")
-  @Es ("Nuevo laberinto")
+  @En ("Copy maze")
+  @Es ("Copiar laberinto")
   String copyMaze ();
 
   @En ("Change maze")
@@ -73,56 +75,56 @@ public interface trGUI {
   @Es ("Agente")
   String agent ();
 
-  @En ("New Agent")
-  @Es ("Nuevo Agente")
+  @En ("New agent")
+  @Es ("Nuevo agente")
   String newAgent ();
 
-  @En ("Clone Agent")
-  @Es ("Clonar Agente")
+  @En ("Clone agent")
+  @Es ("Clonar agente")
   String cloneAgent ();
 
-  @En ("Configure Agent")
-  @Es ("Configurar Agente")
+  @En ("Configure agent")
+  @Es ("Configurar agente")
   String configureAgent ();
 
-  @En ("Load Agent")
-  @Es ("Cargar Agente")
+  @En ("Load agent")
+  @Es ("Cargar agente")
   String loadAgent ();
 
-  @En ("Save Agent")
-  @Es ("Guardar Agente")
+  @En ("Save agent")
+  @Es ("Guardar agente")
   String saveAgent ();
 
-  @En ("Remove Agent")
-  @Es ("Eliminar Agente")
+  @En ("Remove agent")
+  @Es ("Eliminar agente")
   String removeAgent ();
 
   @En ("Help")
   @Es ("Ayuda")
-  String Help ();
+  String help ();
 
   @En ("About")
   @Es ("Acerca de")
-  String About ();
+  String about ();
 
   @En ("Run")
   @Es ("Ejecutar")
-  String buttonRun ();
+  String run ();
 
   @En ("Step")
   @Es ("Siguiente")
-  String buttonStep ();
+  String step ();
 
   @En ("Pause")
   @Es ("Pausar")
-  String buttonPause ();
+  String pause ();
 
   @En ("Stop")
   @Es ("Detener")
-  String buttonStop ();
+  String stop ();
 
   @En ("Zoom")
-  @Es ("Zoom")
+  @Es ("Aumento")
   String zoom ();
 
 }

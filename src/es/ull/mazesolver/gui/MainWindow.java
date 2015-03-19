@@ -65,15 +65,16 @@ import es.ull.mazesolver.agent.Agent;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.gui.environment.EnvironmentSet;
 import es.ull.mazesolver.maze.Maze;
+import es.ull.mazesolver.translations.GUITranslations;
+import es.ull.mazesolver.translations.Translatable;
 import es.ull.mazesolver.util.SimulationManager;
 import es.ull.mazesolver.util.SimulationResults;
-import es.ull.mazesolver.util.c10n.trGUI;
 
 /**
  * Ventana principal del programa. Sólo puede haber una, así que implementa el
  * patrón 'singleton'.
  */
-public class MainWindow extends JFrame implements Observer {
+public class MainWindow extends JFrame implements Observer, Translatable {
   private static String APP_NAME = "Maze Solver";
   private static int DEFAULT_WIDTH = 640;
   private static int DEFAULT_HEIGHT = 480;
@@ -85,8 +86,6 @@ public class MainWindow extends JFrame implements Observer {
 
   private static final long serialVersionUID = 1L;
   private static MainWindow s_instance;
-
-  private trGUI _trGUI;
 
   /**
    * Inicializa la interfaz gráfica y la muestra por pantalla.
@@ -152,6 +151,7 @@ public class MainWindow extends JFrame implements Observer {
   private AgentConfigurationPanel m_config_panel;
 
   // Otros elementos en la interfaz
+  private JLabel m_zoom_lb;
   private JButton m_run, m_step, m_pause, m_stop;
   private JSlider m_zoom;
   private JMenu m_menu_file, m_menu_maze, m_menu_agent, m_menu_help;
@@ -173,8 +173,8 @@ public class MainWindow extends JFrame implements Observer {
    * para permitir el uso del programa.
    */
   private MainWindow () {
-    _trGUI = C10N.get(trGUI.class);
     createInterface();
+    translate(C10N.get(GUITranslations.class));
     m_simulation = new SimulationManager(m_environments);
     m_simulation.addObserver(this);
   }
@@ -226,16 +226,16 @@ public class MainWindow extends JFrame implements Observer {
   private void createMenus () {
     m_menu_bar = new JMenuBar();
 
-    m_menu_file = new JMenu(_trGUI.File());
-    m_menu_maze = new JMenu(_trGUI.Maze());
-    m_menu_agent = new JMenu(_trGUI.agent());
-    m_menu_help = new JMenu(_trGUI.Help());
+    m_menu_file = new JMenu();
+    m_menu_maze = new JMenu();
+    m_menu_agent = new JMenu();
+    m_menu_help = new JMenu();
 
     // Menú "File"
-    m_itm_maze_new = new JMenuItem(_trGUI.newAgent() + "...");
-    m_itm_maze_open = new JMenuItem(_trGUI.openMaze() + "...");
-    m_itm_maze_save = new JMenuItem(_trGUI.saveMaze() + "...");
-    m_itm_exit = new JMenuItem(_trGUI.Exit());
+    m_itm_maze_new = new JMenuItem();
+    m_itm_maze_open = new JMenuItem();
+    m_itm_maze_save = new JMenuItem();
+    m_itm_exit = new JMenuItem();
 
     m_menu_file.add(m_itm_maze_new);
     m_menu_file.addSeparator();
@@ -245,9 +245,9 @@ public class MainWindow extends JFrame implements Observer {
     m_menu_file.add(m_itm_exit);
 
     // Menú "Maze"
-    m_itm_maze_clone = new JMenuItem(_trGUI.copyMaze() + "...");
-    m_itm_maze_change = new JMenuItem(_trGUI.changeMaze() + "...");
-    m_itm_maze_close = new JMenuItem(_trGUI.closeMaze() + "...");
+    m_itm_maze_clone = new JMenuItem();
+    m_itm_maze_change = new JMenuItem();
+    m_itm_maze_close = new JMenuItem();
 
     m_menu_maze.add(m_itm_maze_clone);
     m_menu_maze.add(m_itm_maze_change);
@@ -255,12 +255,12 @@ public class MainWindow extends JFrame implements Observer {
     m_menu_maze.add(m_itm_maze_close);
 
     // Menú "Agent"
-    m_itm_agent_add = new JMenuItem(_trGUI.newAgent()+ "...");
-    m_itm_agent_clone = new JMenuItem(_trGUI.cloneAgent());
-    m_itm_agent_config = new JMenuItem(_trGUI.configureAgent()+ "...");
-    m_itm_agent_load = new JMenuItem(_trGUI.loadAgent()+ "...");
-    m_itm_agent_save = new JMenuItem(_trGUI.saveAgent()+ "...");
-    m_itm_agent_remove = new JMenuItem(_trGUI.removeAgent()+ "...");
+    m_itm_agent_add = new JMenuItem();
+    m_itm_agent_clone = new JMenuItem();
+    m_itm_agent_config = new JMenuItem();
+    m_itm_agent_load = new JMenuItem();
+    m_itm_agent_save = new JMenuItem();
+    m_itm_agent_remove = new JMenuItem();
 
     m_menu_agent.add(m_itm_agent_add);
     m_menu_agent.addSeparator();
@@ -273,7 +273,7 @@ public class MainWindow extends JFrame implements Observer {
     m_menu_agent.add(m_itm_agent_remove);
 
     // Menú "Help"
-    m_itm_about = new JMenuItem(_trGUI.About());
+    m_itm_about = new JMenuItem();
     m_menu_help.add(m_itm_about);
 
     m_menu_bar.add(m_menu_file);
@@ -291,11 +291,12 @@ public class MainWindow extends JFrame implements Observer {
     m_toolbar = new WebToolBar();
     m_toolbar.setFloatable(false);
 
-    m_run = new JButton(_trGUI.buttonRun());
-    m_step = new JButton(_trGUI.buttonStep());
-    m_pause = new JButton(_trGUI.buttonPause());
-    m_stop = new JButton(_trGUI.buttonStop());
+    m_run = new JButton();
+    m_step = new JButton();
+    m_pause = new JButton();
+    m_stop = new JButton();
     m_zoom = new JSlider(MINIMUM_ZOOM_VAL, MAXIMUM_ZOOM_VAL);
+    m_zoom_lb = new JLabel();
 
     m_pause.setEnabled(false);
     m_stop.setEnabled(false);
@@ -305,7 +306,7 @@ public class MainWindow extends JFrame implements Observer {
     m_toolbar.add(m_step);
     m_toolbar.add(m_pause);
     m_toolbar.add(m_stop);
-    m_toolbar.addToEnd(new JLabel(_trGUI.zoom() + ":"));
+    m_toolbar.addToEnd(m_zoom_lb);
     m_toolbar.addToEnd(m_zoom);
 
     setupToolbarListeners();
@@ -781,6 +782,39 @@ public class MainWindow extends JFrame implements Observer {
       }
     }
     m_console.writeInfo("==================");
+  }
+
+  /* (non-Javadoc)
+   * @see es.ull.mazesolver.translations.Translatable#translate()
+   */
+  @Override
+  public void translate (GUITranslations tr) {
+    m_menu_file.setText(tr.file());
+    m_menu_maze.setText(tr.maze());
+    m_menu_agent.setText(tr.agent());
+    m_menu_help.setText(tr.help());
+    m_itm_maze_new.setText(tr.newMaze() + "...");
+    m_itm_maze_open.setText(tr.openMaze() + "...");
+    m_itm_maze_save.setText(tr.saveMaze() + "...");
+    m_itm_exit.setText(tr.exit());
+    m_itm_maze_clone.setText(tr.copyMaze());
+    m_itm_maze_change.setText(tr.changeMaze() + "...");
+    m_itm_maze_close.setText(tr.closeMaze());
+    m_itm_agent_add.setText(tr.newAgent() + "...");
+    m_itm_agent_clone.setText(tr.cloneAgent());
+    m_itm_agent_config.setText(tr.configureAgent() + "...");
+    m_itm_agent_load.setText(tr.loadAgent() + "...");
+    m_itm_agent_save.setText(tr.saveAgent() + "...");
+    m_itm_agent_remove.setText(tr.removeAgent());
+    m_itm_about.setText(tr.about() + "...");
+
+    m_run.setText(tr.run());
+    m_step.setText(tr.step());
+    m_pause.setText(tr.pause());
+    m_stop.setText(tr.stop());
+    m_zoom_lb.setText(tr.zoom() + ":");
+
+    m_console.translate(tr);
   }
 
 }
