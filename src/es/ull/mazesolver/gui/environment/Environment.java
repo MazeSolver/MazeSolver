@@ -246,7 +246,8 @@ public class Environment extends BaseInternalFrame {
       ag.setEnvironment(this);
 
       // Buscamos un hueco donde colocar el agente
-      loops: for (int y = 0; y < m_maze.getHeight(); y++) {
+      loops:
+      for (int y = 0; y < m_maze.getHeight(); y++) {
         for (int x = 0; x < m_maze.getWidth(); x++) {
           boolean used = false;
           for (Agent i: m_agents) {
