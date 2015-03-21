@@ -850,6 +850,9 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       m_pause.setText(b_tr.kontinue());
 
     m_console.translate();
+
+    if (m_config_panel != null)
+      m_config_panel.translate();
   }
 
 }

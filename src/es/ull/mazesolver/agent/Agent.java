@@ -34,6 +34,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import es.ull.mazesolver.gui.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.MazeCell;
 import es.ull.mazesolver.util.Direction;
@@ -130,7 +131,8 @@ public abstract class Agent implements Cloneable, Serializable {
     if (env != null)
       m_env = env;
     else
-      throw new IllegalArgumentException("El laberinto debe ser válido");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().invalidEnvironment());
   }
 
   /**

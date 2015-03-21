@@ -28,6 +28,7 @@ package es.ull.mazesolver.maze;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.util.Direction;
 import es.ull.mazesolver.util.Pair;
 
@@ -77,7 +78,8 @@ public abstract class MazeCreationAlgorithm {
    */
   public MazeCreationAlgorithm (int rows, int columns) {
     if (rows < MIN_ROWS || columns < MIN_COLUMNS)
-      throw new IllegalArgumentException("El número de filas o columnas es demasiado pequeño");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().tooSmallRowsCols());
 
     m_rows = rows;
     m_columns = columns;
@@ -223,7 +225,8 @@ public abstract class MazeCreationAlgorithm {
    */
   private void addRandomCycles (int n) {
     if (n > Maze.perfectMazeWalls(m_rows, m_columns))
-      throw new IllegalArgumentException("El número aristas es superior al posible");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().tooManyWalls());
 
     int k = 0;
     Direction dir;
@@ -258,7 +261,8 @@ public abstract class MazeCreationAlgorithm {
    */
   private void addRandomWalls (int n) {
     if (n > Maze.perfectMazeEdges(m_rows, m_columns))
-      throw new IllegalArgumentException("El número aristas es superior al posible");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().tooManyWalls());
 
     int k = 0;
     Direction dir;

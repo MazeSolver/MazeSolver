@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import com.tomtessier.scrollabledesktop.BaseInternalFrame;
 
 import es.ull.mazesolver.agent.Agent;
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.maze.MazeCell;
 import es.ull.mazesolver.util.BlackboardManager;
@@ -152,7 +153,8 @@ public class Environment extends BaseInternalFrame {
       repaint();
     }
     else
-      throw new IllegalArgumentException("El laberinto debe ser válido");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().invalidMaze());
   }
 
   /**
@@ -240,7 +242,8 @@ public class Environment extends BaseInternalFrame {
    */
   public void addAgent (Agent ag) {
     if (ag == null)
-      throw new IllegalArgumentException("El agente especificado es inválido");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().invalidAgent());
 
     if (!m_agents.contains(ag)) {
       ag.setEnvironment(this);
@@ -283,7 +286,8 @@ public class Environment extends BaseInternalFrame {
       m_agents.remove(ag);
     }
     else
-      throw new IllegalArgumentException("El agente no se encuentra en el entorno");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().agentNotInEnvironment());
 
     repaint();
   }
@@ -324,7 +328,8 @@ public class Environment extends BaseInternalFrame {
    */
   public Agent getAgent (int index) {
     if (index < 0 || index >= m_agents.size())
-      throw new IllegalArgumentException("El índice está fuera de rango");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().indexOutOfRange());
 
     return m_agents.get(index);
   }

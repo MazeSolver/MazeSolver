@@ -37,6 +37,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 
 import es.ull.mazesolver.gui.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.util.Direction;
 import es.ull.mazesolver.util.Rotation;
@@ -155,11 +156,14 @@ public class WallFollowerAgent extends Agent {
       private static final long serialVersionUID = 1L;
 
       private JComboBox <Rotation> m_wall;
+      private JLabel wall_text;
 
       @Override
       protected void createGUI (JPanel root) {
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        root.add(new JLabel("Wall to follow:"));
+
+        wall_text = new JLabel();
+        root.add(wall_text);
 
         m_wall = new JComboBox <Rotation>(Rotation.values());
         m_wall.setSelectedItem(m_rot);
@@ -175,6 +179,12 @@ public class WallFollowerAgent extends Agent {
       protected boolean accept () {
         m_rot = (Rotation) m_wall.getSelectedItem();
         return true;
+      }
+
+      @Override
+      public void translate () {
+        super.translate();
+        wall_text.setText(MainWindow.getTranslations().agent().wallToFollow() + ":");
       }
     };
   }
@@ -222,8 +232,9 @@ public class WallFollowerAgent extends Agent {
     @Override
     public Component getListCellRendererComponent (JList <?> list, Object value, int index,
         boolean isSelected, boolean cellHasFocus) {
-      Component c =
-          super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+      Component c = super.getListCellRendererComponent(list, value, index,
+                                                       isSelected, cellHasFocus);
+
       switch ((Rotation) value) {
         case CLOCKWISE:
           setText("Right wall");
@@ -232,6 +243,7 @@ public class WallFollowerAgent extends Agent {
           setText("Left wall");
           break;
       }
+
       return c;
     }
   }

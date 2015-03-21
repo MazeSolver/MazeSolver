@@ -41,4 +41,44 @@ public interface ExceptionTranslations {
   @En ("The specified maze is invalid")
   @Es ("El laberinto especificado es inválido")
   String invalidMaze ();
+
+  @En ("The specified agent is invalid")
+  @Es ("El agente especificado es inválido")
+  String invalidAgent ();
+
+  @En ("The maze creation algorithm specified is invalid")
+  @Es ("El algoritmo de creación de laberintos especificado es inválido")
+  String invalidMazeCreationAlgorithm ();
+
+  @En ("The specified distance calculator is invalid")
+  @Es ("El medidor de distancias especificado es inválido")
+  String invalidDistanceCalculator ();
+
+  @En ("The agent is not in the environment")
+  @Es ("El agente no se encuentra en el entorno")
+  String agentNotInEnvironment ();
+
+  @En ("The environment is not in the current environment set")
+  @Es ("El entorno no está en el conjunto de entornos actual")
+  String envNotInEnvSet ();
+
+  @En ("Environments exchange is not possible")
+  @Es ("Entornos no intercambiables")
+  String environmentsNotExchangeable ();
+
+  @En ("Index out of range")
+  @Es ("Índice fuera de rango")
+  String indexOutOfRange ();
+
+  @En ("The number of rows or columns is too small")
+  @Es ("El número de filas o columnas es demasiado pequeño")
+  String tooSmallRowsCols ();
+
+  @En ("Too many walls specified")
+  @Es ("El número de paredes es superior al posible")
+  String tooManyWalls ();
+
+  @En ("The situation or action specified was invalid: Rule cannot be created")
+  @Es ("La situación o la acción eran inválidas: No se puede crear la regla")
+  String situationActionInvalid ();
 }
