@@ -65,8 +65,10 @@ import es.ull.mazesolver.agent.Agent;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.gui.environment.EnvironmentSet;
 import es.ull.mazesolver.maze.Maze;
-import es.ull.mazesolver.translations.GUITranslations;
+import es.ull.mazesolver.translations.ButtonTranslations;
+import es.ull.mazesolver.translations.MenuTranslations;
 import es.ull.mazesolver.translations.Translatable;
+import es.ull.mazesolver.translations.Translations;
 import es.ull.mazesolver.util.SimulationManager;
 import es.ull.mazesolver.util.SimulationResults;
 
@@ -86,6 +88,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
 
   private static final long serialVersionUID = 1L;
   private static MainWindow s_instance;
+  private static Translations s_tr;
 
   /**
    * Inicializa la interfaz gráfica y la muestra por pantalla.
@@ -136,6 +139,18 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     return s_instance;
   }
 
+  /**
+   * Obtiene la instancia de traductor de la aplicación o la crea si no había
+   * sido creada antes.
+   *
+   * @return El traductor de la aplicación.
+   */
+  public static Translations getTranslations () {
+    if (s_tr == null)
+      s_tr = C10N.get(Translations.class);
+    return s_tr;
+  }
+
   // Panel que contiene tanto el panel con los laberintos como el panel de
   // configuración, de tal manera que se pueden cambiar de tamaño.
   private JSplitPane m_split_panel;
@@ -158,7 +173,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   private JMenuItem m_itm_maze_new, m_itm_maze_save, m_itm_maze_open, m_itm_exit;
   private JMenuItem m_itm_maze_clone, m_itm_maze_change, m_itm_maze_close;
   private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_clone, m_itm_agent_remove,
-      m_itm_agent_save, m_itm_agent_load;
+                    m_itm_agent_save, m_itm_agent_load;
   private JMenuItem m_itm_about;
 
   // Representación del modelo
@@ -173,10 +188,16 @@ public class MainWindow extends JFrame implements Observer, Translatable {
    * para permitir el uso del programa.
    */
   private MainWindow () {
+    // Lo llamamos para asegurarnos de que las traducciones están cargadas antes
+    // de crear los mensajes de error.
+    MainWindow.getTranslations();
+
     createInterface();
-    translate(C10N.get(GUITranslations.class));
     m_simulation = new SimulationManager(m_environments);
     m_simulation.addObserver(this);
+
+    // Una vez todo está creado traducimos la aplicación
+    translate();
   }
 
   /**
@@ -337,12 +358,13 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           FileDialog.saveMaze(m_environments.getSelectedEnvironment().getMaze());
         }
         catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), "File save failed",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(null, exc.getMessage(),
+              s_tr.message().fileSaveFailed(), JOptionPane.ERROR_MESSAGE);
         }
         catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, "There is no environment selected",
-              "File save failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null,
+              s_tr.message().noEnvironmentSelected(),
+              s_tr.message().fileSaveFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -356,8 +378,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
             m_environments.addEnvironment(new Environment(maze));
         }
         catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), "File open failed",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(null, exc.getMessage(),
+              s_tr.message().fileOpenFailed(), JOptionPane.ERROR_MESSAGE);
         }
       }
     });
@@ -378,8 +400,9 @@ public class MainWindow extends JFrame implements Observer, Translatable {
         if (env != null)
           m_environments.addEnvironment(new Environment(env.getMaze()));
         else {
-          JOptionPane.showMessageDialog(null, "There are no mazes selected", "Cloning failed",
-              JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null,
+              s_tr.message().noEnvironmentSelected(),
+              s_tr.message().cloningFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -401,12 +424,13 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           }
         }
         catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), "Maze change failed",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(null, exc.getMessage(),
+              s_tr.message().mazeChangeFailed(), JOptionPane.ERROR_MESSAGE);
         }
         catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, "There are no environments selected",
-              "Maze change failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null,
+              s_tr.message().noEnvironmentSelected(),
+              s_tr.message().mazeChangeFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -425,8 +449,10 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       public void actionPerformed (ActionEvent e) {
         Environment env = m_environments.getSelectedEnvironment();
         if (env == null) {
-          JOptionPane.showMessageDialog(null, "There are no environments selected",
-              "Agent creation failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null,
+              s_tr.message().noEnvironmentSelected(),
+              s_tr.message().agentCreationFailed(),
+              JOptionPane.WARNING_MESSAGE);
           return;
         }
 
@@ -452,8 +478,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           setConfigurationPanel(ag.getConfigurationPanel());
         }
         catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, "There are no agents selected",
-              "Agent config failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(),
+              s_tr.message().agentConfigFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -466,8 +492,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           m_environments.addAgentToSelectedEnvironment((Agent) env.getSelectedAgent().clone());
         }
         catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, "There are no agents selected",
-              "Agent cloning failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(),
+              s_tr.message().cloningFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -480,8 +506,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           m_environments.removeAgentFromEnvironment(env.getSelectedAgent(), env);
         }
         catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, "There are no agents selected",
-              "Agent removing failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(),
+              s_tr.message().agentRemovalFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -496,12 +522,13 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           m_environments.addAgentToSelectedEnvironment(ag);
         }
         catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), "File load failed",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(null, exc.getMessage(),
+              s_tr.message().fileOpenFailed(), JOptionPane.ERROR_MESSAGE);
         }
         catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, "There is no environment selected",
-              "File load failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null,
+              s_tr.message().noEnvironmentSelected(),
+              s_tr.message().fileOpenFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -514,12 +541,13 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           FileDialog.saveAgent(env.getSelectedAgent());
         }
         catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), "File save failed",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(null, exc.getMessage(),
+              s_tr.message().fileSaveFailed(), JOptionPane.ERROR_MESSAGE);
         }
         catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, "There is no environment selected",
-              "File save failed", JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null,
+              s_tr.message().noEnvironmentSelected(),
+              s_tr.message().fileSaveFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -533,18 +561,18 @@ public class MainWindow extends JFrame implements Observer, Translatable {
             .showMessageDialog(
                 null,
                 "<html><h2>MazeSolver</h2>"
-                    + "Copyright &copy; 2014 - 2015<br>Sergio M. Afonso Fumero and Kevin I. Robayna Hernández<br><br>"
-                    + "This program is free software: you can redistribute it and/or modify<br>"
-                    + "it under the terms of the GNU General Public License as published by<br>"
-                    + "the Free Software Foundation, either version 3 of the License, or<br>"
-                    + "(at your option) any later version.<br><br>"
-                    + "This program is distributed in the hope that it will be useful,<br>"
-                    + "but WITHOUT ANY WARRANTY; without even the implied warranty of<br>"
-                    + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>"
-                    + "GNU General Public License for more details.<br><br>"
-                    + "You should have received a copy of the GNU General Public License<br>"
-                    + "along with this program. If not, see &lt;<a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>&gt;.</html>",
-                "About", JOptionPane.INFORMATION_MESSAGE);
+              + "Copyright &copy; 2014 - 2015<br>Sergio M. Afonso Fumero and Kevin I. Robayna Hernández<br><br>"
+              + "This program is free software: you can redistribute it and/or modify<br>"
+              + "it under the terms of the GNU General Public License as published by<br>"
+              + "the Free Software Foundation, either version 3 of the License, or<br>"
+              + "(at your option) any later version.<br><br>"
+              + "This program is distributed in the hope that it will be useful,<br>"
+              + "but WITHOUT ANY WARRANTY; without even the implied warranty of<br>"
+              + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>"
+              + "GNU General Public License for more details.<br><br>"
+              + "You should have received a copy of the GNU General Public License<br>"
+              + "along with this program. If not, see &lt;<a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>&gt;.</html>",
+                s_tr.menu().about(), JOptionPane.INFORMATION_MESSAGE);
       }
     });
   }
@@ -695,12 +723,12 @@ public class MainWindow extends JFrame implements Observer, Translatable {
    */
   private void pauseSimulation () {
     if (!m_simulation.isPaused()) {
-      m_pause.setText("Continue");
+      m_pause.setText(s_tr.button().kontinue());
       m_simulation.pauseSimulation();
       m_step.setEnabled(true);
     }
     else {
-      m_pause.setText("Pause");
+      m_pause.setText(s_tr.button().pause());
       m_step.setEnabled(false);
       m_simulation.startSimulation();
     }
@@ -722,7 +750,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_maze_open.setEnabled(true);
     m_itm_maze_clone.setEnabled(true);
 
-    m_pause.setText("Pause");
+    m_pause.setText(s_tr.button().pause());
     m_run.setEnabled(true);
     m_step.setEnabled(true);
     m_pause.setEnabled(false);
@@ -788,33 +816,40 @@ public class MainWindow extends JFrame implements Observer, Translatable {
    * @see es.ull.mazesolver.translations.Translatable#translate()
    */
   @Override
-  public void translate (GUITranslations tr) {
-    m_menu_file.setText(tr.file());
-    m_menu_maze.setText(tr.maze());
-    m_menu_agent.setText(tr.agent());
-    m_menu_help.setText(tr.help());
-    m_itm_maze_new.setText(tr.newMaze() + "...");
-    m_itm_maze_open.setText(tr.openMaze() + "...");
-    m_itm_maze_save.setText(tr.saveMaze() + "...");
-    m_itm_exit.setText(tr.exit());
-    m_itm_maze_clone.setText(tr.copyMaze());
-    m_itm_maze_change.setText(tr.changeMaze() + "...");
-    m_itm_maze_close.setText(tr.closeMaze());
-    m_itm_agent_add.setText(tr.newAgent() + "...");
-    m_itm_agent_clone.setText(tr.cloneAgent());
-    m_itm_agent_config.setText(tr.configureAgent() + "...");
-    m_itm_agent_load.setText(tr.loadAgent() + "...");
-    m_itm_agent_save.setText(tr.saveAgent() + "...");
-    m_itm_agent_remove.setText(tr.removeAgent());
-    m_itm_about.setText(tr.about() + "...");
+  public void translate () {
+    MenuTranslations m_tr = s_tr.menu();
+    ButtonTranslations b_tr = s_tr.button();
 
-    m_run.setText(tr.run());
-    m_step.setText(tr.step());
-    m_pause.setText(tr.pause());
-    m_stop.setText(tr.stop());
-    m_zoom_lb.setText(tr.zoom() + ":");
+    m_menu_file.setText(m_tr.file());
+    m_menu_maze.setText(m_tr.maze());
+    m_menu_agent.setText(m_tr.agent());
+    m_menu_help.setText(m_tr.help());
+    m_itm_maze_new.setText(m_tr.newMaze() + "...");
+    m_itm_maze_open.setText(m_tr.openMaze() + "...");
+    m_itm_maze_save.setText(m_tr.saveMaze() + "...");
+    m_itm_exit.setText(m_tr.exit());
+    m_itm_maze_clone.setText(m_tr.copyMaze());
+    m_itm_maze_change.setText(m_tr.changeMaze() + "...");
+    m_itm_maze_close.setText(m_tr.closeMaze());
+    m_itm_agent_add.setText(m_tr.newAgent() + "...");
+    m_itm_agent_clone.setText(m_tr.cloneAgent());
+    m_itm_agent_config.setText(m_tr.configureAgent() + "...");
+    m_itm_agent_load.setText(m_tr.loadAgent() + "...");
+    m_itm_agent_save.setText(m_tr.saveAgent() + "...");
+    m_itm_agent_remove.setText(m_tr.removeAgent());
+    m_itm_about.setText(m_tr.about() + "...");
 
-    m_console.translate(tr);
+    m_run.setText(b_tr.run());
+    m_step.setText(b_tr.step());
+    m_stop.setText(b_tr.stop());
+    m_zoom_lb.setText(b_tr.zoom() + ":");
+
+    if (m_simulation.isRunning() || m_simulation.isStopped())
+      m_pause.setText(b_tr.pause());
+    else
+      m_pause.setText(b_tr.kontinue());
+
+    m_console.translate();
   }
 
 }

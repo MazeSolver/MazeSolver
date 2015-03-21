@@ -20,11 +20,29 @@
  */
 
 /**
- * @file package-info.java
- * @date 13/3/2015
- */
-/**
- * Contiene los elementos de traducción para usar la librería c10n que ayuda a
- * traducir de forma mucho más sencilla, utilizando interfaces.
+ * @file AgentSelectorTranslations.java
+ * @date 21/3/2015
  */
 package es.ull.mazesolver.translations;
+
+import com.github.rodionmoiseev.c10n.C10NMessages;
+import com.github.rodionmoiseev.c10n.annotations.En;
+import com.github.rodionmoiseev.c10n.annotations.Es;
+
+/**
+ * Clase que agrupa las traducciones de la ventana de selección de agentes.
+ */
+@C10NMessages
+public interface AgentSelectorTranslations {
+  @En ("Create new agent")
+  @Es ("Crear nuevo agente")
+  String createNewAgent ();
+
+  @En ("Algorithm")
+  @Es ("Algoritmo")
+  String algorithm ();
+
+  @En ("Amount")
+  @Es ("Cantidad")
+  String amount ();
+}

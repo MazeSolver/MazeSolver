@@ -152,12 +152,12 @@ public class EnvironmentPanel extends JPanel {
         Point pos =
             new Point((int) Math.round((x + 1) * cell_size), (int) Math.round((y + 1) * cell_size));
 
-        if (actual.hasWall(Direction.UP))
+        if (y == 0 && actual.hasWall(Direction.UP))
           g.drawLine(pos.x, pos.y, (int) Math.round(pos.x + cell_size), pos.y);
         if (actual.hasWall(Direction.DOWN))
           g.drawLine(pos.x, (int) Math.round(pos.y + cell_size),
               (int) Math.round(pos.x + cell_size), (int) Math.round(pos.y + cell_size));
-        if (actual.hasWall(Direction.LEFT))
+        if (x == 0 && actual.hasWall(Direction.LEFT))
           g.drawLine(pos.x, pos.y, pos.x, (int) Math.round(pos.y + cell_size));
         if (actual.hasWall(Direction.RIGHT))
           g.drawLine((int) Math.round(pos.x + cell_size), pos.y,

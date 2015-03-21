@@ -26,13 +26,18 @@
 package es.ull.mazesolver.translations;
 
 /**
- * Interfaz que implementan las clases que se pueden traducir.
+ * Interfaz que implementan las clases que se pueden traducir en tiempo de
+ * ejecución.
+ * <br><br>
+ * Sólo es necesario que implementen esta interfaz las clases que
+ * pueden estar creadas en el momento en el que el usuario cambia de idioma.
+ * Esto excluye a todos los diálogos modales.
  */
 public interface Translatable {
 
   /**
    * Traduce las cadenas de texto de la clase.
    */
-  public void translate (GUITranslations tr);
+  public void translate ();
 
 }

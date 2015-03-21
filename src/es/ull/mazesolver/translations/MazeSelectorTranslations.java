@@ -20,8 +20,8 @@
  */
 
 /**
- * @file ConsoleTranslations.java
- * @date 19/3/2015
+ * @file MazeSelectorTranslations.java
+ * @date 21/3/2015
  */
 package es.ull.mazesolver.translations;
 
@@ -30,23 +30,43 @@ import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
 
 /**
- * Contiene las traducciones de las cadenas en la consola.
+ * Traducciones para la ventana de creación de laberintos.
  */
 @C10NMessages
-public interface ConsoleTranslations {
-  @En("Log")
-  @Es("Registro")
-  String log ();
+public interface MazeSelectorTranslations {
+  @En ("Create a new maze")
+  @Es ("Crear un nuevo laberinto")
+  String createNewMaze ();
 
-  @En("Clear")
-  @Es("Limpiar")
-  String clear ();
+  @En ("Algorithm")
+  @Es ("Algoritmo")
+  String algorithm ();
 
-  @En("Save to file")
-  @Es("Guardar en un fichero")
-  String saveToFile ();
+  @En ("Rows")
+  @Es ("Filas")
+  String rows ();
 
-  @En("Log save failed")
-  @Es("Error al guardar el registro")
-  String logSaveError ();
+  @En ("Columns")
+  @Es ("Columnas")
+  String columns ();
+
+  @En ("Basic configuration")
+  @Es ("Configuración básica")
+  String basicConfiguration ();
+
+  @En ("Perfect maze")
+  @Es ("Laberinto perfecto")
+  String perfectMaze ();
+
+  @En ("Add cycles")
+  @Es ("Añadir ciclos")
+  String addCycles ();
+
+  @En ("Add walls")
+  @Es ("Añadir paredes")
+  String addWalls ();
+
+  @En ("Maze type")
+  @Es ("Tipo de laberinto")
+  String mazeType ();
 }

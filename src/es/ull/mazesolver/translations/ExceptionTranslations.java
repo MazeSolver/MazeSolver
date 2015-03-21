@@ -20,11 +20,25 @@
  */
 
 /**
- * @file package-info.java
- * @date 13/3/2015
- */
-/**
- * Contiene los elementos de traducción para usar la librería c10n que ayuda a
- * traducir de forma mucho más sencilla, utilizando interfaces.
+ * @file ExceptionTranslations.java
+ * @date 21/3/2015
  */
 package es.ull.mazesolver.translations;
+
+import com.github.rodionmoiseev.c10n.C10NMessages;
+import com.github.rodionmoiseev.c10n.annotations.En;
+import com.github.rodionmoiseev.c10n.annotations.Es;
+
+/**
+ * Clase que contiene las traducciones de los mensajes de las excepciones.
+ */
+@C10NMessages
+public interface ExceptionTranslations {
+  @En ("The specified environment is invalid")
+  @Es ("El entorno especificado es inválido")
+  String invalidEnvironment ();
+
+  @En ("The specified maze is invalid")
+  @Es ("El laberinto especificado es inválido")
+  String invalidMaze ();
+}

@@ -20,21 +20,20 @@
  */
 
 /**
- * @file trGUI.java
- * @date Mar 13, 2015
+ * @file MenuTranslations.java
+ * @date 21/3/2015
  */
 package es.ull.mazesolver.translations;
 
+import com.github.rodionmoiseev.c10n.C10NMessages;
 import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
 
 /**
- * Interfaz que dota de los elementos de traduccion de la GUI
+ * Clase contenedora de las traducciones para los menús.
  */
-public interface GUITranslations {
-
-  ConsoleTranslations console();
-
+@C10NMessages
+public interface MenuTranslations {
   @En ("File")
   @Es ("Archivo")
   String file ();
@@ -106,25 +105,4 @@ public interface GUITranslations {
   @En ("About")
   @Es ("Acerca de")
   String about ();
-
-  @En ("Run")
-  @Es ("Ejecutar")
-  String run ();
-
-  @En ("Step")
-  @Es ("Siguiente")
-  String step ();
-
-  @En ("Pause")
-  @Es ("Pausar")
-  String pause ();
-
-  @En ("Stop")
-  @Es ("Detener")
-  String stop ();
-
-  @En ("Zoom")
-  @Es ("Aumento")
-  String zoom ();
-
 }

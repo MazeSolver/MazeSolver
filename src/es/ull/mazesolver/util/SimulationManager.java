@@ -32,6 +32,7 @@ import java.util.Observable;
 
 import javax.swing.Timer;
 
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.gui.environment.EnvironmentSet;
 
@@ -90,7 +91,8 @@ public class SimulationManager extends Observable {
    */
   public void setEnvironments (EnvironmentSet env_set) {
     if (env_set == null)
-      throw new IllegalArgumentException("No se puede asignar un entorno nulo.");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().invalidEnvironment());
 
     m_environments = env_set;
   }

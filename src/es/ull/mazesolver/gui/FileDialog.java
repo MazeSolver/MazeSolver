@@ -37,12 +37,30 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import es.ull.mazesolver.agent.Agent;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.Maze;
+import es.ull.mazesolver.translations.MessageTranslations;
+import es.ull.mazesolver.translations.Translations;
 
 /**
  * Clase que contiene los métodos estáticos para mostrar los diálogos para
  * guardar y cargar ficheros.
  */
 public class FileDialog {
+
+  /**
+   * Extensión de los ficheros donde se almacenan los laberintos.
+   */
+  public static final String MAZE_EXT = "maze";
+
+  /**
+   * Extensión de los ficheros donde se almacenan los registros.
+   */
+  public static final String LOG_EXT = "log";
+
+  /**
+   * Extensión de los ficheros donde se almacenan los agentes.
+   */
+  public static final String AGENT_EXT = "agent";
+
   // Esta clase no se puede instanciar
   private FileDialog () {
   }
@@ -58,15 +76,19 @@ public class FileDialog {
    *           seleccionado.
    */
   public static void saveMaze (Maze maze) throws IOException {
-    if (maze == null)
-      throw new IllegalArgumentException("El laberinto especificado es inválido.");
+    Translations tr = MainWindow.getTranslations();
 
-    JFileChooser chooser = createFileChooser("Maze files (*.maze)", "maze");
+    if (maze == null)
+      throw new IllegalArgumentException(tr.exception().invalidMaze());
+
+    JFileChooser chooser = createFileChooser(
+        tr.message().mazeFiles() + " (*." + MAZE_EXT + ")", MAZE_EXT);
     int result = chooser.showSaveDialog(null);
 
     if (result == JFileChooser.APPROVE_OPTION) {
       File f_chosen = chooser.getSelectedFile();
-      File file = new File(f_chosen.getAbsolutePath() + extension(f_chosen.getName(), "maze"));
+      File file = new File(f_chosen.getAbsolutePath() + extension(f_chosen.getName(),
+                           MAZE_EXT));
 
       // Si va a sobreescribir un archivo preguntamos primero
       if (promptOverwrite(file))
@@ -83,7 +105,9 @@ public class FileDialog {
    *           Si hay un problema al leer el fichero seleccionado.
    */
   public static Maze [] loadMazes () throws IOException {
-    JFileChooser chooser = createFileChooser("Maze files (*.maze)", "maze");
+    JFileChooser chooser = createFileChooser(
+        MainWindow.getTranslations().message().mazeFiles() + " (*." + MAZE_EXT + ")",
+        MAZE_EXT);
     chooser.setMultiSelectionEnabled(true);
     int result = chooser.showOpenDialog(null);
 
@@ -111,7 +135,9 @@ public class FileDialog {
    *           Si hay un problema al leer el fichero seleccionado.
    */
   public static Maze loadMaze () throws IOException {
-    JFileChooser chooser = createFileChooser("Maze files (*.maze)", "maze");
+    JFileChooser chooser = createFileChooser(
+        MainWindow.getTranslations().message().mazeFiles() + " (*." + MAZE_EXT + ")",
+        MAZE_EXT);
     int result = chooser.showOpenDialog(null);
 
     Maze maze = null;
@@ -133,12 +159,14 @@ public class FileDialog {
    *           Si hay un problema al leer el fichero seleccionado.
    */
   public static void saveLog (String log) throws IOException {
-    JFileChooser chooser = createFileChooser("Log files (*.log)", "log");
+    JFileChooser chooser = createFileChooser(
+        MainWindow.getTranslations().message().logFiles() + " (*." + LOG_EXT + ")",
+        LOG_EXT);
     int result = chooser.showSaveDialog(null);
 
     if (result == JFileChooser.APPROVE_OPTION) {
       File f_chosen = chooser.getSelectedFile();
-      File file = new File(f_chosen.getAbsolutePath() + extension(f_chosen.getName(), "log"));
+      File file = new File(f_chosen.getAbsolutePath() + extension(f_chosen.getName(), LOG_EXT));
 
       if (promptOverwrite(file)) {
         PrintWriter writer = new PrintWriter(file);
@@ -159,7 +187,9 @@ public class FileDialog {
    *           Si hay un problema al leer el fichero seleccionado.
    */
   public static Agent loadAgent (Environment env) throws IOException {
-    JFileChooser chooser = createFileChooser("Agent files (*.agent)", "agent");
+    JFileChooser chooser = createFileChooser(
+        MainWindow.getTranslations().message().agentFiles() + " (*." + AGENT_EXT + ")",
+        AGENT_EXT);
     int result = chooser.showOpenDialog(null);
 
     Agent ag = null;
@@ -181,12 +211,14 @@ public class FileDialog {
    *           Si no se puede leer el fichero.
    */
   public static void saveAgent (Agent agent) throws IOException {
-    JFileChooser chooser = createFileChooser("Agent files (*.agent)", "agent");
+    JFileChooser chooser = createFileChooser(
+        MainWindow.getTranslations().message().agentFiles() + " (*." + AGENT_EXT + ")",
+        AGENT_EXT);
     int result = chooser.showSaveDialog(null);
 
     if (result == JFileChooser.APPROVE_OPTION) {
       File f_chosen = chooser.getSelectedFile();
-      File file = new File(f_chosen.getAbsolutePath() + extension(f_chosen.getName(), "agent"));
+      File file = new File(f_chosen.getAbsolutePath() + extension(f_chosen.getName(), AGENT_EXT));
 
       if (promptOverwrite(file))
         agent.saveFile(file.getAbsolutePath());
@@ -237,10 +269,11 @@ public class FileDialog {
    */
   private static boolean promptOverwrite (File file) {
     if (file.exists()) {
+      MessageTranslations tr = MainWindow.getTranslations().message();
+
       int choice =
-          JOptionPane.showConfirmDialog(null,
-              "The selected file already exists, do you want to overwrite it?",
-              "File already exists", JOptionPane.YES_NO_OPTION);
+          JOptionPane.showConfirmDialog(null, tr.fileExistsOverwrite(),
+              tr.fileExists(), JOptionPane.YES_NO_OPTION);
       return choice == JOptionPane.YES_OPTION;
     }
     return true;

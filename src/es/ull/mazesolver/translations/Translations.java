@@ -20,11 +20,23 @@
  */
 
 /**
- * @file package-info.java
+ * @file Translations.java
  * @date 13/3/2015
  */
-/**
- * Contiene los elementos de traducción para usar la librería c10n que ayuda a
- * traducir de forma mucho más sencilla, utilizando interfaces.
- */
 package es.ull.mazesolver.translations;
+
+
+/**
+ * Interfaz compuesta de todas las traducciones de todos los elementos de la
+ * aplicación.
+ */
+public interface Translations {
+  MenuTranslations menu ();
+  ButtonTranslations button ();
+  MessageTranslations message ();
+  ExceptionTranslations exception ();
+
+  ConsoleTranslations console ();
+  MazeSelectorTranslations maze ();
+  AgentSelectorTranslations agent ();
+}

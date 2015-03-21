@@ -50,7 +50,7 @@ import javax.swing.text.StyledDocument;
 
 import com.alee.laf.button.WebButton;
 
-import es.ull.mazesolver.translations.GUITranslations;
+import es.ull.mazesolver.translations.ConsoleTranslations;
 import es.ull.mazesolver.translations.Translatable;
 
 /**
@@ -201,11 +201,13 @@ public class LoggingConsole extends JPanel implements Translatable {
    * @see es.ull.mazesolver.translations.Translatable#translate()
    */
   @Override
-  public void translate (GUITranslations tr) {
-    m_log_border.setTitle(tr.console().log());
-    m_clear_button.setText(tr.console().clear());
-    m_save_button.setText(tr.console().saveToFile() + "...");
-    m_log_save_error = tr.console().logSaveError();
+  public void translate () {
+    ConsoleTranslations tr = MainWindow.getTranslations().console();
+
+    m_log_border.setTitle(tr.log());
+    m_clear_button.setText(tr.clear());
+    m_save_button.setText(tr.saveToFile() + "...");
+    m_log_save_error = tr.logSaveError();
   }
 
 }

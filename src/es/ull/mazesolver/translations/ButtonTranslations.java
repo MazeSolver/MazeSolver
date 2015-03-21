@@ -20,11 +20,53 @@
  */
 
 /**
- * @file package-info.java
- * @date 13/3/2015
- */
-/**
- * Contiene los elementos de traducción para usar la librería c10n que ayuda a
- * traducir de forma mucho más sencilla, utilizando interfaces.
+ * @file ButtonTranslations.java
+ * @date 21/3/2015
  */
 package es.ull.mazesolver.translations;
+
+import com.github.rodionmoiseev.c10n.C10NMessages;
+import com.github.rodionmoiseev.c10n.annotations.En;
+import com.github.rodionmoiseev.c10n.annotations.Es;
+
+/**
+ * Agrupa las traducciones de los botones.
+ */
+@C10NMessages
+public interface ButtonTranslations {
+  @En ("Run")
+  @Es ("Ejecutar")
+  String run ();
+
+  @En ("Step")
+  @Es ("Siguiente")
+  String step ();
+
+  @En ("Pause")
+  @Es ("Pausar")
+  String pause ();
+
+  @En ("Continue")
+  @Es ("Continuar")
+  String kontinue();
+
+  @En ("Stop")
+  @Es ("Detener")
+  String stop ();
+
+  @En ("Zoom")
+  @Es ("Aumento")
+  String zoom ();
+
+  @En ("Ok")
+  @Es ("Aceptar")
+  String ok ();
+
+  @En ("Cancel")
+  @Es ("Cancelar")
+  String cancel ();
+
+  @En ("Configure")
+  @Es ("Configurar")
+  String configure ();
+}

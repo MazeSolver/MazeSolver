@@ -56,6 +56,7 @@ import es.ull.mazesolver.maze.algorithm.Prim;
 import es.ull.mazesolver.maze.algorithm.RecursiveBacktracking;
 import es.ull.mazesolver.maze.algorithm.RecursiveDivision;
 import es.ull.mazesolver.maze.algorithm.Wilson;
+import es.ull.mazesolver.translations.Translations;
 
 /**
  * Interfaz gráfica para seleccionar el generador de laberintos y el tamaño del
@@ -83,7 +84,7 @@ public class MazeSelectorDialog extends JDialog {
    * @param parent Ventana padre del diálogo.
    */
   public MazeSelectorDialog (Window parent) {
-    super(parent, "Create a new maze");
+    super(parent);
 
     String [] algos =
         {"Aldous Broder", "Hunt and Kill", "Kruskal", "Prim", "Recursive Backtracking",
@@ -112,6 +113,9 @@ public class MazeSelectorDialog extends JDialog {
    * Crea los elementos y layouts de la interfaz gráfica.
    */
   private void buildInterface () {
+    Translations tr = MainWindow.getTranslations();
+
+    setTitle(tr.maze().createNewMaze());
     setLayout(new BorderLayout());
 
     JPanel basic_global = new JPanel(new BorderLayout(5, 5));
@@ -122,29 +126,29 @@ public class MazeSelectorDialog extends JDialog {
     m_columns =
         new JSpinner(new SpinnerNumberModel(MIN_MAZE_SIZE, MIN_MAZE_SIZE, MAX_MAZE_SIZE, 1));
 
-    basic_labels.add(new JLabel("Algorithm:"));
+    basic_labels.add(new JLabel(tr.maze().algorithm() + ":"));
     basic_controls.add(m_algorithms);
-    basic_labels.add(new JLabel("Rows:"));
+    basic_labels.add(new JLabel(tr.maze().rows() + ":"));
     basic_controls.add(m_rows);
-    basic_labels.add(new JLabel("Columns:"));
+    basic_labels.add(new JLabel(tr.maze().columns() + ":"));
     basic_controls.add(m_columns);
 
     basic_global.add(basic_labels, BorderLayout.WEST);
     basic_global.add(basic_controls, BorderLayout.CENTER);
     basic_global.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 5,
         0, 5), BorderFactory.createTitledBorder(
-        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Basic configuration")));
+        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), tr.maze().basicConfiguration())));
 
     JPanel adv_global = new JPanel(new BorderLayout());
     JPanel adv_labels = new JPanel(new GridLayout(3, 1));
     JPanel adv_controls = new JPanel(new GridLayout(3, 1));
 
     m_type = new ButtonGroup();
-    m_perfect = new JRadioButton("Perfect maze", true);
+    m_perfect = new JRadioButton(tr.maze().perfectMaze(), true);
     m_perfect.setActionCommand("Perfect");
-    m_add_cycles = new JRadioButton("Add cycles:");
+    m_add_cycles = new JRadioButton(tr.maze().addCycles() + ":");
     m_add_cycles.setActionCommand("Cycles");
-    m_add_components = new JRadioButton("Add walls:");
+    m_add_components = new JRadioButton(tr.maze().addWalls() + ":");
     m_add_components.setActionCommand("Walls");
 
     m_type.add(m_perfect);
@@ -172,10 +176,10 @@ public class MazeSelectorDialog extends JDialog {
     adv_global.add(adv_controls, BorderLayout.CENTER);
     adv_global.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 5,
         0, 5), BorderFactory.createTitledBorder(
-        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Maze type")));
+        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), tr.maze().mazeType())));
 
-    m_ok = new JButton("OK");
-    m_cancel = new JButton("Cancel");
+    m_ok = new JButton(tr.button().ok());
+    m_cancel = new JButton(tr.button().cancel());
 
     JPanel button_panel = new JPanel(new FlowLayout());
     button_panel.add(m_ok);
@@ -220,18 +224,8 @@ public class MazeSelectorDialog extends JDialog {
     ActionListener types_listener = new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        if (e.getSource() == m_perfect) {
-          m_cycles.setEnabled(false);
-          m_components.setEnabled(false);
-        }
-        else if (e.getSource() == m_add_cycles) {
-          m_cycles.setEnabled(true);
-          m_components.setEnabled(false);
-        }
-        else if (e.getSource() == m_add_components) {
-          m_cycles.setEnabled(false);
-          m_components.setEnabled(true);
-        }
+        m_cycles.setEnabled(e.getSource() == m_add_cycles);
+        m_components.setEnabled(e.getSource() == m_add_components);
       }
     };
 
