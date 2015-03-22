@@ -24,6 +24,7 @@ Nuestro objetivo es crear una interfaz gráfica para la creación y visualizaci�
 * [ANTLR](http://www.antlr.org): Se trata de un generador de parseadores que puede proporcionar una interfaz para controlar el parser desde Java, además de otros lenguajes. Lo utilizamos para crear un lenguaje de dominio específico para la definición de reglas de situación-acción por el usuario.
 * [WebLaF](https://github.com/mgarin/weblaf): Se trata de un Look & Feel diferente al cross-platform de Java que sigue siendo multiplataforma pero con un diseño más elegante.
 * [JScroll](http://jscroll.sourceforge.net/index.html): Librería Java que permite el uso de `JDesktopPane` pero añadiendo la función de scroll por defecto, que Java no proporciona por defecto.
+* [C10N](https://github.com/rodionmoiseev/c10n): Librería Java que permite el uso de las interfaces de java como elmento de localización, además de dar la opción de usar los resource bundle de java.
 
 ##Tecnologías de IA
 * **Generación de Laberintos**: Mediante algoritmos aleatorios de generación de árboles en un grafo se podrán generar laberintos perfectos. Además se generarán laberintos no perfectos añadiendo al laberinto perfecto N ciclos o N paredes, separando el laberinto en varias componentes conexas.
