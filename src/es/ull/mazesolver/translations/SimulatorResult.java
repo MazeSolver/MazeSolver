@@ -30,7 +30,8 @@ import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
 
 /**
- * Clase contenedora de las traducciones para los distintos idiomas.
+ * Clase contenedora de las traducciones para los resultados de las
+ * simulaciones.
  */
 @C10NMessages
 public interface SimulatorResult {
