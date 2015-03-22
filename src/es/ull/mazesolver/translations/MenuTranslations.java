@@ -105,4 +105,8 @@ public interface MenuTranslations {
   @En ("About")
   @Es ("Acerca de")
   String about ();
+
+  @En ("Language")
+  @Es ("Idioma")
+  String language ();
 }

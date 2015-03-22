@@ -20,25 +20,27 @@
  */
 
 /**
- * @file Translations.java
- * @date 13/3/2015
+ * @file Languages.java
+ * @date Mar 22, 2015
  */
 package es.ull.mazesolver.translations;
 
+import com.github.rodionmoiseev.c10n.C10NMessages;
+import com.github.rodionmoiseev.c10n.annotations.En;
+import com.github.rodionmoiseev.c10n.annotations.Es;
 
 /**
- * Interfaz compuesta de todas las traducciones de todos los elementos de la
- * aplicación.
+ * Clase contenedora de las traducciones para los distintos idiomas.
  */
-public interface Translations {
-  MenuTranslations menu ();
-  ButtonTranslations button ();
-  MessageTranslations message ();
-  ExceptionTranslations exception ();
+@C10NMessages
+public interface Languages {
 
-  ConsoleTranslations console ();
-  MazeSelectorTranslations maze ();
-  AgentSelectorTranslations agent ();
+  @En ("Spanish")
+  @Es ("Español")
+  String spanish ();
 
-  Languages languages();
+  @En ("English")
+  @Es ("Inglés")
+  String english ();
+
 }
