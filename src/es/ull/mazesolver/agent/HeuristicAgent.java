@@ -34,7 +34,9 @@ import javax.swing.JPanel;
 import es.ull.mazesolver.agent.distance.DistanceCalculator;
 import es.ull.mazesolver.agent.distance.DistanceCalculator.DistanceType;
 import es.ull.mazesolver.agent.distance.ManhattanDistance;
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.gui.environment.Environment;
+import es.ull.mazesolver.translations.Translatable;
 
 /**
  * Representa las características comunes a todos los agentes heurísticos, que
@@ -69,7 +71,8 @@ public abstract class HeuristicAgent extends Agent {
    */
   public void setDistanceCalculator (DistanceCalculator dist) {
     if (dist == null)
-      throw new IllegalArgumentException("El medidor de distancias indicado no es válido");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().invalidDistanceCalculator());
 
     m_dist = (DistanceCalculator) dist.clone();
   }
@@ -78,16 +81,18 @@ public abstract class HeuristicAgent extends Agent {
    * Panel de configuración que dispone tan sólo de la selección de un tipo de
    * algoritmo de cálculo de distancias.
    */
-  protected class DistanceConfigurationPanel extends JPanel {
+  protected class DistanceConfigurationPanel extends JPanel implements Translatable {
     private static final long serialVersionUID = 1L;
     private JComboBox <DistanceType> combo;
+    private JLabel m_dist_calc_text;
 
     /**
      * Crea el panel de configuración del agente.
      */
     public DistanceConfigurationPanel () {
       setLayout(new BorderLayout(5, 0));
-      add(new JLabel("Distance measure:"), BorderLayout.WEST);
+      m_dist_calc_text = new JLabel();
+      add(m_dist_calc_text, BorderLayout.WEST);
 
       combo = new JComboBox <DistanceType>(DistanceType.values());
       combo.setSelectedItem(m_dist.getType());
@@ -99,6 +104,12 @@ public abstract class HeuristicAgent extends Agent {
      */
     public DistanceType getSelectedType () {
       return (DistanceType) combo.getSelectedItem();
+    }
+
+    @Override
+    public void translate () {
+      m_dist_calc_text.setText(
+          MainWindow.getTranslations().agent().distanceCalculator() + ":");
     }
   }
 }

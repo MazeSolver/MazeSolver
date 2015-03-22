@@ -33,6 +33,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import es.ull.mazesolver.gui.MainWindow;
+
 /**
  * Clase que representa un laberinto.
  */
@@ -53,7 +55,8 @@ public class Maze {
       m_exit = alg.getExit();
     }
     else
-      throw new IllegalArgumentException("El algoritmo de creación del laberinto es inválido");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().invalidMazeCreationAlgorithm());
   }
 
   /**

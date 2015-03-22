@@ -278,6 +278,12 @@ public class DStarAgent extends HeuristicAgent implements BlackboardCommunicatio
         setDistanceCalculator(DistanceCalculator.fromType(distance.getSelectedType()));
         return true;
       }
+
+      @Override
+      public void translate () {
+        super.translate();
+        distance.translate();
+      }
     };
   }
 

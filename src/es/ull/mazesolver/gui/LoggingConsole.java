@@ -42,6 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -49,11 +50,14 @@ import javax.swing.text.StyledDocument;
 
 import com.alee.laf.button.WebButton;
 
+import es.ull.mazesolver.translations.ConsoleTranslations;
+import es.ull.mazesolver.translations.Translatable;
+
 /**
  * Clase que representa un panel de logging donde se pueden mostrar errores,
  * información, etc. al usuario de manera permanente.
  */
-public class LoggingConsole extends JPanel {
+public class LoggingConsole extends JPanel implements Translatable {
   private static final long serialVersionUID = 1L;
 
   private JButton m_clear_button;
@@ -64,11 +68,14 @@ public class LoggingConsole extends JPanel {
   private Style m_info_style;
   private Style m_warning_style;
 
+  private String m_log_save_error;
+  private TitledBorder m_log_border;
+
   /**
    * Construye una instancia de consola.
    */
   public LoggingConsole () {
-    m_clear_button = new JButton("Clear");
+    m_clear_button = new JButton();
     m_clear_button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
@@ -76,7 +83,7 @@ public class LoggingConsole extends JPanel {
       }
     });
 
-    m_save_button = new JButton("Save to file...");
+    m_save_button = new JButton();
     m_save_button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
@@ -84,7 +91,7 @@ public class LoggingConsole extends JPanel {
           FileDialog.saveLog(m_text.getText());
         }
         catch (IOException e1) {
-          JOptionPane.showMessageDialog(null, e1.getMessage(), "Log save failed",
+          JOptionPane.showMessageDialog(null, e1.getMessage(), m_log_save_error,
               JOptionPane.ERROR_MESSAGE);
         }
       }
@@ -129,11 +136,13 @@ public class LoggingConsole extends JPanel {
     top.add(Box.createGlue());
     top.add(collapser);
 
+    m_log_border = BorderFactory.createTitledBorder(
+        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+
     setLayout(new BorderLayout());
     add(top, BorderLayout.NORTH);
     add(text_scroll, BorderLayout.CENTER);
-    setBorder(BorderFactory.createTitledBorder(
-        BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Log"));
+    setBorder(m_log_border);
   }
 
   /**
@@ -186,6 +195,19 @@ public class LoggingConsole extends JPanel {
    */
   public void clear () {
     m_text.setText("");
+  }
+
+  /* (non-Javadoc)
+   * @see es.ull.mazesolver.translations.Translatable#translate()
+   */
+  @Override
+  public void translate () {
+    ConsoleTranslations tr = MainWindow.getTranslations().console();
+
+    m_log_border.setTitle(tr.log());
+    m_clear_button.setText(tr.clear());
+    m_save_button.setText(tr.saveToFile() + "...");
+    m_log_save_error = tr.logSaveError();
   }
 
 }

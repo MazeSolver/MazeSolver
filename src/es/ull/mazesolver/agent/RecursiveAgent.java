@@ -36,6 +36,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import es.ull.mazesolver.gui.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.maze.MazeCell;
@@ -159,12 +160,14 @@ public class RecursiveAgent extends Agent {
   public AgentConfigurationPanel getConfigurationPanel () {
     return new AgentConfigurationPanel() {
       private static final long serialVersionUID = 1L;
+      private JLabel m_text;
 
       @Override
       protected void createGUI (JPanel root) {
         root.setLayout(new BorderLayout());
         root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        root.add(new JLabel("This agent has no configuration options available"));
+        m_text = new JLabel();
+        root.add(m_text);
       }
 
       @Override
@@ -173,7 +176,13 @@ public class RecursiveAgent extends Agent {
 
       @Override
       protected boolean accept () {
-        return false;
+        return true;
+      }
+
+      @Override
+      public void translate () {
+        super.translate();
+        m_text.setText(MainWindow.getTranslations().agent().noAgentConfigurationAvailable());
       }
     };
   }

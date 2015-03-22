@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import es.ull.mazesolver.translations.ButtonTranslations;
+import es.ull.mazesolver.translations.Translatable;
+
 /**
  * Se trata de un panel de configuración de agentes, que permite al usuario
  * configurar un agente dependiendo del tipo que sea.
@@ -42,11 +45,12 @@ import javax.swing.JPanel;
  * implementados desde el exterior y utilizarse para llamar a los métodos
  * "accept()" o "cancel", respectivamente.
  */
-public abstract class AgentConfigurationPanel extends JPanel {
+public abstract class AgentConfigurationPanel extends JPanel implements Translatable {
   private static final long serialVersionUID = 1L;
 
   private JPanel m_root;
   private ArrayList <EventListener> m_listeners;
+  private JButton m_accept, m_cancel;
 
   /**
    * Lista de mensajes de error obtenidos al intentar guardar la configuración
@@ -100,6 +104,7 @@ public abstract class AgentConfigurationPanel extends JPanel {
 
     createGUI(m_root);
     createControls();
+    translate();
   }
 
   /**
@@ -122,6 +127,17 @@ public abstract class AgentConfigurationPanel extends JPanel {
    */
   public final void removeEventListener (EventListener listener) {
     m_listeners.remove(listener);
+  }
+
+  /* (non-Javadoc)
+   * @see es.ull.mazesolver.translations.Translatable#translate()
+   */
+  @Override
+  public void translate () {
+    ButtonTranslations tr = MainWindow.getTranslations().button();
+
+    m_accept.setText(tr.ok());
+    m_cancel.setText(tr.cancel());
   }
 
   /**
@@ -166,10 +182,10 @@ public abstract class AgentConfigurationPanel extends JPanel {
     setLayout(new BorderLayout());
 
     JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    JButton accept = new JButton("OK");
-    JButton cancel = new JButton("Cancel");
+    m_accept = new JButton();
+    m_cancel = new JButton();
 
-    accept.addActionListener(new ActionListener() {
+    m_accept.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         if (accept())
@@ -179,7 +195,7 @@ public abstract class AgentConfigurationPanel extends JPanel {
       }
     });
 
-    cancel.addActionListener(new ActionListener() {
+    m_cancel.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         cancel();
@@ -187,8 +203,8 @@ public abstract class AgentConfigurationPanel extends JPanel {
       }
     });
 
-    controls.add(accept);
-    controls.add(cancel);
+    controls.add(m_accept);
+    controls.add(m_cancel);
 
     add(m_root, BorderLayout.CENTER);
     add(controls, BorderLayout.SOUTH);

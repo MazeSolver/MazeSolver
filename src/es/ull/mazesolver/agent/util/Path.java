@@ -113,7 +113,7 @@ public class Path {
   }
 
   /**
-   * Añade un nuevo paso a la trayectoria sin modificar la clase original.
+   * Añade un nuevo paso a la trayectoria sin modificar el objeto original.
    *
    * @param dir
    *          Dirección hacia la que realizar el paso.

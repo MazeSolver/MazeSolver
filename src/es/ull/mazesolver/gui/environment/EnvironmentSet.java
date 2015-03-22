@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import com.tomtessier.scrollabledesktop.JScrollableDesktopPane;
 
 import es.ull.mazesolver.agent.Agent;
+import es.ull.mazesolver.gui.MainWindow;
 
 /**
  * Panel principal en el que se encuentran todos los laberintos cargados.
@@ -117,7 +118,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
     if (env != null)
       env.addAgent(ag);
     else
-      throw new IllegalStateException("El usuario no ha seleccionado ningún entorno");
+      throw new IllegalStateException(
+          MainWindow.getTranslations().message().noEnvironmentSelected());
   }
 
   /**
@@ -133,7 +135,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
     if (m_envs.contains(env))
       env.removeAgent(ag);
     else
-      throw new IllegalArgumentException("El entorno no está guardado en el conjunto actual");
+      throw new IllegalArgumentException(
+          MainWindow.getTranslations().exception().envNotInEnvSet());
   }
 
   /**
@@ -161,7 +164,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
     // Evitamos intercambiar un entorno por sí mismo
     if (e1 != e2) {
       if (!m_envs.contains(e1) || m_envs.contains(e2))
-        throw new IllegalArgumentException("No se pueden intercambiar estos entornos");
+        throw new IllegalArgumentException(
+            MainWindow.getTranslations().exception().environmentsNotExchangeable());
 
       // Quitamos el primer entorno
       m_envs.remove(e1);

@@ -164,6 +164,12 @@ public class AStarAgent extends HeuristicAgent {
         setDistanceCalculator(DistanceCalculator.fromType(distance.getSelectedType()));
         return true;
       }
+
+      @Override
+      public void translate () {
+        super.translate();
+        distance.translate();
+      }
     };
   }
 

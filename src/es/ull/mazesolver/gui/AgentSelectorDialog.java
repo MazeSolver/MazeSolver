@@ -55,6 +55,7 @@ import es.ull.mazesolver.agent.SARulesAgent;
 import es.ull.mazesolver.agent.SimulatedAnnealingAgent;
 import es.ull.mazesolver.agent.WallFollowerAgent;
 import es.ull.mazesolver.gui.environment.Environment;
+import es.ull.mazesolver.translations.Translations;
 
 /**
  * Interfaz gráfica para permitir al usuario elegir qué agente añadir al
@@ -91,7 +92,7 @@ public class AgentSelectorDialog extends JDialog {
    *          Número de celdas vacías actualmente en el laberinto.
    */
   public AgentSelectorDialog (JFrame parent, int available_cells) {
-    super(parent, "Create a new agent", true);
+    super(parent, "", true);
     max_agents = available_cells - 1;
     buildInterface();
 
@@ -114,10 +115,13 @@ public class AgentSelectorDialog extends JDialog {
    * Construye la interfaz gráfica y configura los listeners.
    */
   private void buildInterface () {
+    final Translations tr = MainWindow.getTranslations();
+
+    setTitle(tr.agent().createNewAgent());
     setLayout(new BorderLayout());
 
-    JLabel ags = new JLabel("Algorithm:");
-    JLabel amo = new JLabel("Amount:");
+    JLabel ags = new JLabel(tr.agent().algorithm() + ":");
+    JLabel amo = new JLabel(tr.agent().amount() + ":");
 
     JPanel global = new JPanel(new BorderLayout(5, 5));
     JPanel labels = new JPanel(new GridLayout(2, 1, 5, 5));
@@ -135,9 +139,9 @@ public class AgentSelectorDialog extends JDialog {
     global.add(controls, BorderLayout.CENTER);
     global.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    JButton ok = new JButton("OK");
-    JButton cancel = new JButton("Cancel");
-    JButton config = new JButton("Configure...");
+    JButton ok = new JButton(tr.button().ok());
+    JButton cancel = new JButton(tr.button().cancel());
+    JButton config = new JButton(tr.button().configure() + "...");
 
     JPanel button_panel = new JPanel(new FlowLayout());
     button_panel.add(ok);
@@ -193,7 +197,8 @@ public class AgentSelectorDialog extends JDialog {
           m_template_agent = createSelectedAgent();
 
         final AgentConfigurationPanel config_panel = m_template_agent.getConfigurationPanel();
-        final JDialog d = new JDialog(AgentSelectorDialog.this, "Configure agent", true);
+        final JDialog d = new JDialog(AgentSelectorDialog.this,
+                                      tr.message().configureAgent(), true);
         d.setLocationRelativeTo(AgentSelectorDialog.this);
         d.add(config_panel);
         d.setResizable(false);
@@ -206,7 +211,8 @@ public class AgentSelectorDialog extends JDialog {
               all_msgs += msg + "\n";
 
             if (!all_msgs.isEmpty())
-              JOptionPane.showMessageDialog(null, all_msgs, "Operation succeeded",
+              JOptionPane.showMessageDialog(null, all_msgs,
+                  tr.message().operationSucceeded(),
                   JOptionPane.INFORMATION_MESSAGE);
 
             d.dispose();
@@ -224,8 +230,8 @@ public class AgentSelectorDialog extends JDialog {
               all_errors += error + "\n";
 
             if (!all_errors.isEmpty())
-              JOptionPane.showMessageDialog(null, all_errors, "Operation failed",
-                  JOptionPane.ERROR_MESSAGE);
+              JOptionPane.showMessageDialog(null, all_errors,
+                  tr.message().operationFailed(), JOptionPane.ERROR_MESSAGE);
           }
         });
 
@@ -237,6 +243,8 @@ public class AgentSelectorDialog extends JDialog {
 
   /**
    * Crea una instancia del agente seleccionado actualmente en el ComboBox.
+   * Para que sea posible el agente tiene que tener un constructor que acepte
+   * exactamente un parámetro de tipo {@link es.ull.mazesolver.gui.environment.Environment}.
    *
    * @return Instancia del agente seleccionado.
    */
@@ -248,7 +256,7 @@ public class AgentSelectorDialog extends JDialog {
       return ag;
     }
     catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-        | InvocationTargetException | NoSuchMethodException | SecurityException e2) {
+         | InvocationTargetException | NoSuchMethodException | SecurityException e2) {
       e2.printStackTrace();
       return null;
     }

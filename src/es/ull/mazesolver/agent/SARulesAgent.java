@@ -56,6 +56,7 @@ import es.ull.mazesolver.agent.rules.parser.SituationActionLexer;
 import es.ull.mazesolver.agent.rules.parser.SituationActionParser;
 import es.ull.mazesolver.agent.rules.parser.SituationActionParser.Sa_ruleContext;
 import es.ull.mazesolver.gui.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.util.Direction;
@@ -183,16 +184,12 @@ public class SARulesAgent extends Agent {
       private static final long serialVersionUID = 1L;
 
       private JTextArea m_text;
+      private JLabel m_title;
 
-      /*
-       * (non-Javadoc)
-       *
-       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#createGUI(javax.swing.JPanel)
-       */
       @Override
       protected void createGUI (JPanel root) {
         root.setLayout(new BorderLayout());
-        JLabel title = new JLabel("Write your rules here:");
+        m_title = new JLabel();
 
         m_text = new JTextArea(m_code);
         JScrollPane scroll = new JScrollPane(m_text);
@@ -222,27 +219,17 @@ public class SARulesAgent extends Agent {
           }
         });
 
-        root.add(title, BorderLayout.NORTH);
+        root.add(m_title, BorderLayout.NORTH);
         root.add(scroll, BorderLayout.CENTER);
 
         root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         root.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
       }
 
-      /*
-       * (non-Javadoc)
-       *
-       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#cancel()
-       */
       @Override
       public void cancel () {
       }
 
-      /*
-       * (non-Javadoc)
-       *
-       * @see es.ull.mazesolver.gui.AgentConfigurationPanel#accept()
-       */
       @Override
       public boolean accept () {
         // Cargamos el código nuevo en el agente y guardamos una copia del
@@ -261,6 +248,12 @@ public class SARulesAgent extends Agent {
           m_success.add("Code compiled successfully.");
           return true;
         }
+      }
+
+      @Override
+      public void translate () {
+        super.translate();
+        m_title.setText(MainWindow.getTranslations().agent().writeRulesHere());
       }
     };
   }

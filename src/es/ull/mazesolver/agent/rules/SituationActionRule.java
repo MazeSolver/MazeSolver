@@ -27,6 +27,7 @@ package es.ull.mazesolver.agent.rules;
 
 import es.ull.mazesolver.agent.SARulesAgent;
 import es.ull.mazesolver.agent.rules.parser.SituationActionParser.Sa_ruleContext;
+import es.ull.mazesolver.gui.MainWindow;
 
 /**
  * Clase que modela una regla de situación-acción.
@@ -60,7 +61,7 @@ public class SituationActionRule implements Cloneable {
   public SituationActionRule (RulePredicate pred, RuleAction act) {
     if (pred == null || act == null)
       throw new IllegalArgumentException(
-          "La situación o la acción eran nulas: No se puede crear la regla.");
+          MainWindow.getTranslations().exception().situationActionInvalid());
 
     m_predicate = pred;
     m_action = act;
