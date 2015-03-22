@@ -69,6 +69,7 @@ import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.translations.ButtonTranslations;
 import es.ull.mazesolver.translations.Languages;
 import es.ull.mazesolver.translations.MenuTranslations;
+import es.ull.mazesolver.translations.SimulatorResult;
 import es.ull.mazesolver.translations.Translatable;
 import es.ull.mazesolver.translations.Translations;
 import es.ull.mazesolver.util.SimulationManager;
@@ -787,6 +788,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
    */
   @Override
   public void update (Observable obs, Object obj) {
+    SimulatorResult tr_sim = s_tr.simulation();
     // Esto sucede cuando todos los entornos han terminado de ejecutarse o se ha
     // parado la simulación.
     stopSimulation();
@@ -799,16 +801,17 @@ public class MainWindow extends JFrame implements Observer, Translatable {
         mazes.add(env.getMaze());
     }
 
-    m_console.writeInfo("SIMULATION RESULTS");
+    m_console.writeInfo(tr_sim.title());
     m_console.writeInfo("==================");
     for (int i = 0; i < mazes.size(); i++) {
       Maze maze = mazes.get(i);
       Agent maze_winner = results.getWinner(maze);
-      m_console.writeInfo("=== Maze " + (i + 1) + " (" + maze.getWidth() + "x" + maze.getHeight()
-          + ") ===");
-      m_console.writeInfo("* Time taken first: " + results.timeTakenFirst(maze));
-      m_console.writeInfo("* Time taken last: " + results.timeTakenLast(maze));
-      m_console.writeInfo("* Winner: " + (maze_winner != null? maze_winner.getName() : "None"));
+      m_console.writeInfo("=== " + tr_sim.maze() + " " + (i + 1) + " (" + maze.getWidth() + "x"
+          + maze.getHeight() + ") ===");
+      m_console.writeInfo("* " + tr_sim.timeTakenFirst() + ": " + results.timeTakenFirst(maze));
+      m_console.writeInfo("* " + tr_sim.timeTakenLast() + ": " + results.timeTakenLast(maze));
+      m_console.writeInfo("* " + tr_sim.winner() + ": "
+          + (maze_winner != null? maze_winner.getName() : tr_sim.none()));
       m_console.writeInfo("");
 
       for (int j = 0; j < envs.size(); j++) {
@@ -816,18 +819,20 @@ public class MainWindow extends JFrame implements Observer, Translatable {
         if (env.getMaze() == maze) {
           Agent env_winner = results.getWinner(env);
           m_console.writeInfo("  == " + env.getTitle() + " ==");
-          m_console.writeInfo("  * Time taken first: " + results.timeTakenFirst(env));
-          m_console.writeInfo("  * Time taken last: " + results.timeTakenLast(env));
-          m_console.writeInfo("  * Winner: " + (env_winner != null? env_winner.getName() : "None"));
+          m_console.writeInfo("* " + tr_sim.timeTakenFirst() + ": " + results.timeTakenFirst(env));
+          m_console.writeInfo("* " + tr_sim.timeTakenLast() + ": " + results.timeTakenLast(env));
+          m_console.writeInfo("* " + tr_sim.winner() + ": "
+              + (env_winner != null? env_winner.getName() : tr_sim.none()));
           m_console.writeInfo("");
-          m_console.writeInfo("  * Agents detail:");
+          m_console.writeInfo("  * " + tr_sim.agentsDetail() + ":");
 
           for (Map.Entry <Agent, Integer> entry: results.getSteps(env).entrySet()) {
             Agent ag = entry.getKey();
             String finished =
-                maze.containsPoint(new Point(ag.getX(), ag.getY()))? "NOT FINISHED" : "FINISHED";
-            m_console.writeInfo("    - " + ag.getName() + ": " + entry.getValue() + " steps ["
-                + finished + "]");
+                maze.containsPoint(new Point(ag.getX(), ag.getY()))? tr_sim.notFinished() : tr_sim
+                    .finished();
+            m_console.writeInfo("    - " + ag.getName() + ": " + entry.getValue() + " "
+                + tr_sim.steps() + " [" + finished + "]");
           }
         }
       }
