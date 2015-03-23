@@ -36,37 +36,46 @@ import com.github.rodionmoiseev.c10n.annotations.Es;
 public interface ButtonTranslations {
   @En ("Run")
   @Es ("Ejecutar")
+  @De ("Ausführen")
   String run ();
 
   @En ("Step")
   @Es ("Siguiente")
+  @De ("Nächster Schritt")
   String step ();
 
   @En ("Pause")
   @Es ("Pausar")
+  @De ("Pause")
   String pause ();
 
   @En ("Continue")
   @Es ("Continuar")
+  @De ("Weiter")
   String kontinue();
 
   @En ("Stop")
   @Es ("Detener")
+  @De ("Stop")
   String stop ();
 
   @En ("Zoom")
   @Es ("Aumento")
+  @De ("Zoom")
   String zoom ();
 
   @En ("Ok")
   @Es ("Aceptar")
+  @De ("Ok")
   String ok ();
 
   @En ("Cancel")
   @Es ("Cancelar")
+  @De ("Abbrechen")
   String cancel ();
 
   @En ("Configure")
   @Es ("Configurar")
+  @De ("Konfigurieren")
   String configure ();
 }

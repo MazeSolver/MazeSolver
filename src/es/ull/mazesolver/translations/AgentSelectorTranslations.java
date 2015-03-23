@@ -36,37 +36,46 @@ import com.github.rodionmoiseev.c10n.annotations.Es;
 public interface AgentSelectorTranslations {
   @En ("Create new agent")
   @Es ("Crear nuevo agente")
+  @De ("Neuen Agent erstellen")
   String createNewAgent ();
 
   @En ("Algorithm")
   @Es ("Algoritmo")
+  @De ("Algorithmus")
   String algorithm ();
 
   @En ("Amount")
   @Es ("Cantidad")
+  @De ("Anzahl")
   String amount ();
 
   @En ("Distance measure")
   @Es ("Medición de distancias")
+  @De ("Distanzmaß")
   String distanceCalculator ();
 
   @En ("This agent has no configuration options available")
   @Es ("Este agente no tiene opciones de configuración disponibles")
+  @De ("Dieser Agent hat keine Konfigurationsoptionen verfügbar")
   String noAgentConfigurationAvailable ();
 
   @En ("Write your rules here")
   @Es ("Escriba aquí sus reglas")
+  @De ("Schreiben Sie ihre Regeln hier")
   String writeRulesHere ();
 
   @En ("Initial temperature")
   @Es ("Temperatura inicial")
+  @De ("Anfangstemperatur")
   String initialTemp ();
 
   @En ("Cooling rate factor")
   @Es ("Factor de enfriado")
+  @De ("Kühlrate")
   String coolingRateFactor ();
 
   @En ("Wall to follow")
   @Es ("Pared que seguir")
+  @De ("Wand zum folgen")
   String wallToFollow ();
 }

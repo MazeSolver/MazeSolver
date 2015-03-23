@@ -36,17 +36,21 @@ import com.github.rodionmoiseev.c10n.annotations.Es;
 public interface ConsoleTranslations {
   @En("Log")
   @Es("Registro")
+  @De ("Log")
   String log ();
 
   @En("Clear")
   @Es("Limpiar")
+  @De ("Löschen")
   String clear ();
 
   @En("Save to file")
   @Es("Guardar en un fichero")
+  @De ("Als Datei speichern")
   String saveToFile ();
 
   @En("Log save failed")
   @Es("Error al guardar el registro")
+  @De ("Fehler beim Speichern des Logs")
   String logSaveError ();
 }

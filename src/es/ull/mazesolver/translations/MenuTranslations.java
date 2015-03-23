@@ -36,77 +36,96 @@ import com.github.rodionmoiseev.c10n.annotations.Es;
 public interface MenuTranslations {
   @En ("File")
   @Es ("Archivo")
+  @De ("Datei")
   String file ();
 
   @En ("New maze")
   @Es ("Nuevo laberinto")
+  @De ("Neues Labyrinth")
   String newMaze ();
 
   @En ("Open maze")
   @Es ("Abrir laberinto")
+  @De ("Labyrinth öffnen")
   String openMaze ();
 
   @En ("Save maze")
   @Es ("Guardar laberinto")
+  @De ("Labyrinth speichern")
   String saveMaze ();
 
   @En ("Exit")
   @Es ("Salir")
+  @De ("Schließen")
   String exit ();
 
   @En ("Maze")
   @Es ("Laberinto")
+  @De ("Labyrinth")
   String maze ();
 
   @En ("Copy maze")
   @Es ("Copiar laberinto")
+  @De ("Labyrinth kopieren")
   String copyMaze ();
 
   @En ("Change maze")
   @Es ("Cambiar de laberinto")
+  @De ("Labyrinth ändern")
   String changeMaze ();
 
   @En ("Close maze")
   @Es ("Cerrar laberinto")
+  @De ("Labyrinth schließen")
   String closeMaze ();
 
   @En ("Agent")
   @Es ("Agente")
+  @De ("Agent")
   String agent ();
 
   @En ("New agent")
   @Es ("Nuevo agente")
+  @De ("Neuer Agent")
   String newAgent ();
 
   @En ("Clone agent")
   @Es ("Clonar agente")
+  @De ("Agent klonen")
   String cloneAgent ();
 
   @En ("Configure agent")
   @Es ("Configurar agente")
+  @De ("Agent konfigurieren")
   String configureAgent ();
 
   @En ("Load agent")
   @Es ("Cargar agente")
+  @De ("Agent laden")
   String loadAgent ();
 
   @En ("Save agent")
   @Es ("Guardar agente")
+  @De ("Agent speichern")
   String saveAgent ();
 
   @En ("Remove agent")
   @Es ("Eliminar agente")
+  @De ("Agent entfernen")
   String removeAgent ();
 
   @En ("Help")
   @Es ("Ayuda")
+  @De ("Hilfe")
   String help ();
 
   @En ("About")
   @Es ("Acerca de")
+  @De ("Über")
   String about ();
 
   @En ("Language")
   @Es ("Idioma")
+  @De ("Sprache")
   String language ();
 }

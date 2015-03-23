@@ -38,42 +38,52 @@ public interface SimulatorResult {
 
   @En ("SIMULATION RESULTS")
   @Es ("RESULTADOS DE LA SIMULACIÓN")
+  @De ("SIMULATIONSERGEBNISSE")
   String title ();
 
   @En ("Winner")
   @Es ("Ganador")
+  @De ("Gewinner")
   String winner ();
 
   @En ("Maze")
   @Es ("Laberinto")
+  @De ("Labyrinth")
   String maze ();
 
   @En ("Time taken first")
   @Es ("Tiempo que tardo el primero")
+  @De ("Erste Zeit")
   String timeTakenFirst ();
 
   @En ("Time taken last")
   @Es ("Tiempo que tardo el último")
+  @De ("Letzte Zeit")
   String timeTakenLast ();
 
   @En ("None")
   @Es ("Nada")
+  @De ("Nichts")
   String none ();
 
   @En ("Agents detail")
   @Es ("Agente detallados")
+  @De ("Agentdetails")
   String agentsDetail ();
 
   @En ("NOT FINISHED")
   @Es ("NO ACABO")
+  @De ("NICHT BEENDET")
   String notFinished ();
 
   @En ("FINISHED")
   @Es ("ACABO")
+  @De ("BEENDET")
   String finished ();
 
   @En ("steps")
   @Es ("pasos")
+  @De ("Schritte")
   String steps ();
 
 }
