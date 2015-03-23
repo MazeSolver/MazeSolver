@@ -53,12 +53,12 @@ public interface SimulatorResult {
   String maze ();
 
   @En ("Time taken first")
-  @Es ("Tiempo que tardo el primero")
+  @Es ("Tiempo que tardó el primero")
   @De ("Erste Zeit")
   String timeTakenFirst ();
 
   @En ("Time taken last")
-  @Es ("Tiempo que tardo el último")
+  @Es ("Tiempo que tardó el último")
   @De ("Letzte Zeit")
   String timeTakenLast ();
 
@@ -68,17 +68,17 @@ public interface SimulatorResult {
   String none ();
 
   @En ("Agents detail")
-  @Es ("Agente detallados")
+  @Es ("Detalles de agentes")
   @De ("Agentdetails")
   String agentsDetail ();
 
   @En ("NOT FINISHED")
-  @Es ("NO ACABO")
+  @Es ("NO ACABÓ")
   @De ("NICHT BEENDET")
   String notFinished ();
 
   @En ("FINISHED")
-  @Es ("ACABO")
+  @Es ("ACABÓ")
   @De ("BEENDET")
   String finished ();
 
