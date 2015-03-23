@@ -26,6 +26,7 @@
 package es.ull.mazesolver.translations;
 
 import com.github.rodionmoiseev.c10n.C10NMessages;
+import com.github.rodionmoiseev.c10n.annotations.De;
 import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
 
