@@ -36,37 +36,46 @@ import com.github.rodionmoiseev.c10n.annotations.Es;
 public interface MazeSelectorTranslations {
   @En ("Create a new maze")
   @Es ("Crear un nuevo laberinto")
+  @De ("Neues Labyrinth erstellen")
   String createNewMaze ();
 
   @En ("Algorithm")
   @Es ("Algoritmo")
+  @De ("Algorithmus")
   String algorithm ();
 
   @En ("Rows")
   @Es ("Filas")
+  @De ("Zeilen")
   String rows ();
 
   @En ("Columns")
   @Es ("Columnas")
+  @De ("Spalten")
   String columns ();
 
   @En ("Basic configuration")
   @Es ("Configuración básica")
+  @De ("Basiseinstellung")
   String basicConfiguration ();
 
   @En ("Perfect maze")
   @Es ("Laberinto perfecto")
+  @De ("Perfektes Labyrinth")
   String perfectMaze ();
 
   @En ("Add cycles")
   @Es ("Añadir ciclos")
+  @De ("Zyklen hinzufügen")
   String addCycles ();
 
   @En ("Add walls")
   @Es ("Añadir paredes")
+  @De ("Wände hinzufügen")
   String addWalls ();
 
   @En ("Maze type")
   @Es ("Tipo de laberinto")
+  @De ("Labyrinthtyp")
   String mazeType ();
 }

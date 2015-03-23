@@ -37,10 +37,17 @@ public interface Languages {
 
   @En ("Spanish")
   @Es ("Español")
+  @De ("Spanisch")
   String spanish ();
 
   @En ("English")
   @Es ("Inglés")
+  @De ("Englisch")
   String english ();
+  
+  @En ("German")
+  @Es ("Alemán")
+  @De ("Deutsch")
+  String german ();
 
 }
