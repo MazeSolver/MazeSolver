@@ -1,7 +1,7 @@
 MazeSolver
 ==========
 
-Proyecto de la asignatura de Sistemas Inteligentes de la Universidad de La Laguna (Computación).
+Generador y resolvedor de laberintos generados desde algorítmos de la inteligencia artificial.
 
 ![Screenshot](prototype/gui.png)
 
