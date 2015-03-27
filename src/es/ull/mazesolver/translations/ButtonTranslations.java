@@ -29,6 +29,7 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
 import com.github.rodionmoiseev.c10n.annotations.De;
 import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
+import com.github.rodionmoiseev.c10n.annotations.Ru;
 
 /**
  * Agrupa las traducciones de los botones.
@@ -38,45 +39,54 @@ public interface ButtonTranslations {
   @En ("Run")
   @Es ("Ejecutar")
   @De ("Ausführen")
+  @Ru ("Пуск")
   String run ();
 
   @En ("Step")
   @Es ("Siguiente")
   @De ("Nächster Schritt")
+  @Ru ("Шаг")
   String step ();
 
   @En ("Pause")
   @Es ("Pausar")
   @De ("Pause")
+  @Ru ("Пауза")
   String pause ();
 
   @En ("Continue")
   @Es ("Continuar")
   @De ("Weiter")
+  @Ru ("Продолжить")
   String kontinue();
 
   @En ("Stop")
   @Es ("Detener")
   @De ("Stop")
+  @Ru ("Стоп")
   String stop ();
 
   @En ("Zoom")
   @Es ("Aumento")
   @De ("Zoom")
+  @Ru ("Увеличение")
   String zoom ();
 
   @En ("Ok")
   @Es ("Aceptar")
   @De ("Ok")
+  @Ru ("Да")
   String ok ();
 
   @En ("Cancel")
   @Es ("Cancelar")
   @De ("Abbrechen")
+  @Ru ("Отмена")
   String cancel ();
 
   @En ("Configure")
   @Es ("Configurar")
   @De ("Konfigurieren")
+  @Ru ("Настройки")
   String configure ();
 }

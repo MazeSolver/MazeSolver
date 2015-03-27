@@ -25,10 +25,9 @@
  */
 package es.ull.mazesolver.translations;
 
+import com.github.rodionmoiseev.c10n.C10NDef;
 import com.github.rodionmoiseev.c10n.C10NMessages;
-import com.github.rodionmoiseev.c10n.annotations.De;
 import com.github.rodionmoiseev.c10n.annotations.En;
-import com.github.rodionmoiseev.c10n.annotations.Es;
 
 /**
  * Clase contenedora de las traducciones para los distintos idiomas.
@@ -36,19 +35,15 @@ import com.github.rodionmoiseev.c10n.annotations.Es;
 @C10NMessages
 public interface Languages {
 
-  @En ("Spanish")
-  @Es ("Español")
-  @De ("Spanisch")
+  @C10NDef ("Español")
   String spanish ();
 
   @En ("English")
-  @Es ("Inglés")
-  @De ("Englisch")
   String english ();
 
-  @En ("German")
-  @Es ("Alemán")
-  @De ("Deutsch")
+  @C10NDef ("Deutsch")
   String german ();
 
+  @C10NDef ("Русский")
+  String russian ();
 }

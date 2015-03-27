@@ -29,6 +29,7 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
 import com.github.rodionmoiseev.c10n.annotations.De;
 import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
+import com.github.rodionmoiseev.c10n.annotations.Ru;
 
 /**
  * Clase contenedora de las traducciones para los resultados de las
@@ -40,51 +41,61 @@ public interface SimulatorResult {
   @En ("SIMULATION RESULTS")
   @Es ("RESULTADOS DE LA SIMULACIÓN")
   @De ("SIMULATIONSERGEBNISSE")
+  @Ru ("РЕЗУЛЬТАТ СИМУЛИРОВАНИЯ")
   String title ();
 
   @En ("Winner")
   @Es ("Ganador")
   @De ("Gewinner")
+  @Ru ("Победитель")
   String winner ();
 
   @En ("Maze")
   @Es ("Laberinto")
   @De ("Labyrinth")
+  @Ru ("Лабиринт")
   String maze ();
 
   @En ("Time taken first")
   @Es ("Tiempo que tardó el primero")
   @De ("Erste Zeit")
+  @Ru ("Время первой попытки")
   String timeTakenFirst ();
 
   @En ("Time taken last")
   @Es ("Tiempo que tardó el último")
   @De ("Letzte Zeit")
+  @Ru ("Время последней попытки")
   String timeTakenLast ();
 
   @En ("None")
   @Es ("Nada")
   @De ("Nichts")
+  @Ru ("Отсутствует")
   String none ();
 
   @En ("Agents detail")
   @Es ("Detalles de agentes")
   @De ("Agentdetails")
+  @Ru ("Подробности агента")
   String agentsDetail ();
 
   @En ("NOT FINISHED")
   @Es ("NO ACABÓ")
   @De ("NICHT BEENDET")
+  @Ru ("НЕ ПРОЙДЕН")
   String notFinished ();
 
   @En ("FINISHED")
   @Es ("ACABÓ")
   @De ("BEENDET")
+  @Ru ("ПРОЙДЕН")
   String finished ();
 
   @En ("steps")
   @Es ("pasos")
   @De ("Schritte")
+  @Ru ("шаг(ов)")
   String steps ();
 
 }
