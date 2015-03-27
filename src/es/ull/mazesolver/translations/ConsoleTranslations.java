@@ -29,6 +29,7 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
 import com.github.rodionmoiseev.c10n.annotations.De;
 import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
+import com.github.rodionmoiseev.c10n.annotations.Ru;
 
 /**
  * Contiene las traducciones de las cadenas en la consola.
@@ -38,20 +39,24 @@ public interface ConsoleTranslations {
   @En("Log")
   @Es("Registro")
   @De ("Log")
+  @Ru ("Журнал")
   String log ();
 
   @En("Clear")
   @Es("Limpiar")
   @De ("Löschen")
+  @Ru ("Очистить")
   String clear ();
 
   @En("Save to file")
   @Es("Guardar en un fichero")
   @De ("Als Datei speichern")
+  @Ru ("Сохранить в файл")
   String saveToFile ();
 
   @En("Log save failed")
   @Es("Error al guardar el registro")
   @De ("Fehler beim Speichern des Logs")
+  @Ru ("Ошибка при сохранении журнала")
   String logSaveError ();
 }
