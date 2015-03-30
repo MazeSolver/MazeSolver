@@ -163,7 +163,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       m_itm_agent_save, m_itm_agent_load;
   private JMenuItem m_itm_about;
 
-  private JMenuItem m_itm_language_spanish, m_itm_language_english, m_itm_language_german, m_itm_language_russian;
+  private JMenuItem m_itm_language_spanish, m_itm_language_english, m_itm_language_german, m_itm_language_russian, m_itm_language_french;
 
   // Representación del modelo
   private EnvironmentSet m_environments;
@@ -305,11 +305,13 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_language_english = new JMenuItem();
     m_itm_language_german = new JMenuItem();
     m_itm_language_russian = new JMenuItem();
+	m_itm_language_french = new JMenuItem();
 
     m_menu_language.add(m_itm_language_english);
     m_menu_language.add(m_itm_language_spanish);
     m_menu_language.add(m_itm_language_german);
     m_menu_language.add(m_itm_language_russian);
+	m_menu_language.add(m_itm_language_french);
 
     m_menu_bar.add(m_menu_file);
     m_menu_bar.add(m_menu_maze);
@@ -623,6 +625,16 @@ public class MainWindow extends JFrame implements Observer, Translatable {
         translate();
       }
     });
+
+	// Menú "Languages"
+    // /////////////////////////////////////////////////////////////////////////
+    m_itm_language_french.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        s_tr = C10N.get(Translations.class, new Locale("fr"));
+        translate();
+      }
+    });
   }
 
   /**
@@ -901,6 +913,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_language_spanish.setText(m_lang_tr.spanish());
     m_itm_language_german.setText(m_lang_tr.german());
     m_itm_language_russian.setText(m_lang_tr.russian());
+	m_itm_language_french.setText(m_lang_tr.french());
 
     m_run.setText(b_tr.run());
     m_step.setText(b_tr.step());

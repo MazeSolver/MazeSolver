@@ -29,6 +29,7 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
 import com.github.rodionmoiseev.c10n.annotations.De;
 import com.github.rodionmoiseev.c10n.annotations.En;
 import com.github.rodionmoiseev.c10n.annotations.Es;
+import com.github.rodionmoiseev.c10n.annotations.Fr;
 import com.github.rodionmoiseev.c10n.annotations.Ru;
 
 /**
@@ -40,53 +41,62 @@ public interface MazeSelectorTranslations {
   @Es ("Crear un nuevo laberinto")
   @De ("Neues Labyrinth erstellen")
   @Ru ("Создать новый лабиринт")
+  @Fr ("Créer un nouveau labyrinthe")
   String createNewMaze ();
 
   @En ("Algorithm")
   @Es ("Algoritmo")
   @De ("Algorithmus")
   @Ru ("Алгоритм")
+  @Fr ("Algorithme")
   String algorithm ();
 
   @En ("Rows")
   @Es ("Filas")
   @De ("Zeilen")
   @Ru ("Ряды")
+  @Fr ("Lignes")
   String rows ();
 
   @En ("Columns")
   @Es ("Columnas")
   @De ("Spalten")
   @Ru ("Колонки")
+  @Fr ("Colonnes")
   String columns ();
 
   @En ("Basic configuration")
   @Es ("Configuración básica")
   @De ("Basiseinstellung")
   @Ru ("Основные настройки")
+  @Fr ("Configuration de base")
   String basicConfiguration ();
 
   @En ("Perfect maze")
   @Es ("Laberinto perfecto")
   @De ("Perfektes Labyrinth")
   @Ru ("Идеальный лабиринт")
+  @Fr ("Labyrinthe parfait")
   String perfectMaze ();
 
   @En ("Add cycles")
   @Es ("Añadir ciclos")
   @De ("Zyklen hinzufügen")
   @Ru ("Добавить циклы")
+  @Fr ("Ajouter des cycles")
   String addCycles ();
 
   @En ("Add walls")
   @Es ("Añadir paredes")
   @De ("Wände hinzufügen")
   @Ru ("Добавить стены")
+  @Fr ("Ajouter des murs")
   String addWalls ();
 
   @En ("Maze type")
   @Es ("Tipo de laberinto")
   @De ("Labyrinthtyp")
   @Ru ("Вид лабиринта")
+  @Fr ("Type de labyrinthe")
   String mazeType ();
 }

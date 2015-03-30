@@ -46,4 +46,7 @@ public interface Languages {
 
   @C10NDef ("Русский")
   String russian ();
+  
+  @C10NDef ("Français")
+  String french ();
 }
