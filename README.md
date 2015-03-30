@@ -5,18 +5,12 @@ Programa generador y solucionador de laberintos utilizando técnicas de IA basad
 
 ![Screenshot](prototype/gui.png)
 
-## Links de interes
-A continuación les listamos algunos links de interes tales como el blog [1] de la aplicación la wiki [2] alojada en github y la documentación del código [3].
+## Links de interés
+A continuación les listamos algunos links de interés relacionados con este proyecto.
 
-En el blog puedes encontrar publicaciones divertidas y un resumen del avance de este proyecto.
-
-En la wiki te puedes encontrar una descripción mas detallada de lo que es MazeSolver, Un tutorial para desarrolladores para añadir nuevos agentes al sistema, listado de versiones con lo que fue añadido en cada una, y mas.
-
-La documentación del código es fue generada con JavaDoc y te permitira ver sin entrar al propio código de manera sencilla que se hace en cada paquete, metodo, clase.
-
-* [[1](http://mazesolver.github.io/MazeSolver/)]
-* [[2](https://github.com/MazeSolver/MazeSolver/wiki)]
-* [[3](https://mazesolver.wordpress.com/)]
+* [Documentación de la API](http://mazesolver.github.io/MazeSolver/): La documentación del código fue generada con JavaDoc y te permitirá ver sin entrar al propio código de manera sencilla qué se hace en cada paquete, método o clase o para qué son ciertas constantes.
+* [Wiki del proyecto](https://github.com/MazeSolver/MazeSolver/wiki): En la wiki te puedes encontrar una descripción mas detallada de lo que es MazeSolver, un tutorial para desarrolladores para añadir nuevos agentes al sistema, listado de versiones con lo que fue añadido en cada una, y más.
+* [Blog del proyecto](https://mazesolver.wordpress.com/): En el blog puedes encontrar publicaciones divertidas y un resumen del avance de este proyecto.
 
 ## [LICENSE](http://www.gnu.org/licenses/gpl-3.0.html) ![LICENSE](http://www.gnu.org/graphics/gplv3-88x31.png)
 
