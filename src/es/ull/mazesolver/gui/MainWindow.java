@@ -183,6 +183,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
         // install default annotations
         install(new DefaultC10NAnnotations());
 
+        bindBundle("translations.Translations");
+
         /**
          * setup c10n to fallback to @En annotation when locale does not match
          * any other registered annotation, by binding it without specifying the

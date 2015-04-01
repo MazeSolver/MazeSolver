@@ -26,11 +26,6 @@
 package es.ull.mazesolver.translations;
 
 import com.github.rodionmoiseev.c10n.C10NMessages;
-import com.github.rodionmoiseev.c10n.annotations.De;
-import com.github.rodionmoiseev.c10n.annotations.En;
-import com.github.rodionmoiseev.c10n.annotations.Es;
-import com.github.rodionmoiseev.c10n.annotations.Fr;
-import com.github.rodionmoiseev.c10n.annotations.Ru;
 
 /**
  * Clase contenedora de las traducciones para los resultados de las
@@ -38,75 +33,14 @@ import com.github.rodionmoiseev.c10n.annotations.Ru;
  */
 @C10NMessages
 public interface SimulatorResult {
-
-  @En ("SIMULATION RESULTS")
-  @Es ("RESULTADOS DE LA SIMULACIÓN")
-  @De ("SIMULATIONSERGEBNISSE")
-  @Ru ("РЕЗУЛЬТАТ СИМУЛИРОВАНИЯ")
-  @Fr ("RÉSULTATS DE LA SIMULATION")
   String title ();
-
-  @En ("Winner")
-  @Es ("Ganador")
-  @De ("Gewinner")
-  @Ru ("Победитель")
-  @Fr ("Vainqueur")
   String winner ();
-
-  @En ("Maze")
-  @Es ("Laberinto")
-  @De ("Labyrinth")
-  @Ru ("Лабиринт")
-  @Fr ("Labyrinthe")
   String maze ();
-
-  @En ("Time taken first")
-  @Es ("Tiempo que tardó el primero")
-  @De ("Erste Zeit")
-  @Ru ("Время первой попытки")
-  @Fr ("Premier temps")
   String timeTakenFirst ();
-
-  @En ("Time taken last")
-  @Es ("Tiempo que tardó el último")
-  @De ("Letzte Zeit")
-  @Ru ("Время последней попытки")
-  @Fr ("Dernier temps")
   String timeTakenLast ();
-
-  @En ("None")
-  @Es ("Nada")
-  @De ("Nichts")
-  @Ru ("Отсутствует")
-  @Fr ("Aucun")
   String none ();
-
-  @En ("Agents detail")
-  @Es ("Detalles de agentes")
-  @De ("Agentdetails")
-  @Ru ("Подробности агента")
-  @Fr ("Détails de l'agent")
   String agentsDetail ();
-
-  @En ("NOT FINISHED")
-  @Es ("NO ACABÓ")
-  @De ("NICHT BEENDET")
-  @Ru ("НЕ ПРОЙДЕН")
-  @Fr ("NON TERMINÉ")
   String notFinished ();
-
-  @En ("FINISHED")
-  @Es ("ACABÓ")
-  @De ("BEENDET")
-  @Ru ("ПРОЙДЕН")
-  @Fr ("TERMINÉ")
   String finished ();
-
-  @En ("steps")
-  @Es ("pasos")
-  @De ("Schritte")
-  @Ru ("шаг(ов)")
-  @Fr ("pas")
   String steps ();
-
 }

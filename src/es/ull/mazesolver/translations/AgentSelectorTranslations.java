@@ -26,77 +26,19 @@
 package es.ull.mazesolver.translations;
 
 import com.github.rodionmoiseev.c10n.C10NMessages;
-import com.github.rodionmoiseev.c10n.annotations.De;
-import com.github.rodionmoiseev.c10n.annotations.En;
-import com.github.rodionmoiseev.c10n.annotations.Es;
-import com.github.rodionmoiseev.c10n.annotations.Fr;
-import com.github.rodionmoiseev.c10n.annotations.Ru;
 
 /**
  * Clase que agrupa las traducciones de la ventana de selección de agentes.
  */
 @C10NMessages
 public interface AgentSelectorTranslations {
-  @En ("Create new agent")
-  @Es ("Crear nuevo agente")
-  @De ("Neuen Agent erstellen")
-  @Ru ("Создать нового агента")
-  @Fr ("Créer un nouvel agent")
   String createNewAgent ();
-
-  @En ("Algorithm")
-  @Es ("Algoritmo")
-  @De ("Algorithmus")
-  @Ru ("Алгоритм")
-  @Fr ("Algorithme")
   String algorithm ();
-
-  @En ("Amount")
-  @Es ("Cantidad")
-  @De ("Anzahl")
-  @Ru ("Количество")
-  @Fr ("Quantité")
   String amount ();
-
-  @En ("Distance measure")
-  @Es ("Medición de distancias")
-  @De ("Distanzmaß")
-  @Ru ("Измерение дистанции")
-  @Fr ("Mesure des distances")
   String distanceCalculator ();
-
-  @En ("This agent has no configuration options available")
-  @Es ("Este agente no tiene opciones de configuración disponibles")
-  @De ("Dieser Agent hat keine Konfigurationsoptionen verfügbar")
-  @Ru ("У данного агента нет настроек")
-  @Fr ("Cet agent ne possède pas d'options de configuration disponibles")
   String noAgentConfigurationAvailable ();
-
-  @En ("Write your rules here")
-  @Es ("Escriba aquí sus reglas")
-  @De ("Schreiben Sie ihre Regeln hier")
-  @Ru ("Правила записываются здесь")
-  @Fr ("Écrivez vos règles ici")
   String writeRulesHere ();
-
-  @En ("Initial temperature")
-  @Es ("Temperatura inicial")
-  @De ("Anfangstemperatur")
-  @Ru ("Начальная температура")
-  @Fr ("Température initiale")
   String initialTemp ();
-
-  @En ("Cooling rate factor")
-  @Es ("Factor de enfriado")
-  @De ("Kühlrate")
-  @Ru ("Фактор охлаждаемости")
-  @Fr ("Facteur de refroidissement")
   String coolingRateFactor ();
-
-  @En ("Wall to follow")
-  @Es ("Pared que seguir")
-  @De ("Wand zum folgen")
-  @Ru ("Следовать стене")
-  @Fr ("Mur à suivre")
   String wallToFollow ();
 }

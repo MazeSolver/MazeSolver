@@ -34,7 +34,6 @@ package es.ull.mazesolver.translations;
  * Esto excluye a todos los diálogos modales.
  */
 public interface Translatable {
-
   /**
    * Traduce las cadenas de texto de la clase.
    */

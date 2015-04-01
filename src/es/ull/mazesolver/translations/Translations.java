@@ -26,6 +26,7 @@
 package es.ull.mazesolver.translations;
 
 
+
 /**
  * Interfaz compuesta de todas las traducciones de todos los elementos de la
  * aplicación.
@@ -41,6 +42,5 @@ public interface Translations {
   AgentSelectorTranslations agent ();
 
   SimulatorResult simulation();
-
   Languages languages();
 }
