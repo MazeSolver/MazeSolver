@@ -32,38 +32,21 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface MessageTranslations {
-
   String fileSaveFailed ();
-
   String fileOpenFailed ();
-
   String cloningFailed ();
-
   String mazeChangeFailed ();
-
   String agentCreationFailed ();
-
   String agentConfigFailed ();
-
   String agentRemovalFailed ();
-
   String noEnvironmentSelected ();
-
   String noAgentSelected ();
-
   String configureAgent ();
-
   String operationSucceeded ();
-
   String operationFailed ();
-
   String mazeFiles ();
-
   String logFiles ();
-
   String agentFiles ();
-
   String fileExists ();
-
   String fileExistsOverwrite ();
 }

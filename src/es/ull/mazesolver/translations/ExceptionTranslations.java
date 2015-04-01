@@ -32,28 +32,16 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface ExceptionTranslations {
-
   String invalidEnvironment ();
-
   String invalidMaze ();
-
   String invalidAgent ();
-
   String invalidMazeCreationAlgorithm ();
-
   String invalidDistanceCalculator ();
-
   String agentNotInEnvironment ();
-
   String envNotInEnvSet ();
-
   String environmentsNotExchangeable ();
-
   String indexOutOfRange ();
-
   String tooSmallRowsCols ();
-
   String tooManyWalls ();
-
   String situationActionInvalid ();
 }

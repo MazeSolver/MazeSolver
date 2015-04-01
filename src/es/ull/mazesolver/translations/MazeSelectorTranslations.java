@@ -32,22 +32,13 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface MazeSelectorTranslations {
-
   String createNewMaze ();
-
   String algorithm ();
-
   String rows ();
-
   String columns ();
-
   String basicConfiguration ();
-
   String perfectMaze ();
-
   String addCycles ();
-
   String addWalls ();
-
   String mazeType ();
 }

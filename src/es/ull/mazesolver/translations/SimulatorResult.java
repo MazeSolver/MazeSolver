@@ -33,25 +33,14 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface SimulatorResult {
-
   String title ();
-
   String winner ();
-
   String maze ();
-
   String timeTakenFirst ();
-
   String timeTakenLast ();
-
   String none ();
-
   String agentsDetail ();
-
   String notFinished ();
-
   String finished ();
-
   String steps ();
-
 }

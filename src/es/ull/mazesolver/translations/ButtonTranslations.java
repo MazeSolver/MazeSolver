@@ -32,23 +32,13 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface ButtonTranslations {
-
   String run ();
-
-
   String step ();
-
   String pause ();
-
   String kontinue();
-
   String stop ();
-
   String zoom ();
-
   String ok ();
-
   String cancel ();
-
   String configure ();
 }

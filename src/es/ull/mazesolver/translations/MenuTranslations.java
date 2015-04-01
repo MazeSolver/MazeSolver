@@ -32,42 +32,23 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface MenuTranslations {
-
   String file ();
-
   String newMaze ();
-
   String openMaze ();
-
   String saveMaze ();
-
   String exit ();
-
   String maze ();
-
   String copyMaze ();
-
   String changeMaze ();
-
   String closeMaze ();
-
   String agent ();
-
   String newAgent ();
-
   String cloneAgent ();
-
   String configureAgent ();
-
   String loadAgent ();
-
   String saveAgent ();
-
   String removeAgent ();
-
   String help ();
-
   String about ();
-
   String language ();
 }

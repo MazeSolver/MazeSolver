@@ -32,12 +32,8 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface ConsoleTranslations {
-
   String log ();
-
   String clear ();
-
   String saveToFile ();
-
   String logSaveError ();
 }

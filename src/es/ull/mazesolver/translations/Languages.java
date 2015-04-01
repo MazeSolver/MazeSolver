@@ -33,7 +33,6 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface Languages {
-
   @C10NDef ("Español")
   String spanish ();
 

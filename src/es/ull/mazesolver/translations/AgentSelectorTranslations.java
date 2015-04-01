@@ -32,22 +32,13 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  */
 @C10NMessages
 public interface AgentSelectorTranslations {
-
   String createNewAgent ();
-
   String algorithm ();
-
   String amount ();
-
   String distanceCalculator ();
-
   String noAgentConfigurationAvailable ();
-
   String writeRulesHere ();
-
   String initialTemp ();
-
   String coolingRateFactor ();
-
   String wallToFollow ();
 }
