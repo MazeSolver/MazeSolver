@@ -25,26 +25,14 @@
  */
 package es.ull.mazesolver.agent;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
-import javax.swing.ActionMap;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.text.DefaultEditorKit;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -55,8 +43,8 @@ import es.ull.mazesolver.agent.rules.parser.SituationActionErrorHandler;
 import es.ull.mazesolver.agent.rules.parser.SituationActionLexer;
 import es.ull.mazesolver.agent.rules.parser.SituationActionParser;
 import es.ull.mazesolver.agent.rules.parser.SituationActionParser.Sa_ruleContext;
-import es.ull.mazesolver.gui.AgentConfigurationPanel;
-import es.ull.mazesolver.gui.MainWindow;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.configuration.SARulesAgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.util.Direction;
@@ -112,6 +100,68 @@ public class SARulesAgent extends Agent {
     compileCode();
   }
 
+  /**
+   * @return El código fuente actualmente cargado en el agente.
+   */
+  public String getCode () {
+    return m_code;
+  }
+
+  /**
+   * Cambia el código fuente cargado. Se debe llamar a {@link #compileCode()}
+   * para que el nuevo código pueda ser ejecutado por el agente.
+   * @param code
+   */
+  public void setCode (String code) {
+    m_code = code;
+  }
+
+  /**
+   * Convierte el código fuente guardado en m_code en la representación de las
+   * reglas de situación-acción.
+   *
+   * @return {@code true} si la compilación fue exitosa y {@code false} si no.
+   */
+  public boolean compileCode () {
+    m_error_handler.resetErrorList();
+
+    ArrayList <SituationActionRule> rules = new ArrayList <SituationActionRule>();
+    InputStream stream = new ByteArrayInputStream(m_code.getBytes(StandardCharsets.UTF_8));
+
+    try {
+      ANTLRInputStream input = new ANTLRInputStream(stream);
+      SituationActionLexer lexer = new SituationActionLexer(input);
+      CommonTokenStream tokens = new CommonTokenStream(lexer);
+      SituationActionParser parser = new SituationActionParser(tokens);
+
+      lexer.removeErrorListeners();
+      parser.removeErrorListeners();
+      lexer.addErrorListener(m_error_handler);
+      parser.addErrorListener(m_error_handler);
+
+      rules = new ArrayList <SituationActionRule>();
+      for (Sa_ruleContext i: parser.program().sa_rule())
+        rules.add(SituationActionRule.createFromTree(i));
+    }
+    catch (Exception e) {
+      return false;
+    }
+
+    if (m_error_handler.hasErrors())
+      return false;
+    else {
+      m_rules = rules;
+      return true;
+    }
+  }
+
+  /**
+   * @return
+   */
+  public ArrayList<String> getCompilationErrors () {
+    return m_error_handler.getErrors();
+  }
+
   /*
    * (non-Javadoc)
    *
@@ -131,6 +181,16 @@ public class SARulesAgent extends Agent {
   @Override
   public String getAlgorithmName () {
     return "Situation-Action Rules";
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see es.ull.mazesolver.agent.Agent#getAlgorithmColor()
+   */
+  @Override
+  public Color getAlgorithmColor () {
+    return Color.MAGENTA;
   }
 
   /*
@@ -180,86 +240,11 @@ public class SARulesAgent extends Agent {
    */
   @Override
   public AgentConfigurationPanel getConfigurationPanel () {
-    return new AgentConfigurationPanel() {
-      private static final long serialVersionUID = 1L;
-
-      private JTextArea m_text;
-      private JLabel m_title;
-
-      @Override
-      protected void createGUI (JPanel root) {
-        root.setLayout(new BorderLayout());
-        m_title = new JLabel();
-
-        m_text = new JTextArea(m_code);
-        JScrollPane scroll = new JScrollPane(m_text);
-
-        // Añadimos un popup para cortar, copiar, pegar y seleccionar todo
-        final JPopupMenu popup = new JPopupMenu();
-        ActionMap actions = m_text.getActionMap();
-        popup.add(actions.get(DefaultEditorKit.cutAction));
-        popup.add(actions.get(DefaultEditorKit.copyAction));
-        popup.add(actions.get(DefaultEditorKit.pasteAction));
-        popup.addSeparator();
-        popup.add(actions.get(DefaultEditorKit.selectAllAction));
-
-        m_text.addMouseListener(new MouseAdapter() {
-          public void mousePressed (MouseEvent e) {
-            maybeShowPopup(e);
-          }
-
-          public void mouseReleased (MouseEvent e) {
-            maybeShowPopup(e);
-          }
-
-          private void maybeShowPopup (MouseEvent e) {
-            if (e.isPopupTrigger()) {
-              popup.show(e.getComponent(), e.getX(), e.getY());
-            }
-          }
-        });
-
-        root.add(m_title, BorderLayout.NORTH);
-        root.add(scroll, BorderLayout.CENTER);
-
-        root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        root.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
-      }
-
-      @Override
-      public void cancel () {
-      }
-
-      @Override
-      public boolean accept () {
-        // Cargamos el código nuevo en el agente y guardamos una copia del
-        // anterior
-        String prev_code = m_code;
-        m_code = m_text.getText();
-
-        // Intentamos compilar el código, y si no es válido restauramos el
-        // anterior y guardamos los errores.
-        if (!compileCode()) {
-          m_code = prev_code;
-          m_errors = m_error_handler.getErrors();
-          return false;
-        }
-        else {
-          m_success.add("Code compiled successfully.");
-          return true;
-        }
-      }
-
-      @Override
-      public void translate () {
-        super.translate();
-        m_title.setText(MainWindow.getTranslations().agent().writeRulesHere());
-      }
-    };
+    return new SARulesAgentConfigurationPanel(this);
   }
 
   /**
-   * Indica si una celda adyacente al agente ha sido visitada ya por él mismo.
+   * Indica si una celda adyacente al agente ha sido visitada ya por el mismo.
    *
    * @param dir
    *          Dirección en la que hay que mirar.
@@ -275,45 +260,6 @@ public class SARulesAgent extends Agent {
     return m_visited[p.y][p.x];
   }
 
-  /**
-   * Convierte el código fuente guardado en m_code en la representación de las
-   * reglas de situación-acción.
-   *
-   * @return {@code true} si la compilación fue exitosa y {@code false} si no.
-   */
-  protected boolean compileCode () {
-    m_error_handler.resetErrorList();
-
-    ArrayList <SituationActionRule> rules = new ArrayList <SituationActionRule>();
-    InputStream stream = new ByteArrayInputStream(m_code.getBytes(StandardCharsets.UTF_8));
-
-    try {
-      ANTLRInputStream input = new ANTLRInputStream(stream);
-      SituationActionLexer lexer = new SituationActionLexer(input);
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-      SituationActionParser parser = new SituationActionParser(tokens);
-
-      lexer.removeErrorListeners();
-      parser.removeErrorListeners();
-      lexer.addErrorListener(m_error_handler);
-      parser.addErrorListener(m_error_handler);
-
-      rules = new ArrayList <SituationActionRule>();
-      for (Sa_ruleContext i: parser.program().sa_rule())
-        rules.add(SituationActionRule.createFromTree(i));
-    }
-    catch (Exception e) {
-      return false;
-    }
-
-    if (m_error_handler.hasErrors())
-      return false;
-    else {
-      m_rules = rules;
-      return true;
-    }
-  }
-
   /*
    * (non-Javadoc)
    *
@@ -322,8 +268,8 @@ public class SARulesAgent extends Agent {
   @Override
   public Object clone () {
     SARulesAgent ag = new SARulesAgent(m_env);
+    ag.setAgentColor(getAgentColor());
     ag.m_code = m_code;
-    ag.m_pos = (Point) m_pos.clone();
     ag.m_rules = new ArrayList <SituationActionRule>(m_rules.size());
     for (SituationActionRule r: m_rules)
       ag.m_rules.add((SituationActionRule) r.clone());

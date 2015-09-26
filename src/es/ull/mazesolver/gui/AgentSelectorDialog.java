@@ -54,6 +54,7 @@ import es.ull.mazesolver.agent.RecursiveAgent;
 import es.ull.mazesolver.agent.SARulesAgent;
 import es.ull.mazesolver.agent.SimulatedAnnealingAgent;
 import es.ull.mazesolver.agent.WallFollowerAgent;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.translations.Translations;
 

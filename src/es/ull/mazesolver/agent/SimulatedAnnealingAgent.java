@@ -25,26 +25,17 @@
  */
 package es.ull.mazesolver.agent;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.Color;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-
-import es.ull.mazesolver.agent.distance.DistanceCalculator;
-import es.ull.mazesolver.gui.AgentConfigurationPanel;
-import es.ull.mazesolver.gui.MainWindow;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.configuration.SimulatedAnnealingAgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.MazeCell;
-import es.ull.mazesolver.translations.AgentSelectorTranslations;
 import es.ull.mazesolver.util.Direction;
 
 /**
@@ -74,6 +65,38 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
     m_cooling_rate = DEFAULT_COOLING_RATE;
   }
 
+  /**
+   * @return La temperatura inicial usada por el agente.
+   */
+  public int getInitialTemperature () {
+    return m_initial_temp;
+  }
+
+  /**
+   * Cambia la temperatura inicial del agente.
+   *
+   * @param temp La nueva temperatura inicial.
+   */
+  public void setInitialTemperature (int temp) {
+    m_initial_temp = temp;
+  }
+
+  /**
+   * @return El ratio de enfriamiento por iteración del agente.
+   */
+  public double getCoolingRate () {
+    return m_cooling_rate;
+  }
+
+  /**
+   * Cambia el ratio de enfriamiento del agente por iteración.
+   *
+   * @param rate El nuevo ratio de enfriamiento.
+   */
+  public void setCoolingRate (double rate) {
+    m_cooling_rate = rate;
+  }
+
   /*
    * (non-Javadoc)
    *
@@ -82,6 +105,16 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
   @Override
   public String getAlgorithmName () {
     return "Simulated Annealing";
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see es.ull.mazesolver.agent.Agent#getAlgorithmColor()
+   */
+  @Override
+  public Color getAlgorithmColor () {
+    return Color.CYAN;
   }
 
   /*
@@ -139,72 +172,7 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
    */
   @Override
   public AgentConfigurationPanel getConfigurationPanel () {
-    return new AgentConfigurationPanel() {
-      private static final long serialVersionUID = 1L;
-
-      private static final double COOLING_STEP = 0.001;
-      private static final double EPSILON = 0.000000001;
-      private static final String COOLING_RATE_FORMAT = "0.000000000";
-
-      private DistanceConfigurationPanel distance;
-      private JSpinner initial_temp, cooling_rate;
-      private JLabel initial_temp_text, cooling_rate_text;
-
-      @Override
-      protected void createGUI (JPanel root) {
-        distance = new DistanceConfigurationPanel();
-        initial_temp = new JSpinner(
-            new SpinnerNumberModel(m_initial_temp, 1, Integer.MAX_VALUE, 1));
-        cooling_rate = new JSpinner(
-            new SpinnerNumberModel(m_cooling_rate, EPSILON, 1 - EPSILON, COOLING_STEP));
-        cooling_rate.setEditor(new JSpinner.NumberEditor(cooling_rate, COOLING_RATE_FORMAT));
-
-        initial_temp_text = new JLabel();
-        cooling_rate_text = new JLabel();
-
-        JPanel label_panel = new JPanel(new GridLayout(2, 1));
-        label_panel.add(initial_temp_text);
-        label_panel.add(cooling_rate_text);
-
-        JPanel content_panel = new JPanel(new GridLayout(2, 1));
-        content_panel.add(initial_temp);
-        content_panel.add(cooling_rate);
-
-        JPanel label_content = new JPanel(new BorderLayout());
-        label_content.add(label_panel, BorderLayout.WEST);
-        label_content.add(content_panel, BorderLayout.CENTER);
-
-        JPanel global = new JPanel(new BorderLayout());
-        global.add(distance, BorderLayout.NORTH);
-        global.add(label_content, BorderLayout.SOUTH);
-
-        root.setLayout(new BorderLayout(5, 0));
-        root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        root.add(global, BorderLayout.NORTH);
-      }
-
-      @Override
-      protected void cancel () {
-      }
-
-      @Override
-      protected boolean accept () {
-        m_dist = DistanceCalculator.fromType(distance.getSelectedType());
-        m_initial_temp = (Integer) initial_temp.getValue();
-        m_cooling_rate = (Double) cooling_rate.getValue();
-        return true;
-      }
-
-      @Override
-      public void translate () {
-        super.translate();
-        distance.translate();
-
-        AgentSelectorTranslations tr = MainWindow.getTranslations().agent();
-        initial_temp_text.setText(tr.initialTemp() + ":");
-        cooling_rate_text.setText(tr.coolingRateFactor() + ":");
-      }
-    };
+    return new SimulatedAnnealingAgentConfigurationPanel(this);
   }
 
   /*
@@ -215,6 +183,7 @@ public class SimulatedAnnealingAgent extends HeuristicAgent {
   @Override
   public Object clone () {
     SimulatedAnnealingAgent ag = new SimulatedAnnealingAgent(m_env);
+    ag.setAgentColor(getAgentColor());
     ag.setDistanceCalculator(m_dist);
     ag.m_cooling_rate = m_cooling_rate;
     ag.m_initial_temp = m_initial_temp;

@@ -25,19 +25,12 @@
  */
 package es.ull.mazesolver.agent;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-
-import es.ull.mazesolver.gui.AgentConfigurationPanel;
-import es.ull.mazesolver.gui.MainWindow;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.configuration.WallFollowerAgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.util.Direction;
 import es.ull.mazesolver.util.Rotation;
@@ -107,6 +100,16 @@ public class WallFollowerAgent extends Agent {
   /*
    * (non-Javadoc)
    *
+   * @see es.ull.mazesolver.agent.Agent#getAlgorithmColor()
+   */
+  @Override
+  public Color getAlgorithmColor () {
+    return Color.GRAY;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
    * @see es.ull.mazesolver.agent.Agent#getNextMovement()
    */
   @Override
@@ -152,41 +155,7 @@ public class WallFollowerAgent extends Agent {
    */
   @Override
   public AgentConfigurationPanel getConfigurationPanel () {
-    return new AgentConfigurationPanel() {
-      private static final long serialVersionUID = 1L;
-
-      private JComboBox <Rotation> m_wall;
-      private JLabel wall_text;
-
-      @Override
-      protected void createGUI (JPanel root) {
-        setLayout(new FlowLayout(FlowLayout.LEFT));
-
-        wall_text = new JLabel();
-        root.add(wall_text);
-
-        m_wall = new JComboBox <Rotation>(Rotation.values());
-        m_wall.setSelectedItem(m_rot);
-        m_wall.setRenderer(new RotationRenderer());
-        root.add(m_wall);
-      }
-
-      @Override
-      protected void cancel () {
-      }
-
-      @Override
-      protected boolean accept () {
-        m_rot = (Rotation) m_wall.getSelectedItem();
-        return true;
-      }
-
-      @Override
-      public void translate () {
-        super.translate();
-        wall_text.setText(MainWindow.getTranslations().agent().wallToFollow() + ":");
-      }
-    };
+    return new WallFollowerAgentConfigurationPanel(this);
   }
 
   /*
@@ -196,7 +165,10 @@ public class WallFollowerAgent extends Agent {
    */
   @Override
   public Object clone () {
-    return new WallFollowerAgent(m_env);
+    WallFollowerAgent ag = new WallFollowerAgent(m_env);
+    ag.setAgentColor(getAgentColor());
+
+    return ag;
   }
 
   /**
@@ -215,36 +187,4 @@ public class WallFollowerAgent extends Agent {
     m_last_dir = Direction.RIGHT;
   }
 
-  /**
-   * Clase que permite mostrar un nombre personalizado para las rotaciones en el
-   * contexto de seguir paredes.
-   */
-  private class RotationRenderer extends DefaultListCellRenderer {
-    private static final long serialVersionUID = 1L;
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax
-     * .swing.JList, java.lang.Object, int, boolean, boolean)
-     */
-    @Override
-    public Component getListCellRendererComponent (JList <?> list, Object value, int index,
-        boolean isSelected, boolean cellHasFocus) {
-      Component c = super.getListCellRendererComponent(list, value, index,
-                                                       isSelected, cellHasFocus);
-
-      switch ((Rotation) value) {
-        case CLOCKWISE:
-          setText("Right wall");
-          break;
-        case COUNTER_CLOCKWISE:
-          setText("Left wall");
-          break;
-      }
-
-      return c;
-    }
-  }
 }

@@ -25,7 +25,7 @@
  */
 package es.ull.mazesolver.agent;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,11 +33,8 @@ import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.TreeMap;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-
-import es.ull.mazesolver.agent.distance.DistanceCalculator;
-import es.ull.mazesolver.gui.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.configuration.HeuristicAgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.maze.MazeCell;
@@ -88,6 +85,16 @@ public class HillClimbAgent extends HeuristicAgent {
   @Override
   public String getAlgorithmName () {
     return "Hill Climbing";
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see es.ull.mazesolver.agent.Agent#getAlgorithmColor()
+   */
+  @Override
+  public Color getAlgorithmColor () {
+    return Color.ORANGE;
   }
 
   /*
@@ -160,34 +167,7 @@ public class HillClimbAgent extends HeuristicAgent {
    */
   @Override
   public AgentConfigurationPanel getConfigurationPanel () {
-    return new AgentConfigurationPanel() {
-      private static final long serialVersionUID = 1L;
-      private DistanceConfigurationPanel distance;
-
-      @Override
-      protected void createGUI (JPanel root) {
-        distance = new DistanceConfigurationPanel();
-        root.setLayout(new BorderLayout());
-        root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        root.add(distance, BorderLayout.NORTH);
-      }
-
-      @Override
-      protected void cancel () {
-      }
-
-      @Override
-      protected boolean accept () {
-        setDistanceCalculator(DistanceCalculator.fromType(distance.getSelectedType()));
-        return true;
-      }
-
-      @Override
-      public void translate () {
-        super.translate();
-        distance.translate();
-      }
-    };
+    return new HeuristicAgentConfigurationPanel(this);
   }
 
   /*
@@ -198,7 +178,9 @@ public class HillClimbAgent extends HeuristicAgent {
   @Override
   public Object clone () {
     HillClimbAgent ag = new HillClimbAgent(m_env);
+    ag.setAgentColor(getAgentColor());
     ag.setDistanceCalculator(m_dist);
+
     return ag;
   }
 

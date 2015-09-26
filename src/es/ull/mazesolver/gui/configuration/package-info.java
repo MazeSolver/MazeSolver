@@ -20,26 +20,12 @@
  */
 
 /**
- * @file Translations.java
- * @date 13/3/2015
+ * @file package-info.java
+ * @date 25/9/2015
  */
-package es.ull.mazesolver.translations;
 
 /**
- * Interfaz compuesta de todas las traducciones de todos los elementos de la
- * aplicación.
+ * Paquete que contiene las clases con los paneles de configuración de los
+ * distintos tipos de agentes.
  */
-public interface Translations {
-  MenuTranslations menu ();
-  ButtonTranslations button ();
-  MessageTranslations message ();
-  ExceptionTranslations exception ();
-  EnumTranslations enums ();
-
-  ConsoleTranslations console ();
-  MazeSelectorTranslations maze ();
-  AgentSelectorTranslations agent ();
-
-  SimulatorResult simulation();
-  Languages languages();
-}
+package es.ull.mazesolver.gui.configuration;

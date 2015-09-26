@@ -20,26 +20,18 @@
  */
 
 /**
- * @file Translations.java
- * @date 13/3/2015
+ * @file EnumTranslations.java
+ * @date 26/9/2015
  */
 package es.ull.mazesolver.translations;
 
+import com.github.rodionmoiseev.c10n.C10NMessages;
+
 /**
- * Interfaz compuesta de todas las traducciones de todos los elementos de la
- * aplicación.
+ * Clase que agrupa las traducciones de las enumeraciones en la aplicación.
  */
-public interface Translations {
-  MenuTranslations menu ();
-  ButtonTranslations button ();
-  MessageTranslations message ();
-  ExceptionTranslations exception ();
-  EnumTranslations enums ();
-
-  ConsoleTranslations console ();
-  MazeSelectorTranslations maze ();
-  AgentSelectorTranslations agent ();
-
-  SimulatorResult simulation();
-  Languages languages();
+@C10NMessages
+public interface EnumTranslations {
+  String rightWall ();
+  String leftWall ();
 }
