@@ -65,6 +65,9 @@ public class SimpleAgentConfigurationPanel extends AgentConfigurationPanel {
     m_general.setAgentName(m_agent.getAgentName());
     m_general.setAgentColor(m_agent.getAgentColor());
 
+    String title = MainWindow.getTranslations().agent().generalConfig();
+    m_general.setBorder(BorderFactory.createTitledBorder(title));
+
     root.setLayout(new VerticalFlowLayout());
     root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
     root.add(m_general);

@@ -28,6 +28,7 @@ package es.ull.mazesolver.gui.configuration;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -88,6 +89,7 @@ public class SimulatedAnnealingAgentConfigurationPanel extends HeuristicAgentCon
     JPanel label_content = new JPanel(new BorderLayout());
     label_content.add(label_panel, BorderLayout.WEST);
     label_content.add(content_panel, BorderLayout.CENTER);
+    label_content.setBorder(BorderFactory.createTitledBorder("Simulated Annealing"));
 
     root.add(label_content);
   }

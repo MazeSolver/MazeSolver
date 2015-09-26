@@ -27,11 +27,13 @@ package es.ull.mazesolver.gui.configuration;
 
 import java.awt.Component;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import com.alee.extended.layout.VerticalFlowLayout;
 import com.alee.laf.list.WebListCellRenderer;
 
 import es.ull.mazesolver.agent.WallFollowerAgent;
@@ -72,8 +74,12 @@ public class WallFollowerAgentConfigurationPanel extends SimpleAgentConfiguratio
     m_wall.setSelectedItem(agent.getRotation());
     m_wall.setRenderer(new RotationRenderer());
 
-    root.add(wall_text);
-    root.add(m_wall);
+    JPanel global = new JPanel(new VerticalFlowLayout());
+    global.add(wall_text);
+    global.add(m_wall);
+    global.setBorder(BorderFactory.createTitledBorder("Wall Follower"));
+
+    root.add(global);
   }
 
   /* (non-Javadoc)

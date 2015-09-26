@@ -144,7 +144,7 @@ public class AgentSelectorDialog extends JDialog {
     JButton cancel = new JButton(tr.button().cancel());
     JButton config = new JButton(tr.button().configure() + "...");
 
-    JPanel button_panel = new JPanel(new FlowLayout());
+    JPanel button_panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     button_panel.add(ok);
     button_panel.add(cancel);
     button_panel.add(config);

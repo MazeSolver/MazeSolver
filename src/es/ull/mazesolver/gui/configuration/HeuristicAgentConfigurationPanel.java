@@ -25,10 +25,12 @@
  */
 package es.ull.mazesolver.gui.configuration;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import es.ull.mazesolver.agent.HeuristicAgent;
 import es.ull.mazesolver.agent.distance.DistanceCalculator;
+import es.ull.mazesolver.gui.MainWindow;
 
 /**
  * Panel de configuración de agentes heurísticos, que contiene toda la
@@ -60,6 +62,9 @@ public class HeuristicAgentConfigurationPanel extends SimpleAgentConfigurationPa
 
     HeuristicAgent agent = (HeuristicAgent) m_agent;
     m_distance = new DistanceWidget(agent.getDistanceCalculator().getType());
+
+    String title = MainWindow.getTranslations().agent().heuristicAgent();
+    m_distance.setBorder(BorderFactory.createTitledBorder(title));
 
     root.add(m_distance);
   }

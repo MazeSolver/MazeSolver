@@ -181,7 +181,7 @@ public class MazeSelectorDialog extends JDialog {
     m_ok = new JButton(tr.button().ok());
     m_cancel = new JButton(tr.button().cancel());
 
-    JPanel button_panel = new JPanel(new FlowLayout());
+    JPanel button_panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     button_panel.add(m_ok);
     button_panel.add(m_cancel);
 

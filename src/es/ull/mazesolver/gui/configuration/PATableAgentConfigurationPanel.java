@@ -25,6 +25,7 @@
  */
 package es.ull.mazesolver.gui.configuration;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import es.ull.mazesolver.agent.PATableAgent;
@@ -59,6 +60,7 @@ public class PATableAgentConfigurationPanel extends SimpleAgentConfigurationPane
     PATableAgent agent = (PATableAgent) m_agent;
     m_table = agent.getPerceptionActionTable();
     m_table_widget = new PATableWidget(m_table);
+    m_table_widget.setBorder(BorderFactory.createTitledBorder("Perception-Action"));
 
     root.add(m_table_widget);
   }

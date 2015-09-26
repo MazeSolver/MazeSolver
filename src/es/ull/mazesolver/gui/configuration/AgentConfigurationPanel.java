@@ -189,7 +189,7 @@ public abstract class AgentConfigurationPanel extends JPanel implements Translat
   private void createControls () {
     setLayout(new BorderLayout());
 
-    JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JPanel controls = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     m_accept = new JButton();
     m_cancel = new JButton();
 

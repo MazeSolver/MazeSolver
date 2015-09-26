@@ -31,6 +31,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -102,6 +103,7 @@ public class SARulesAgentConfigurationPanel extends SimpleAgentConfigurationPane
     JPanel center_panel = new JPanel(new BorderLayout());
     center_panel.add(m_title, BorderLayout.NORTH);
     center_panel.add(scroll, BorderLayout.CENTER);
+    center_panel.setBorder(BorderFactory.createTitledBorder("Situation-Action"));
 
     center_panel.setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
     root.add(center_panel);
