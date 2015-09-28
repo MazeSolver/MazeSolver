@@ -63,6 +63,7 @@ import com.github.rodionmoiseev.c10n.annotations.DefaultC10NAnnotations;
 import com.github.rodionmoiseev.c10n.annotations.En;
 
 import es.ull.mazesolver.agent.Agent;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.gui.environment.EnvironmentSet;
 import es.ull.mazesolver.maze.Maze;
@@ -87,7 +88,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   private static int MINIMUM_ZOOM_VAL = 1;
   private static int MAXIMUM_ZOOM_VAL = 100;
   private static double MINIMUM_ZOOM_AUG = 1;
-  private static double MAXIMUM_ZOOM_AUG = 3;
+  private static double MAXIMUM_ZOOM_AUG = 10;
 
   private static final long serialVersionUID = 1L;
   private static MainWindow s_instance;
@@ -849,7 +850,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       m_console.writeInfo("* " + tr_sim.timeTakenFirst() + ": " + results.timeTakenFirst(maze));
       m_console.writeInfo("* " + tr_sim.timeTakenLast() + ": " + results.timeTakenLast(maze));
       m_console.writeInfo("* " + tr_sim.winner() + ": "
-          + (maze_winner != null? maze_winner.getName() : tr_sim.none()));
+          + (maze_winner != null? maze_winner.getAgentName() : tr_sim.none()));
       m_console.writeInfo("");
 
       for (int j = 0; j < envs.size(); j++) {
@@ -860,7 +861,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           m_console.writeInfo("* " + tr_sim.timeTakenFirst() + ": " + results.timeTakenFirst(env));
           m_console.writeInfo("* " + tr_sim.timeTakenLast() + ": " + results.timeTakenLast(env));
           m_console.writeInfo("* " + tr_sim.winner() + ": "
-              + (env_winner != null? env_winner.getName() : tr_sim.none()));
+              + (env_winner != null? env_winner.getAgentName() : tr_sim.none()));
           m_console.writeInfo("");
           m_console.writeInfo("  * " + tr_sim.agentsDetail() + ":");
 
@@ -869,7 +870,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
             String finished =
                 maze.containsPoint(new Point(ag.getX(), ag.getY()))? tr_sim.notFinished() : tr_sim
                     .finished();
-            m_console.writeInfo("    - " + ag.getName() + ": " + entry.getValue() + " "
+            m_console.writeInfo("    - " + ag.getAgentName() + ": " + entry.getValue() + " "
                 + tr_sim.steps() + " [" + finished + "]");
           }
         }

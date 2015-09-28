@@ -47,6 +47,8 @@ import es.ull.mazesolver.util.Direction;
 public class EnvironmentPanel extends JPanel {
   private static final long serialVersionUID = 1L;
   private static final int CELL_SIZE_PX = 5;
+  private static final float HUE_DIFF = 0.3f;
+  private static final float SAT_BRI_THRESHOLD = 0.5f;
 
   private static double s_zoom = 1.0;
   private Environment m_env;
@@ -166,25 +168,31 @@ public class EnvironmentPanel extends JPanel {
     }
 
     // Dibujamos los agentes.
-    for (int i = 0; i < m_env.getAgentCount(); i++)
-      drawAgent(m_env.getAgent(i), Color.BLUE, g, cell_size);
+    for (int i = 0; i < m_env.getAgentCount(); i++) {
+      Agent agent = m_env.getAgent(i);
+      drawAgent(agent, agent.getAgentColor(), g, cell_size);
+    }
 
     // Dibujamos el agente seleccionado con otro color para resaltarlo.
     Agent selected = m_env.getSelectedAgent();
-    if (selected != null)
-      drawAgent(selected, Color.RED, g, cell_size);
+    if (selected != null) {
+      g.setColor(differentColor(selected.getAgentColor()));
+      g.fillOval((int) Math.round(((selected.getX() + 1) * cell_size) + cell_size / 4),
+                 (int) Math.round(((selected.getY() + 1) * cell_size) + cell_size / 4),
+                 (int) Math.round((cell_size / 2) - 1), (int) Math.round((cell_size / 2) - 1));
+    }
 
     // Dibujamos un marcador al agente sobre el que se encuentra el ratón y un
     // popup con su nombre.
     Agent hovered = m_env.getHoveredAgent();
     if (hovered != null) {
-      g.setColor(Color.GREEN);
+      g.setColor(differentColor(hovered.getAgentColor()));
       g.drawOval((int) Math.round((hovered.getX() + 1) * cell_size),
           (int) Math.round((hovered.getY() + 1) * cell_size), (int) Math.round(cell_size - 1),
           (int) Math.round(cell_size - 1));
 
       if (m_last_hovered != hovered) {
-        String name = hovered.getName();
+        String name = hovered.getAgentName();
         Point p = MouseInfo.getPointerInfo().getLocation();
 
         PopupTip.hide();
@@ -226,10 +234,36 @@ public class EnvironmentPanel extends JPanel {
    * @param cell_size
    *          Tamaño de las celdas en el panel.
    */
-  private void drawAgent (Agent ag, Color col, Graphics g, double cell_size) {
+  private static void drawAgent (Agent ag, Color col, Graphics g, double cell_size) {
     g.setColor(col);
     g.fillOval((int) Math.round((ag.getX() + 1) * cell_size),
         (int) Math.round((ag.getY() + 1) * cell_size), (int) Math.round(cell_size - 1),
         (int) Math.round(cell_size - 1));
+  }
+
+  /**
+   * Obtiene un color fácilmente diferenciable de otro color indicado. Cuando
+   * se le indican colores muy cercanos al blanco o al negro, los colores que
+   * devuelve no se diferencian con claridad.
+   *
+   * @param color El color del que se quiere buscar otro diferente.
+   * @return El color que
+   */
+  private static Color differentColor (Color color) {
+    float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+
+    // Obtenemos un color diferente al cambiar el matiz
+    hsb[0] += HUE_DIFF;
+    if (hsb[0] > 1.0f)
+      hsb[0] = 1.0f - hsb[0];
+
+    // Comprobamos el brillo y la saturación para que los colores muy cercanos
+    // al blanco o al negro se puedan diferenciar
+    if (hsb[1] < SAT_BRI_THRESHOLD)
+      hsb[1] = 1.0f - hsb[1];
+    if (hsb[2] < SAT_BRI_THRESHOLD)
+      hsb[2] = 1.0f - hsb[2];
+
+    return Color.getHSBColor(hsb[0], hsb[1], hsb[2]);
   }
 }

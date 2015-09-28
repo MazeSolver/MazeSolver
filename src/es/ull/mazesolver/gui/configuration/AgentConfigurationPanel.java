@@ -23,7 +23,7 @@
  * @file AgentConfigurationPanel.java
  * @date 22/11/2014
  */
-package es.ull.mazesolver.gui;
+package es.ull.mazesolver.gui.configuration;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import es.ull.mazesolver.agent.Agent;
+import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.translations.ButtonTranslations;
 import es.ull.mazesolver.translations.Translatable;
 
@@ -51,6 +53,11 @@ public abstract class AgentConfigurationPanel extends JPanel implements Translat
   private JPanel m_root;
   private ArrayList <EventListener> m_listeners;
   private JButton m_accept, m_cancel;
+
+  /**
+   * Agente que se quiere configurar.
+   */
+  protected Agent m_agent;
 
   /**
    * Lista de mensajes de error obtenidos al intentar guardar la configuración
@@ -96,9 +103,10 @@ public abstract class AgentConfigurationPanel extends JPanel implements Translat
   /**
    * Construye la interfaz del panel de configuración de agentes.
    */
-  public AgentConfigurationPanel () {
+  public AgentConfigurationPanel (Agent agent) {
     m_root = new JPanel();
     m_listeners = new ArrayList <EventListener>();
+    m_agent = agent;
     m_errors = new ArrayList <String>();
     m_success = new ArrayList <String>();
 
@@ -181,7 +189,7 @@ public abstract class AgentConfigurationPanel extends JPanel implements Translat
   private void createControls () {
     setLayout(new BorderLayout());
 
-    JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    JPanel controls = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     m_accept = new JButton();
     m_cancel = new JButton();
 

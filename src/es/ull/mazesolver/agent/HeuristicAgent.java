@@ -25,18 +25,10 @@
  */
 package es.ull.mazesolver.agent;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import es.ull.mazesolver.agent.distance.DistanceCalculator;
-import es.ull.mazesolver.agent.distance.DistanceCalculator.DistanceType;
 import es.ull.mazesolver.agent.distance.ManhattanDistance;
 import es.ull.mazesolver.gui.MainWindow;
 import es.ull.mazesolver.gui.environment.Environment;
-import es.ull.mazesolver.translations.Translatable;
 
 /**
  * Representa las características comunes a todos los agentes heurísticos, que
@@ -78,38 +70,10 @@ public abstract class HeuristicAgent extends Agent {
   }
 
   /**
-   * Panel de configuración que dispone tan sólo de la selección de un tipo de
-   * algoritmo de cálculo de distancias.
+   * @return El algoritmo de cálculo de distancias entre puntos del agente.
    */
-  protected class DistanceConfigurationPanel extends JPanel implements Translatable {
-    private static final long serialVersionUID = 1L;
-    private JComboBox <DistanceType> combo;
-    private JLabel m_dist_calc_text;
-
-    /**
-     * Crea el panel de configuración del agente.
-     */
-    public DistanceConfigurationPanel () {
-      setLayout(new BorderLayout(5, 0));
-      m_dist_calc_text = new JLabel();
-      add(m_dist_calc_text, BorderLayout.WEST);
-
-      combo = new JComboBox <DistanceType>(DistanceType.values());
-      combo.setSelectedItem(m_dist.getType());
-      add(combo, BorderLayout.CENTER);
-    }
-
-    /**
-     * @return El tipo de distancia que ha seleccionado el usuario.
-     */
-    public DistanceType getSelectedType () {
-      return (DistanceType) combo.getSelectedItem();
-    }
-
-    @Override
-    public void translate () {
-      m_dist_calc_text.setText(
-          MainWindow.getTranslations().agent().distanceCalculator() + ":");
-    }
+  public DistanceCalculator getDistanceCalculator () {
+    return m_dist;
   }
+
 }

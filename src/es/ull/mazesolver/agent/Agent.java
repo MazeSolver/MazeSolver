@@ -25,6 +25,7 @@
  */
 package es.ull.mazesolver.agent;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,8 +34,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import es.ull.mazesolver.gui.AgentConfigurationPanel;
 import es.ull.mazesolver.gui.MainWindow;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.MazeCell;
 import es.ull.mazesolver.util.Direction;
@@ -52,6 +53,8 @@ public abstract class Agent implements Cloneable, Serializable {
   private static int s_agent_count = 0;
 
   private transient int m_agent_id;
+  private transient String m_name;
+  private Color m_color;
 
   /**
    * Entorno en el que reside el agente.
@@ -72,6 +75,8 @@ public abstract class Agent implements Cloneable, Serializable {
    */
   protected Agent (Environment env) {
     m_agent_id = s_agent_count++;
+    m_name = getAlgorithmName() + " " + String.valueOf(m_agent_id);
+    m_color = getAlgorithmColor();
     m_pos = new Point();
     setEnvironment(env);
   }
@@ -190,13 +195,44 @@ public abstract class Agent implements Cloneable, Serializable {
   }
 
   /**
+   * Cambia el nombre del agente.
+   *
+   * @param name
+   *          Nombre del agente.
+   */
+  public void setAgentName (String name) {
+    if (name != null && !name.isEmpty())
+      m_name = name;
+  }
+
+  /**
    * Pregunta al agente el nombre que le identifica.
    *
-   * @return Nombre identificador del agente. Incluye el nombre del algoritmo
-   *         que implementa.
+   * @return Nombre identificador del agente. Por defecto incluye el nombre del
+   *         algoritmo que implementa.
    */
-  public String getName () {
-    return getAlgorithmName() + " " + String.valueOf(m_agent_id);
+  public String getAgentName () {
+    return m_name;
+  }
+
+  /**
+   * Cambia el color del agente.
+   *
+   * @param color
+   *          Nuevo color del agente.
+   */
+  public void setAgentColor (Color color) {
+    if (color != null)
+      m_color = color;
+  }
+
+  /**
+   * Pregunta al agente su color.
+   *
+   * @return El color del agente.
+   */
+  public Color getAgentColor () {
+    return m_color;
   }
 
   /**
@@ -221,6 +257,7 @@ public abstract class Agent implements Cloneable, Serializable {
       file_in.close();
 
       ag.m_agent_id = s_agent_count++;
+      ag.m_name = ag.getAlgorithmName() + " " + String.valueOf(ag.m_agent_id);
       ag.m_pos = new Point();
       ag.setEnvironment(env);
 
@@ -253,6 +290,14 @@ public abstract class Agent implements Cloneable, Serializable {
    * @return Nombre del algoritmo que implementa.
    */
   public abstract String getAlgorithmName ();
+
+
+  /**
+   * Pregunta al agente el color por defecto de los agentes de su tipo.
+   *
+   * @return Color por defecto de los agentes que implementan ese algoritmo.
+   */
+  public abstract Color getAlgorithmColor ();
 
   /**
    * Obtiene el siguiente movimiento dado el estado actual del agente.

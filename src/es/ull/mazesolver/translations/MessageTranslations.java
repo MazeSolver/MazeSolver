@@ -49,4 +49,5 @@ public interface MessageTranslations {
   String agentFiles ();
   String fileExists ();
   String fileExistsOverwrite ();
+  String codeCompiled ();
 }

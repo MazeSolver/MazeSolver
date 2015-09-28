@@ -35,6 +35,10 @@ public interface AgentSelectorTranslations {
   String createNewAgent ();
   String algorithm ();
   String amount ();
+  String generalConfig ();
+  String name ();
+  String color ();
+  String heuristicAgent ();
   String distanceCalculator ();
   String noAgentConfigurationAvailable ();
   String writeRulesHere ();

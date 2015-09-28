@@ -44,4 +44,5 @@ public interface ExceptionTranslations {
   String tooSmallRowsCols ();
   String tooManyWalls ();
   String situationActionInvalid ();
+  String unnamedAgent ();
 }

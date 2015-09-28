@@ -54,6 +54,7 @@ import es.ull.mazesolver.agent.RecursiveAgent;
 import es.ull.mazesolver.agent.SARulesAgent;
 import es.ull.mazesolver.agent.SimulatedAnnealingAgent;
 import es.ull.mazesolver.agent.WallFollowerAgent;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.translations.Translations;
 
@@ -143,7 +144,7 @@ public class AgentSelectorDialog extends JDialog {
     JButton cancel = new JButton(tr.button().cancel());
     JButton config = new JButton(tr.button().configure() + "...");
 
-    JPanel button_panel = new JPanel(new FlowLayout());
+    JPanel button_panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     button_panel.add(ok);
     button_panel.add(cancel);
     button_panel.add(config);

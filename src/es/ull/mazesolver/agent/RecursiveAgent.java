@@ -25,18 +25,14 @@
  */
 package es.ull.mazesolver.agent;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Stack;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import es.ull.mazesolver.gui.AgentConfigurationPanel;
-import es.ull.mazesolver.gui.MainWindow;
+import es.ull.mazesolver.gui.configuration.AgentConfigurationPanel;
+import es.ull.mazesolver.gui.configuration.SimpleAgentConfigurationPanel;
 import es.ull.mazesolver.gui.environment.Environment;
 import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.maze.MazeCell;
@@ -87,6 +83,16 @@ public class RecursiveAgent extends Agent {
   @Override
   public String getAlgorithmName () {
     return "Recursive Backtracking";
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see es.ull.mazesolver.agent.Agent#getAlgorithmColor()
+   */
+  @Override
+  public Color getAlgorithmColor () {
+    return Color.YELLOW;
   }
 
   /*
@@ -158,33 +164,7 @@ public class RecursiveAgent extends Agent {
    */
   @Override
   public AgentConfigurationPanel getConfigurationPanel () {
-    return new AgentConfigurationPanel() {
-      private static final long serialVersionUID = 1L;
-      private JLabel m_text;
-
-      @Override
-      protected void createGUI (JPanel root) {
-        root.setLayout(new BorderLayout());
-        root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        m_text = new JLabel();
-        root.add(m_text);
-      }
-
-      @Override
-      protected void cancel () {
-      }
-
-      @Override
-      protected boolean accept () {
-        return true;
-      }
-
-      @Override
-      public void translate () {
-        super.translate();
-        m_text.setText(MainWindow.getTranslations().agent().noAgentConfigurationAvailable());
-      }
-    };
+    return new SimpleAgentConfigurationPanel(this);
   }
 
   /*
@@ -195,6 +175,8 @@ public class RecursiveAgent extends Agent {
   @Override
   public Object clone () {
     RecursiveAgent ag = new RecursiveAgent(m_env);
+    ag.setAgentColor(getAgentColor());
+
     return ag;
   }
 
