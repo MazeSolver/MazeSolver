@@ -48,7 +48,14 @@ public interface MenuTranslations {
   String loadAgent ();
   String saveAgent ();
   String removeAgent ();
+  String simulation ();
+  String configuration ();
+  String simulationMode ();
+  String editMode ();
   String help ();
+  String userDocs ();
+  String apiDocs ();
+  String knownProblems ();
   String about ();
   String language ();
 }

@@ -41,9 +41,11 @@ import es.ull.mazesolver.gui.environment.EnvironmentSet;
  */
 public class SimulationManager extends Observable {
   private static int DEFAULT_INTERVAL = 200;
+  private static int FAST_INTERVAL = 20;
 
   private Timer m_timer;
   private boolean m_paused;
+  private int m_steps;
 
   private EnvironmentSet m_environments;
   private boolean [] m_finished;
@@ -58,6 +60,7 @@ public class SimulationManager extends Observable {
    *          Conjunto de entornos que va a manejar.
    */
   public SimulationManager (EnvironmentSet env_set) {
+    m_steps = -1;
     m_results = new SimulationResults();
     setEnvironments(env_set);
 
@@ -67,8 +70,8 @@ public class SimulationManager extends Observable {
         doStep();
       }
     });
-    m_timer.setRepeats(true);
     m_timer.setDelay(DEFAULT_INTERVAL);
+    m_timer.setRepeats(true);
   }
 
   /**
@@ -119,6 +122,23 @@ public class SimulationManager extends Observable {
   }
 
   /**
+   * Comienza una simulación rápida. Hay que indicar el número de pasos que
+   * se desean simular, tras los cuales la simulación se pausará. Si la
+   * simulación acaba antes del número de pasos indicado, se parará.
+   *
+   * @param steps
+   *          Número de pasos máximo que se simulará.
+   */
+  public void startFastSimulation (int steps) {
+    if (steps > 0) {
+      m_steps = steps;
+
+      setInterval(FAST_INTERVAL);
+      startSimulation();
+    }
+  }
+
+  /**
    * Pausa la simulación actual si se está ejecutando.
    */
   public void pauseSimulation () {
@@ -126,6 +146,10 @@ public class SimulationManager extends Observable {
       m_timer.stop();
       m_results.pauseTimer();
       m_paused = true;
+
+      // Avisamos a los observadores que la simulación se ha pausado
+      setChanged();
+      notifyObservers();
     }
   }
 
@@ -137,6 +161,11 @@ public class SimulationManager extends Observable {
       m_timer.stop();
       m_results.pauseTimer();
       m_paused = false;
+
+      if (m_steps >= 0) {
+        m_steps = -1;
+        setInterval(DEFAULT_INTERVAL);
+      }
 
       // Avisamos a los observadores que la simulación ha terminado
       setChanged();
@@ -208,6 +237,20 @@ public class SimulationManager extends Observable {
    * Lleva a cabo un paso de la simulación.
    */
   private void doStep () {
+    // Controlamos que si el número de pasos fue especificado y ya llegó a cero,
+    // que se pause la simulación y se restablezca la velocidad de ejecución
+    if (m_steps == 0) {
+      pauseSimulation();
+      setInterval(DEFAULT_INTERVAL);
+      m_steps = -1;
+      return;
+    }
+
+    // Si el número de pasos fue especificado se va decrementando para parar en
+    // el momento oportuno
+    if (m_steps > 0)
+      --m_steps;
+
     int amount_finished = 0;
 
     // Hacemos que ejecuten un paso todos los agentes de todos los entornos

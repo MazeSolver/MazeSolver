@@ -50,4 +50,5 @@ public interface MessageTranslations {
   String fileExists ();
   String fileExistsOverwrite ();
   String codeCompiled ();
+  String urlLaunchFailed ();
 }

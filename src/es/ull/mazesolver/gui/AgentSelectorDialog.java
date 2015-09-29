@@ -95,8 +95,8 @@ public class AgentSelectorDialog extends JDialog {
   public AgentSelectorDialog (JFrame parent, int available_cells) {
     super(parent, "", true);
     max_agents = available_cells - 1;
-    buildInterface();
 
+    buildInterface();
     setResizable(false);
   }
 

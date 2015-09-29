@@ -26,6 +26,7 @@
 package es.ull.mazesolver.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -34,12 +35,15 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -48,6 +52,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
@@ -70,7 +75,7 @@ import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.translations.ButtonTranslations;
 import es.ull.mazesolver.translations.Languages;
 import es.ull.mazesolver.translations.MenuTranslations;
-import es.ull.mazesolver.translations.SimulatorResult;
+import es.ull.mazesolver.translations.SimulatorResultTranslations;
 import es.ull.mazesolver.translations.Translatable;
 import es.ull.mazesolver.translations.Translations;
 import es.ull.mazesolver.util.SimulationManager;
@@ -82,6 +87,7 @@ import es.ull.mazesolver.util.SimulationResults;
  */
 public class MainWindow extends JFrame implements Observer, Translatable {
   private static String APP_NAME = "Maze Solver";
+  private static String VERSION_STRING = "v1.2";
   private static int DEFAULT_WIDTH = 640;
   private static int DEFAULT_HEIGHT = 480;
 
@@ -89,6 +95,10 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   private static int MAXIMUM_ZOOM_VAL = 100;
   private static double MINIMUM_ZOOM_AUG = 1;
   private static double MAXIMUM_ZOOM_AUG = 10;
+
+  private static final String USER_DOCS_URL = "https://github.com/MazeSolver/MazeSolver/wiki";
+  private static final String API_DOCS_URL = "https://mazesolver.github.io/MazeSolver/";
+  private static final String ISSUES_URL = "https://github.com/MazeSolver/MazeSolver/labels/bug";
 
   private static final long serialVersionUID = 1L;
   private static MainWindow s_instance;
@@ -157,14 +167,20 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   private JLabel m_zoom_lb;
   private JButton m_run, m_step, m_pause, m_stop;
   private JSlider m_zoom;
-  private JMenu m_menu_file, m_menu_maze, m_menu_agent, m_menu_help, m_menu_language;
-  private JMenuItem m_itm_maze_new, m_itm_maze_save, m_itm_maze_open, m_itm_exit;
-  private JMenuItem m_itm_maze_clone, m_itm_maze_change, m_itm_maze_close;
-  private JMenuItem m_itm_agent_add, m_itm_agent_config, m_itm_agent_clone, m_itm_agent_remove,
-      m_itm_agent_save, m_itm_agent_load;
-  private JMenuItem m_itm_about;
-
-  private JMenuItem m_itm_language_spanish, m_itm_language_english, m_itm_language_german, m_itm_language_russian, m_itm_language_french;
+  private JMenu m_menu_file, m_menu_maze, m_menu_agent, m_menu_sim,
+                m_menu_config, m_menu_language, m_menu_help;
+  private JMenuItem m_itm_exit;
+  private JMenuItem m_itm_maze_new, m_itm_maze_open, m_itm_maze_save,
+                    m_itm_maze_copy, m_itm_maze_change, m_itm_env_close;
+  private JMenuItem m_itm_agent_new, m_itm_agent_open, m_itm_agent_save,
+                    m_itm_agent_copy, m_itm_agent_config, m_itm_agent_remove;
+  private JMenuItem m_itm_sim_run, m_itm_sim_step, m_itm_sim_pause,
+                    m_itm_sim_stop, m_itm_sim_fastrun;
+  private JRadioButtonMenuItem m_itm_mode_sim, m_itm_mode_edit;
+  private JMenuItem m_itm_language_spanish, m_itm_language_english,
+                    m_itm_language_german, m_itm_language_russian,
+                    m_itm_language_french;
+  private JMenuItem m_itm_userdoc, m_itm_apidoc, m_itm_bugs, m_itm_about;
 
   // Representación del modelo
   private EnvironmentSet m_environments;
@@ -256,71 +272,113 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_menu_file = new JMenu();
     m_menu_maze = new JMenu();
     m_menu_agent = new JMenu();
-    m_menu_help = new JMenu();
+    m_menu_sim = new JMenu();
+    m_menu_config = new JMenu();
     m_menu_language = new JMenu();
+    m_menu_help = new JMenu();
 
     // Menú "File"
-    m_itm_maze_new = new JMenuItem();
-    m_itm_maze_open = new JMenuItem();
-    m_itm_maze_save = new JMenuItem();
     m_itm_exit = new JMenuItem();
 
-    m_menu_file.add(m_itm_maze_new);
-    m_menu_file.addSeparator();
-    m_menu_file.add(m_itm_maze_open);
-    m_menu_file.add(m_itm_maze_save);
-    m_menu_file.addSeparator();
     m_menu_file.add(m_itm_exit);
 
     // Menú "Maze"
-    m_itm_maze_clone = new JMenuItem();
+    m_itm_maze_new = new JMenuItem();
+    m_itm_maze_open = new JMenuItem();
+    m_itm_maze_save = new JMenuItem();
+    m_itm_maze_copy = new JMenuItem();
     m_itm_maze_change = new JMenuItem();
-    m_itm_maze_close = new JMenuItem();
+    m_itm_env_close = new JMenuItem();
 
-    m_menu_maze.add(m_itm_maze_clone);
+    m_menu_maze.add(m_itm_maze_new);
+    m_menu_maze.addSeparator();
+    m_menu_maze.add(m_itm_maze_open);
+    m_menu_maze.add(m_itm_maze_save);
+    m_menu_maze.addSeparator();
+    m_menu_maze.add(m_itm_maze_copy);
     m_menu_maze.add(m_itm_maze_change);
     m_menu_maze.addSeparator();
-    m_menu_maze.add(m_itm_maze_close);
+    m_menu_maze.add(m_itm_env_close);
 
     // Menú "Agent"
-    m_itm_agent_add = new JMenuItem();
-    m_itm_agent_clone = new JMenuItem();
-    m_itm_agent_config = new JMenuItem();
-    m_itm_agent_load = new JMenuItem();
+    m_itm_agent_new = new JMenuItem();
+    m_itm_agent_open = new JMenuItem();
     m_itm_agent_save = new JMenuItem();
+    m_itm_agent_copy = new JMenuItem();
+    m_itm_agent_config = new JMenuItem();
     m_itm_agent_remove = new JMenuItem();
 
-    m_menu_agent.add(m_itm_agent_add);
+    m_menu_agent.add(m_itm_agent_new);
     m_menu_agent.addSeparator();
-    m_menu_agent.add(m_itm_agent_clone);
-    m_menu_agent.add(m_itm_agent_config);
-    m_menu_agent.addSeparator();
-    m_menu_agent.add(m_itm_agent_load);
+    m_menu_agent.add(m_itm_agent_open);
     m_menu_agent.add(m_itm_agent_save);
+    m_menu_agent.addSeparator();
+    m_menu_agent.add(m_itm_agent_copy);
+    m_menu_agent.add(m_itm_agent_config);
     m_menu_agent.addSeparator();
     m_menu_agent.add(m_itm_agent_remove);
 
-    // Menú "Help"
-    m_itm_about = new JMenuItem();
-    m_menu_help.add(m_itm_about);
+    // Menú "Simulation"
+    m_itm_sim_run = new JMenuItem();
+    m_itm_sim_step = new JMenuItem();
+    m_itm_sim_pause = new JMenuItem();
+    m_itm_sim_stop = new JMenuItem();
+    m_itm_sim_fastrun = new JMenuItem();
 
+    m_menu_sim.add(m_itm_sim_run);
+    m_menu_sim.add(m_itm_sim_step);
+    m_menu_sim.add(m_itm_sim_pause);
+    m_menu_sim.add(m_itm_sim_stop);
+    m_menu_sim.addSeparator();
+    m_menu_sim.add(m_itm_sim_fastrun);
+
+    // Menú "Configuration"
+    m_itm_mode_sim = new JRadioButtonMenuItem();
+    m_itm_mode_edit = new JRadioButtonMenuItem();
+
+    m_itm_mode_sim.setSelected(true);
+
+    m_menu_config.add(m_itm_mode_sim);
+    m_menu_config.add(m_itm_mode_edit);
+
+    ButtonGroup group = new ButtonGroup();
+    group.add(m_itm_mode_sim);
+    group.add(m_itm_mode_edit);
+
+    // Menú "Language"
     m_itm_language_spanish = new JMenuItem();
     m_itm_language_english = new JMenuItem();
     m_itm_language_german = new JMenuItem();
     m_itm_language_russian = new JMenuItem();
-	m_itm_language_french = new JMenuItem();
+    m_itm_language_french = new JMenuItem();
 
-    m_menu_language.add(m_itm_language_english);
     m_menu_language.add(m_itm_language_spanish);
+    m_menu_language.add(m_itm_language_english);
     m_menu_language.add(m_itm_language_german);
     m_menu_language.add(m_itm_language_russian);
-	m_menu_language.add(m_itm_language_french);
+    m_menu_language.add(m_itm_language_french);
+
+    // Menú "Help"
+    ImageIcon world = new ImageIcon(getClass().getResource("/images/world.png"));
+    ImageIcon info = new ImageIcon(getClass().getResource("/images/info.png"));
+    m_itm_userdoc = new JMenuItem("", world);
+    m_itm_apidoc = new JMenuItem("", world);
+    m_itm_bugs = new JMenuItem("", world);
+    m_itm_about = new JMenuItem("", info);
+
+    m_menu_help.add(m_itm_userdoc);
+    m_menu_help.add(m_itm_apidoc);
+    m_menu_help.add(m_itm_bugs);
+    m_menu_help.addSeparator();
+    m_menu_help.add(m_itm_about);
 
     m_menu_bar.add(m_menu_file);
     m_menu_bar.add(m_menu_maze);
     m_menu_bar.add(m_menu_agent);
-    m_menu_bar.add(m_menu_help);
+    m_menu_bar.add(m_menu_sim);
+    m_menu_bar.add(m_menu_config);
     m_menu_bar.add(m_menu_language);
+    m_menu_bar.add(m_menu_help);
 
     setupMenuListeners();
   }
@@ -359,6 +417,15 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   private void setupMenuListeners () {
     // Menú "File"
     // /////////////////////////////////////////////////////////////////////////
+    m_itm_exit.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        dispatchEvent(new WindowEvent(MainWindow.getInstance(), WindowEvent.WINDOW_CLOSING));
+      }
+    });
+
+    // Menú "Maze"
+    // /////////////////////////////////////////////////////////////////////////
     m_itm_maze_new.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
@@ -368,6 +435,21 @@ public class MainWindow extends JFrame implements Observer, Translatable {
 
         if (generated != null)
           m_environments.addEnvironment(new Environment(generated));
+      }
+    });
+
+    m_itm_maze_open.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Maze [] mazes = FileDialog.loadMazes();
+          for (Maze maze: mazes)
+            m_environments.addEnvironment(new Environment(maze));
+        }
+        catch (IOException exc) {
+          JOptionPane.showMessageDialog(null, exc.getMessage(), s_tr.message().fileOpenFailed(),
+              JOptionPane.ERROR_MESSAGE);
+        }
       }
     });
 
@@ -388,31 +470,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       }
     });
 
-    m_itm_maze_open.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        try {
-          Maze [] mazes = FileDialog.loadMazes();
-          for (Maze maze: mazes)
-            m_environments.addEnvironment(new Environment(maze));
-        }
-        catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), s_tr.message().fileOpenFailed(),
-              JOptionPane.ERROR_MESSAGE);
-        }
-      }
-    });
-
-    m_itm_exit.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        dispatchEvent(new WindowEvent(MainWindow.getInstance(), WindowEvent.WINDOW_CLOSING));
-      }
-    });
-
-    // Menú "Maze"
-    // /////////////////////////////////////////////////////////////////////////
-    m_itm_maze_clone.addActionListener(new ActionListener() {
+    m_itm_maze_copy.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         Environment env = m_environments.getSelectedEnvironment();
@@ -452,7 +510,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       }
     });
 
-    m_itm_maze_close.addActionListener(new ActionListener() {
+    m_itm_env_close.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         m_environments.removeSelectedEnvironment();
@@ -461,7 +519,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
 
     // Menú "Agent"
     // /////////////////////////////////////////////////////////////////////////
-    m_itm_agent_add.addActionListener(new ActionListener() {
+    m_itm_agent_new.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         Environment env = m_environments.getSelectedEnvironment();
@@ -485,49 +543,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       }
     });
 
-    m_itm_agent_config.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        try {
-          Agent ag = m_environments.getSelectedEnvironment().getSelectedAgent();
-          setConfigurationPanel(ag.getConfigurationPanel());
-        }
-        catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(), s_tr.message()
-              .agentConfigFailed(), JOptionPane.WARNING_MESSAGE);
-        }
-      }
-    });
-
-    m_itm_agent_clone.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        try {
-          Environment env = m_environments.getSelectedEnvironment();
-          m_environments.addAgentToSelectedEnvironment((Agent) env.getSelectedAgent().clone());
-        }
-        catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(), s_tr.message()
-              .cloningFailed(), JOptionPane.WARNING_MESSAGE);
-        }
-      }
-    });
-
-    m_itm_agent_remove.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        try {
-          Environment env = m_environments.getSelectedEnvironment();
-          m_environments.removeAgentFromEnvironment(env.getSelectedAgent(), env);
-        }
-        catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(), s_tr.message()
-              .agentRemovalFailed(), JOptionPane.WARNING_MESSAGE);
-        }
-      }
-    });
-
-    m_itm_agent_load.addActionListener(new ActionListener() {
+    m_itm_agent_open.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         try {
@@ -565,15 +581,125 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       }
     });
 
+    m_itm_agent_copy.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Environment env = m_environments.getSelectedEnvironment();
+          m_environments.addAgentToSelectedEnvironment((Agent) env.getSelectedAgent().clone());
+        }
+        catch (Exception exc) {
+          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(), s_tr.message()
+              .cloningFailed(), JOptionPane.WARNING_MESSAGE);
+        }
+      }
+    });
+
+    m_itm_agent_config.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Agent ag = m_environments.getSelectedEnvironment().getSelectedAgent();
+          setConfigurationPanel(ag.getConfigurationPanel());
+        }
+        catch (Exception exc) {
+          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(), s_tr.message()
+              .agentConfigFailed(), JOptionPane.WARNING_MESSAGE);
+        }
+      }
+    });
+
+    m_itm_agent_remove.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Environment env = m_environments.getSelectedEnvironment();
+          m_environments.removeAgentFromEnvironment(env.getSelectedAgent(), env);
+        }
+        catch (Exception exc) {
+          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(), s_tr.message()
+              .agentRemovalFailed(), JOptionPane.WARNING_MESSAGE);
+        }
+      }
+    });
+
+    // Menú "Simulation"
+    m_itm_sim_run.addActionListener(new RunAction());
+    m_itm_sim_step.addActionListener(new StepAction());
+    m_itm_sim_pause.addActionListener(new PauseAction());
+    m_itm_sim_stop.addActionListener(new StopAction());
+
+    m_itm_sim_fastrun.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        FastSimulationDialog dialog = new FastSimulationDialog(MainWindow.this);
+        int steps = dialog.showDialog();
+
+        if (steps > 0)
+          startFastSimulation(steps);
+      }
+    });
+
+    // Menú "Configuration"
+    // TODO Implementar el modo de edición de los laberintos y los listeners
+    // TODO de estos botones para intercambiar entre los dos modos
+    m_itm_mode_sim.addActionListener(null);
+    m_itm_mode_edit.addActionListener(null);
+
+    // Menú "Languages"
+    // /////////////////////////////////////////////////////////////////////////
+    class LanguageAction implements ActionListener {
+      private String m_lang_code;
+
+      public LanguageAction (String lang_code) {
+        m_lang_code = lang_code;
+      }
+
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        s_tr = C10N.get(Translations.class, new Locale(m_lang_code));
+        translate();
+      }
+    }
+
+    m_itm_language_spanish.addActionListener(new LanguageAction("es"));
+    m_itm_language_english.addActionListener(new LanguageAction("en"));
+    m_itm_language_german.addActionListener(new LanguageAction("de"));
+    m_itm_language_russian.addActionListener(new LanguageAction("ru"));
+    m_itm_language_french.addActionListener(new LanguageAction("fr"));
+
     // Menú "Help"
     // /////////////////////////////////////////////////////////////////////////
+    class URLLauncher implements ActionListener {
+      private String m_url;
+
+      public URLLauncher (String url) {
+        m_url = url;
+      }
+
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        try {
+          Desktop.getDesktop().browse(URI.create(m_url));
+        }
+        catch (Exception exc) {
+          JOptionPane.showMessageDialog(null, exc.getMessage(), s_tr.message().urlLaunchFailed(),
+              JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    }
+
+    m_itm_userdoc.addActionListener(new URLLauncher(USER_DOCS_URL));
+    m_itm_apidoc.addActionListener(new URLLauncher(API_DOCS_URL));
+    m_itm_bugs.addActionListener(new URLLauncher(ISSUES_URL));
+
     m_itm_about.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         JOptionPane
             .showMessageDialog(
                 null,
-                "<html><h2>MazeSolver</h2>"
+                "<html><h2>" + APP_NAME + " " + VERSION_STRING + "</h2>"
                     + "Copyright &copy; 2014 - 2015<br>Sergio M. Afonso Fumero and Kevin I. Robayna Hernández<br><br>"
                     + "This program is free software: you can redistribute it and/or modify<br>"
                     + "it under the terms of the GNU General Public License as published by<br>"
@@ -588,89 +714,16 @@ public class MainWindow extends JFrame implements Observer, Translatable {
                 s_tr.menu().about(), JOptionPane.INFORMATION_MESSAGE);
       }
     });
-
-    // Menú "Languages"
-    // /////////////////////////////////////////////////////////////////////////
-    m_itm_language_english.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        s_tr = C10N.get(Translations.class, new Locale("en"));
-        translate();
-      }
-    });
-
-    // Menú "Languages"
-    // /////////////////////////////////////////////////////////////////////////
-    m_itm_language_spanish.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        s_tr = C10N.get(Translations.class, new Locale("es"));
-        translate();
-      }
-    });
-
-    // Menú "Languages"
-    // /////////////////////////////////////////////////////////////////////////
-    m_itm_language_german.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        s_tr = C10N.get(Translations.class, new Locale("de"));
-        translate();
-      }
-    });
-
-    // Menú "Languages"
-    // /////////////////////////////////////////////////////////////////////////
-    m_itm_language_russian.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        s_tr = C10N.get(Translations.class, new Locale("ru"));
-        translate();
-      }
-    });
-
-	// Menú "Languages"
-    // /////////////////////////////////////////////////////////////////////////
-    m_itm_language_french.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        s_tr = C10N.get(Translations.class, new Locale("fr"));
-        translate();
-      }
-    });
   }
 
   /**
    * Configura los listeners de los botones en la barra de herramientas.
    */
   private void setupToolbarListeners () {
-    m_run.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        startSimulation();
-      }
-    });
-
-    m_step.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        m_simulation.stepSimulation();
-      }
-    });
-
-    m_pause.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        pauseSimulation();
-      }
-    });
-
-    m_stop.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        stopSimulation();
-      }
-    });
+    m_run.addActionListener(new RunAction());
+    m_step.addActionListener(new StepAction());
+    m_pause.addActionListener(new PauseAction());
+    m_stop.addActionListener(new StopAction());
 
     m_zoom.addChangeListener(new ChangeListener() {
       @Override
@@ -742,7 +795,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       revalidate();
       repaint();
 
-      m_itm_maze_close.setEnabled(false);
+      m_itm_env_close.setEnabled(false);
       m_itm_agent_remove.setEnabled(false);
     }
   }
@@ -758,66 +811,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       revalidate();
       repaint();
     }
-    m_itm_maze_close.setEnabled(true);
+    m_itm_env_close.setEnabled(true);
     m_itm_agent_remove.setEnabled(true);
-  }
-
-  /**
-   * Adapta los menús al estado de "Simulación en curso" y la comienza.
-   */
-  private void startSimulation () {
-    // Desactivamos los menús que no se pueden utilizar durante la simulación
-    m_itm_maze_new.setEnabled(false);
-    m_itm_maze_change.setEnabled(false);
-    m_itm_maze_open.setEnabled(false);
-    m_itm_maze_clone.setEnabled(false);
-
-    m_run.setEnabled(false);
-    m_step.setEnabled(false);
-    m_pause.setEnabled(true);
-    m_stop.setEnabled(true);
-
-    m_simulation.startSimulation();
-  }
-
-  /**
-   * Pausa o reanuda la simulación dependiendo de su estado y mantiene coherente
-   * el estado de los menús.
-   */
-  private void pauseSimulation () {
-    if (!m_simulation.isPaused()) {
-      m_pause.setText(s_tr.button().kontinue());
-      m_simulation.pauseSimulation();
-      m_step.setEnabled(true);
-    }
-    else {
-      m_pause.setText(s_tr.button().pause());
-      m_step.setEnabled(false);
-      m_simulation.startSimulation();
-    }
-  }
-
-  /**
-   * Para la simulación y vuelve a dejar los menús en su estado inicial.
-   */
-  private void stopSimulation () {
-    m_simulation.stopSimulation();
-    for (Environment env: m_environments.getEnvironmentList()) {
-      for (int i = 0; i < env.getAgentCount(); i++)
-        env.getAgent(i).resetMemory();
-    }
-
-    // Volvemos a activar los menús que desactivamos antes
-    m_itm_maze_new.setEnabled(true);
-    m_itm_maze_change.setEnabled(true);
-    m_itm_maze_open.setEnabled(true);
-    m_itm_maze_clone.setEnabled(true);
-
-    m_pause.setText(s_tr.button().pause());
-    m_run.setEnabled(true);
-    m_step.setEnabled(true);
-    m_pause.setEnabled(false);
-    m_stop.setEnabled(false);
   }
 
   /*
@@ -827,7 +822,16 @@ public class MainWindow extends JFrame implements Observer, Translatable {
    */
   @Override
   public void update (Observable obs, Object obj) {
-    SimulatorResult tr_sim = s_tr.simulation();
+    SimulatorResultTranslations tr_sim = s_tr.simulation();
+
+    // La notificación viene de una pausa en la ejecución
+    if (m_simulation.isPaused()) {
+      setPausedContinuedState();
+      return;
+    }
+
+    // La notificación viene de la parada o finalización de la ejecución
+
     // Esto sucede cuando todos los entornos han terminado de ejecutarse o se ha
     // parado la simulación.
     stopSimulation();
@@ -893,45 +897,200 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_menu_file.setText(m_tr.file());
     m_menu_maze.setText(m_tr.maze());
     m_menu_agent.setText(m_tr.agent());
+    m_menu_sim.setText(m_tr.simulation());
+    m_menu_config.setText(m_tr.configuration());
+    m_menu_language.setText(m_tr.language());
     m_menu_help.setText(m_tr.help());
 
-    m_menu_language.setText(m_tr.language());
-
+    m_itm_exit.setText(m_tr.exit());
     m_itm_maze_new.setText(m_tr.newMaze() + "...");
     m_itm_maze_open.setText(m_tr.openMaze() + "...");
     m_itm_maze_save.setText(m_tr.saveMaze() + "...");
-    m_itm_exit.setText(m_tr.exit());
-    m_itm_maze_clone.setText(m_tr.copyMaze());
+    m_itm_maze_copy.setText(m_tr.copyMaze());
     m_itm_maze_change.setText(m_tr.changeMaze() + "...");
-    m_itm_maze_close.setText(m_tr.closeMaze());
-    m_itm_agent_add.setText(m_tr.newAgent() + "...");
-    m_itm_agent_clone.setText(m_tr.cloneAgent());
-    m_itm_agent_config.setText(m_tr.configureAgent() + "...");
-    m_itm_agent_load.setText(m_tr.loadAgent() + "...");
+    m_itm_env_close.setText(m_tr.closeMaze());
+    m_itm_agent_new.setText(m_tr.newAgent() + "...");
+    m_itm_agent_open.setText(m_tr.loadAgent() + "...");
     m_itm_agent_save.setText(m_tr.saveAgent() + "...");
+    m_itm_agent_copy.setText(m_tr.cloneAgent());
+    m_itm_agent_config.setText(m_tr.configureAgent() + "...");
     m_itm_agent_remove.setText(m_tr.removeAgent());
-    m_itm_about.setText(m_tr.about() + "...");
-
-    m_itm_language_english.setText(m_lang_tr.english());
+    m_itm_sim_run.setText(b_tr.run());
+    m_itm_sim_step.setText(b_tr.step());
+    m_itm_sim_stop.setText(b_tr.stop());
+    m_itm_sim_fastrun.setText(b_tr.fastRun() + "...");
+    m_itm_mode_sim.setText(m_tr.simulationMode());
+    m_itm_mode_edit.setText(m_tr.editMode());
     m_itm_language_spanish.setText(m_lang_tr.spanish());
+    m_itm_language_english.setText(m_lang_tr.english());
     m_itm_language_german.setText(m_lang_tr.german());
     m_itm_language_russian.setText(m_lang_tr.russian());
-	m_itm_language_french.setText(m_lang_tr.french());
+    m_itm_language_french.setText(m_lang_tr.french());
+    m_itm_userdoc.setText(m_tr.userDocs());
+    m_itm_apidoc.setText(m_tr.apiDocs());
+    m_itm_bugs.setText(m_tr.knownProblems());
+    m_itm_about.setText(m_tr.about() + "...");
 
     m_run.setText(b_tr.run());
     m_step.setText(b_tr.step());
     m_stop.setText(b_tr.stop());
     m_zoom_lb.setText(b_tr.zoom() + ":");
 
+    String pauseText = b_tr.kontinue();
     if (m_simulation.isRunning() || m_simulation.isStopped())
-      m_pause.setText(b_tr.pause());
-    else
-      m_pause.setText(b_tr.kontinue());
+      pauseText = b_tr.pause();
+
+    m_pause.setText(pauseText);
+    m_itm_sim_pause.setText(pauseText);
 
     m_console.translate();
 
     if (m_config_panel != null)
       m_config_panel.translate();
+  }
+
+  /**
+   * Adapta los menús al estado de "Simulación en curso" y la comienza.
+   */
+  private void startSimulation () {
+    setSimulatingState();
+    m_simulation.startSimulation();
+  }
+
+  /**
+   * Adapta los menús al estado de "Simulación en curso" comienza una simulación
+   * rápida.
+   * @param steps
+   *          Número máximo de pasos que se van a simular.
+   */
+  private void startFastSimulation (int steps) {
+    if (m_simulation.isPaused()) {
+      m_simulation.startFastSimulation(steps);
+      setPausedContinuedState();
+    }
+    else {
+      setSimulatingState();
+      m_simulation.startFastSimulation(steps);
+    }
+
+  }
+
+  /**
+   * Pausa o reanuda la simulación dependiendo de su estado y mantiene coherente
+   * el estado de los menús.
+   */
+  private void pauseSimulation () {
+    if (m_simulation.isPaused())
+      m_simulation.startSimulation();
+    else
+      m_simulation.pauseSimulation();
+
+    setPausedContinuedState();
+  }
+
+  /**
+   * Para la simulación y vuelve a dejar los menús en su estado inicial.
+   */
+  private void stopSimulation () {
+    setStoppedState();
+
+    m_simulation.stopSimulation();
+    for (Environment env: m_environments.getEnvironmentList()) {
+      for (int i = 0; i < env.getAgentCount(); i++)
+        env.getAgent(i).resetMemory();
+    }
+  }
+
+  /**
+   * Adapta los menús al estado de "Simulación en curso".
+   */
+  private void setSimulatingState () {
+    // Desactivamos los menús que no se pueden utilizar durante la simulación
+    m_itm_maze_new.setEnabled(false);
+    m_itm_maze_change.setEnabled(false);
+    m_itm_maze_open.setEnabled(false);
+    m_itm_maze_copy.setEnabled(false);
+
+    m_run.setEnabled(false);
+    m_step.setEnabled(false);
+    m_pause.setEnabled(true);
+    m_stop.setEnabled(true);
+
+    m_itm_sim_run.setEnabled(false);
+    m_itm_sim_step.setEnabled(false);
+    m_itm_sim_pause.setEnabled(true);
+    m_itm_sim_stop.setEnabled(true);
+  }
+
+  /**
+   * Adapta los menús al estado de "Simulación pausada" o "Simulación en curso"
+   * dependiendo de si la simulación está pausada o en curso.
+   */
+  private void setPausedContinuedState () {
+    if (m_simulation.isPaused()) {
+      m_pause.setText(s_tr.button().kontinue());
+      m_step.setEnabled(true);
+
+      m_itm_sim_pause.setText(s_tr.button().kontinue());
+      m_itm_sim_step.setEnabled(true);
+    }
+    else {
+      m_pause.setText(s_tr.button().pause());
+      m_step.setEnabled(false);
+
+      m_itm_sim_pause.setText(s_tr.button().pause());
+      m_itm_sim_step.setEnabled(false);
+    }
+  }
+
+  /**
+   * Adapta los menús al estado de "Simulación parada".
+   */
+  private void setStoppedState () {
+    m_itm_maze_new.setEnabled(true);
+    m_itm_maze_change.setEnabled(true);
+    m_itm_maze_open.setEnabled(true);
+    m_itm_maze_copy.setEnabled(true);
+
+    m_pause.setText(s_tr.button().pause());
+    m_run.setEnabled(true);
+    m_step.setEnabled(true);
+    m_pause.setEnabled(false);
+    m_stop.setEnabled(false);
+
+    m_itm_sim_pause.setText(s_tr.button().pause());
+    m_itm_sim_run.setEnabled(true);
+    m_itm_sim_step.setEnabled(true);
+    m_itm_sim_pause.setEnabled(false);
+    m_itm_sim_stop.setEnabled(false);
+  }
+
+  private class RunAction implements ActionListener {
+    @Override
+    public void actionPerformed (ActionEvent e) {
+      startSimulation();
+    }
+  }
+
+  private class StepAction implements ActionListener {
+    @Override
+    public void actionPerformed (ActionEvent e) {
+      m_simulation.stepSimulation();
+    }
+  }
+
+  private class PauseAction implements ActionListener {
+    @Override
+    public void actionPerformed (ActionEvent e) {
+      pauseSimulation();
+    }
+  }
+
+  private class StopAction implements ActionListener {
+    @Override
+    public void actionPerformed (ActionEvent e) {
+      stopSimulation();
+    }
   }
 
 }

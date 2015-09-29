@@ -20,26 +20,18 @@
  */
 
 /**
- * @file ButtonTranslations.java
- * @date 21/3/2015
+ * @file OtherTranslations.java
+ * @date 29/9/2015
  */
 package es.ull.mazesolver.translations;
 
 import com.github.rodionmoiseev.c10n.C10NMessages;
 
 /**
- * Agrupa las traducciones de los botones.
+ * Clase que agrupa todo el resto de traducciones que no pertenecen a las demás
+ * categorías.
  */
 @C10NMessages
-public interface ButtonTranslations {
-  String run ();
-  String step ();
-  String pause ();
-  String kontinue();
-  String fastRun ();
-  String stop ();
-  String zoom ();
-  String ok ();
-  String cancel ();
-  String configure ();
+public interface OtherTranslations {
+  String numberSteps ();
 }

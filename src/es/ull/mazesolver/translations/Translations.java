@@ -40,6 +40,8 @@ public interface Translations {
   MazeSelectorTranslations maze ();
   AgentSelectorTranslations agent ();
 
-  SimulatorResult simulation();
-  Languages languages();
+  SimulatorResultTranslations simulation ();
+  Languages languages ();
+
+  OtherTranslations other ();
 }
