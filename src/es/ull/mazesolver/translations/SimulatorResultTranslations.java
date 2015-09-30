@@ -32,7 +32,7 @@ import com.github.rodionmoiseev.c10n.C10NMessages;
  * simulaciones.
  */
 @C10NMessages
-public interface SimulatorResult {
+public interface SimulatorResultTranslations {
   String title ();
   String winner ();
   String maze ();
