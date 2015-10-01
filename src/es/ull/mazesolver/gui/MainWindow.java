@@ -78,6 +78,7 @@ import es.ull.mazesolver.translations.MenuTranslations;
 import es.ull.mazesolver.translations.SimulatorResultTranslations;
 import es.ull.mazesolver.translations.Translatable;
 import es.ull.mazesolver.translations.Translations;
+import es.ull.mazesolver.util.InteractionMode;
 import es.ull.mazesolver.util.SimulationManager;
 import es.ull.mazesolver.util.SimulationResults;
 
@@ -640,19 +641,19 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     });
 
     // Menú "Configuration"
-    // TODO Implementar el modo de edición de los laberintos y los listeners
-    // TODO de estos botones para intercambiar entre los dos modos
     m_itm_mode_sim.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        setSimulateModeState();
+        setInteractionModeState(InteractionMode.SIMULATION);
+        m_environments.setInteractionMode(InteractionMode.SIMULATION);
       }
     });
 
     m_itm_mode_edit.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        setEditModeState();
+        setInteractionModeState(InteractionMode.EDITION);
+        m_environments.setInteractionMode(InteractionMode.EDITION);
       }
     });
 
@@ -1078,25 +1079,29 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   }
 
   /**
-   * Adapta los menús al estado de "Modo edición"
+   * Adapta los menús dependiendo del modo de interacción al que se esté
+   * cambiando.
+   *
+   * @param mode
+   *          Nuevo modo de interacción.
    */
-  private void setEditModeState () {
-    m_run.setEnabled(false);
-    m_step.setEnabled(false);
+  private void setInteractionModeState (InteractionMode mode) {
+    boolean enable = false;
 
-    m_menu_sim.setEnabled(false);
-    m_menu_agent.setEnabled(false);
-  }
+    switch (mode) {
+      case SIMULATION:
+        enable = true;
+        break;
+      case EDITION:
+        enable = false;
+        break;
+    }
 
-  /**
-   * Adapta los menús al estado de "Modo simulación"
-   */
-  private void setSimulateModeState () {
-    m_run.setEnabled(true);
-    m_step.setEnabled(true);
+    m_run.setEnabled(enable);
+    m_step.setEnabled(enable);
 
-    m_menu_sim.setEnabled(true);
-    m_menu_agent.setEnabled(true);
+    m_menu_sim.setEnabled(enable);
+    m_menu_agent.setEnabled(enable);
   }
 
   private class RunAction implements ActionListener {

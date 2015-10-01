@@ -184,7 +184,7 @@ public abstract class MazeCreationAlgorithm {
     // Posición en la que se abrirá el hueco: Puede ser tanto una coordenada en
     // X como en Y
     int pos;
-    if (dir == Direction.UP || dir == Direction.DOWN)
+    if (dir.isVertical())
       pos = (int) (Math.random() * m_columns);
     else
       pos = (int) (Math.random() * m_rows);
@@ -193,27 +193,23 @@ public abstract class MazeCreationAlgorithm {
     m_maze_exit = new Point();
     switch (dir) {
       case UP:
-        m_maze_exit.x = pos;
-        m_maze_exit.y = 0;
+        m_maze_exit.move(pos, 0);
         break;
       case DOWN:
-        m_maze_exit.x = pos;
-        m_maze_exit.y = m_rows - 1;
+        m_maze_exit.move(pos, m_rows - 1);
         break;
       case LEFT:
-        m_maze_exit.x = 0;
-        m_maze_exit.y = pos;
+        m_maze_exit.move(0, pos);
         break;
       case RIGHT:
-        m_maze_exit.x = m_columns - 1;
-        m_maze_exit.y = pos;
+        m_maze_exit.move(m_columns - 1, pos);
         break;
       default:
         break;
     }
 
     m_maze.get(m_maze_exit.y).get(m_maze_exit.x).unsetWall(dir);
-    m_maze_exit = dir.movePoint(m_maze_exit);
+    m_maze_exit.setLocation(dir.movePoint(m_maze_exit));
   }
 
   /**
