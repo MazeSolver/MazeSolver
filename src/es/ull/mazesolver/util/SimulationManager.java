@@ -105,7 +105,7 @@ public class SimulationManager extends Observable {
    * agregar o eliminar entornos mientras la simulación se está ejecutando.
    */
   public void startSimulation () {
-    m_sim_finished = m_paused = false;
+    m_sim_finished = false;
 
     // Actualizamos el tamaño de la lista de entornos finalizados por si hay un
     // número diferente de entornos que en la última ejecución
@@ -114,10 +114,16 @@ public class SimulationManager extends Observable {
       m_results.clear();
     }
 
+    m_paused = false;
+
     // Lanzamos un hilo sólo si no se está ejecutando todavía
     if (!isRunning()) {
       m_timer.start();
       m_results.startTimer();
+
+      // Avisamos a los observadores de que la simulación ha cambiado de estado
+      setChanged();
+      notifyObservers();
     }
   }
 
@@ -147,7 +153,7 @@ public class SimulationManager extends Observable {
       m_results.pauseTimer();
       m_paused = true;
 
-      // Avisamos a los observadores que la simulación se ha pausado
+      // Avisamos a los observadores de que la simulación ha cambiado de estado
       setChanged();
       notifyObservers();
     }
@@ -167,7 +173,7 @@ public class SimulationManager extends Observable {
         setInterval(DEFAULT_INTERVAL);
       }
 
-      // Avisamos a los observadores que la simulación ha terminado
+      // Avisamos a los observadores de que la simulación ha cambiado de estado
       setChanged();
       notifyObservers(m_results);
     }

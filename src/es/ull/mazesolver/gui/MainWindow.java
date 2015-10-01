@@ -297,7 +297,6 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_menu_maze.addSeparator();
     m_menu_maze.add(m_itm_maze_copy);
     m_menu_maze.add(m_itm_maze_change);
-    m_menu_maze.addSeparator();
     m_menu_maze.add(m_itm_env_close);
 
     // Menú "Agent"
@@ -643,8 +642,19 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     // Menú "Configuration"
     // TODO Implementar el modo de edición de los laberintos y los listeners
     // TODO de estos botones para intercambiar entre los dos modos
-    m_itm_mode_sim.addActionListener(null);
-    m_itm_mode_edit.addActionListener(null);
+    m_itm_mode_sim.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        setSimulateModeState();
+      }
+    });
+
+    m_itm_mode_edit.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        setEditModeState();
+      }
+    });
 
     // Menú "Languages"
     // /////////////////////////////////////////////////////////////////////////
@@ -824,63 +834,62 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   public void update (Observable obs, Object obj) {
     SimulatorResultTranslations tr_sim = s_tr.simulation();
 
+    // La notificación viene del comienzo de la ejecución
+    if (m_simulation.isRunning())
+      setSimulatingState();
     // La notificación viene de una pausa en la ejecución
-    if (m_simulation.isPaused()) {
+    else if (m_simulation.isPaused())
       setPausedContinuedState();
-      return;
-    }
-
     // La notificación viene de la parada o finalización de la ejecución
+    else {
+      stopSimulation();
+      SimulationResults results = (SimulationResults) obj;
 
-    // Esto sucede cuando todos los entornos han terminado de ejecutarse o se ha
-    // parado la simulación.
-    stopSimulation();
-    SimulationResults results = (SimulationResults) obj;
+      ArrayList <Environment> envs = m_environments.getEnvironmentList();
+      ArrayList <Maze> mazes = new ArrayList <Maze>();
+      for (Environment env: envs) {
+        if (!mazes.contains(env.getMaze()))
+          mazes.add(env.getMaze());
+      }
 
-    ArrayList <Environment> envs = m_environments.getEnvironmentList();
-    ArrayList <Maze> mazes = new ArrayList <Maze>();
-    for (Environment env: envs) {
-      if (!mazes.contains(env.getMaze()))
-        mazes.add(env.getMaze());
-    }
+      m_console.writeInfo(tr_sim.title());
+      m_console.writeInfo("==================");
+      for (int i = 0; i < mazes.size(); i++) {
+        Maze maze = mazes.get(i);
+        Agent maze_winner = results.getWinner(maze);
+        m_console.writeInfo("=== " + tr_sim.maze() + " " + (i + 1) + " (" + maze.getWidth() + "x"
+            + maze.getHeight() + ") ===");
+        m_console.writeInfo("* " + tr_sim.timeTakenFirst() + ": " + results.timeTakenFirst(maze));
+        m_console.writeInfo("* " + tr_sim.timeTakenLast() + ": " + results.timeTakenLast(maze));
+        m_console.writeInfo("* " + tr_sim.winner() + ": "
+            + (maze_winner != null? maze_winner.getAgentName() : tr_sim.none()));
+        m_console.writeInfo("");
 
-    m_console.writeInfo(tr_sim.title());
-    m_console.writeInfo("==================");
-    for (int i = 0; i < mazes.size(); i++) {
-      Maze maze = mazes.get(i);
-      Agent maze_winner = results.getWinner(maze);
-      m_console.writeInfo("=== " + tr_sim.maze() + " " + (i + 1) + " (" + maze.getWidth() + "x"
-          + maze.getHeight() + ") ===");
-      m_console.writeInfo("* " + tr_sim.timeTakenFirst() + ": " + results.timeTakenFirst(maze));
-      m_console.writeInfo("* " + tr_sim.timeTakenLast() + ": " + results.timeTakenLast(maze));
-      m_console.writeInfo("* " + tr_sim.winner() + ": "
-          + (maze_winner != null? maze_winner.getAgentName() : tr_sim.none()));
-      m_console.writeInfo("");
+        for (int j = 0; j < envs.size(); j++) {
+          Environment env = envs.get(j);
+          if (env.getMaze() == maze) {
+            Agent env_winner = results.getWinner(env);
+            m_console.writeInfo("  == " + env.getTitle() + " ==");
+            m_console.writeInfo("* " + tr_sim.timeTakenFirst() + ": " + results.timeTakenFirst(env));
+            m_console.writeInfo("* " + tr_sim.timeTakenLast() + ": " + results.timeTakenLast(env));
+            m_console.writeInfo("* " + tr_sim.winner() + ": "
+                + (env_winner != null? env_winner.getAgentName() : tr_sim.none()));
+            m_console.writeInfo("");
+            m_console.writeInfo("  * " + tr_sim.agentsDetail() + ":");
 
-      for (int j = 0; j < envs.size(); j++) {
-        Environment env = envs.get(j);
-        if (env.getMaze() == maze) {
-          Agent env_winner = results.getWinner(env);
-          m_console.writeInfo("  == " + env.getTitle() + " ==");
-          m_console.writeInfo("* " + tr_sim.timeTakenFirst() + ": " + results.timeTakenFirst(env));
-          m_console.writeInfo("* " + tr_sim.timeTakenLast() + ": " + results.timeTakenLast(env));
-          m_console.writeInfo("* " + tr_sim.winner() + ": "
-              + (env_winner != null? env_winner.getAgentName() : tr_sim.none()));
-          m_console.writeInfo("");
-          m_console.writeInfo("  * " + tr_sim.agentsDetail() + ":");
-
-          for (Map.Entry <Agent, Integer> entry: results.getSteps(env).entrySet()) {
-            Agent ag = entry.getKey();
-            String finished =
-                maze.containsPoint(new Point(ag.getX(), ag.getY()))? tr_sim.notFinished() : tr_sim
-                    .finished();
-            m_console.writeInfo("    - " + ag.getAgentName() + ": " + entry.getValue() + " "
-                + tr_sim.steps() + " [" + finished + "]");
+            for (Map.Entry <Agent, Integer> entry: results.getSteps(env).entrySet()) {
+              Agent ag = entry.getKey();
+              String finished =
+                  maze.containsPoint(new Point(ag.getX(), ag.getY()))? tr_sim.notFinished() : tr_sim
+                      .finished();
+              m_console.writeInfo("    - " + ag.getAgentName() + ": " + entry.getValue() + " "
+                  + tr_sim.steps() + " [" + finished + "]");
+            }
           }
         }
       }
+      m_console.writeInfo("==================");
     }
-    m_console.writeInfo("==================");
   }
 
   /*
@@ -953,7 +962,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
    * Adapta los menús al estado de "Simulación en curso" y la comienza.
    */
   private void startSimulation () {
-    setSimulatingState();
+    //setSimulatingState();
     m_simulation.startSimulation();
   }
 
@@ -972,7 +981,6 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       setSimulatingState();
       m_simulation.startFastSimulation(steps);
     }
-
   }
 
   /**
@@ -1020,6 +1028,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_sim_step.setEnabled(false);
     m_itm_sim_pause.setEnabled(true);
     m_itm_sim_stop.setEnabled(true);
+
+    m_itm_mode_edit.setEnabled(false);
   }
 
   /**
@@ -1063,6 +1073,30 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_sim_step.setEnabled(true);
     m_itm_sim_pause.setEnabled(false);
     m_itm_sim_stop.setEnabled(false);
+
+    m_itm_mode_edit.setEnabled(true);
+  }
+
+  /**
+   * Adapta los menús al estado de "Modo edición"
+   */
+  private void setEditModeState () {
+    m_run.setEnabled(false);
+    m_step.setEnabled(false);
+
+    m_menu_sim.setEnabled(false);
+    m_menu_agent.setEnabled(false);
+  }
+
+  /**
+   * Adapta los menús al estado de "Modo simulación"
+   */
+  private void setSimulateModeState () {
+    m_run.setEnabled(true);
+    m_step.setEnabled(true);
+
+    m_menu_sim.setEnabled(true);
+    m_menu_agent.setEnabled(true);
   }
 
   private class RunAction implements ActionListener {
