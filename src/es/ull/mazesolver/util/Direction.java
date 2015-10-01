@@ -209,4 +209,18 @@ public enum Direction implements Serializable {
     return new Point(p.x + desp.first, p.y + desp.second);
   }
 
+  /**
+   * @return Si la dirección es vertical.
+   */
+  public boolean isVertical () {
+    return this == UP || this == DOWN;
+  }
+
+  /**
+   * @return Si la dirección es horizontal.
+   */
+  public boolean isHorizontal () {
+    return this == LEFT || this == RIGHT;
+  }
+
 }

@@ -34,6 +34,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import es.ull.mazesolver.gui.MainWindow;
+import es.ull.mazesolver.util.Direction;
 
 /**
  * Clase que representa un laberinto.
@@ -115,6 +116,59 @@ public class Maze {
    */
   public int getHeight () {
     return m_maze.size();
+  }
+
+  /**
+   * Cambia la salida del laberinto a otro lugar, añadiendo y eliminando las
+   * paredes necesarias.
+   *
+   * @param pos
+   *          Índice de la celda en la que se quiere colocar la salida.
+   *          Dependiendo de la dirección este valor se referirá a una columna
+   *          (si la dirección es arriba o abajo) o a una fila (si la dirección
+   *          es izquierda o derecha).
+   * @param dir
+   *          Borde del laberinto donde colocar la salida.
+   */
+  public void setExit (int pos, Direction dir) {
+    // Comprobamos que los parámetros son válidos
+    if (pos < 0 || dir == Direction.NONE)
+      return;
+    if (dir.isVertical() && pos >= getWidth())
+      return;
+    if (dir.isHorizontal() && pos >= getHeight())
+      return;
+
+    // Tapamos la salida anterior antes de modificar su posición
+    if (m_exit.x < 0)
+      m_maze.get(m_exit.y).get(0).setWall(Direction.LEFT);
+    else if (m_exit.x >= getWidth())
+      m_maze.get(m_exit.y).get(getWidth() - 1).setWall(Direction.RIGHT);
+    else if (m_exit.y < 0)
+      m_maze.get(0).get(m_exit.x).setWall(Direction.UP);
+    else if (m_exit.y >= getHeight())
+      m_maze.get(getHeight() - 1).get(m_exit.x).setWall(Direction.DOWN);
+
+    // Modificamos la salida del laberinto y abrimos la pared
+    switch (dir) {
+      case UP:
+        m_exit.move(pos, 0);
+        break;
+      case DOWN:
+        m_exit.move(pos, getHeight() - 1);
+        break;
+      case LEFT:
+        m_exit.move(0, pos);
+        break;
+      case RIGHT:
+        m_exit.move(getWidth() - 1, pos);
+        break;
+      default:
+        break;
+    }
+
+    m_maze.get(m_exit.y).get(m_exit.x).unsetWall(dir);
+    m_exit.setLocation(dir.movePoint(m_exit));
   }
 
   /**

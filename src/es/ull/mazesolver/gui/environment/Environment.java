@@ -25,9 +25,11 @@
  */
 package es.ull.mazesolver.gui.environment;
 
+import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
@@ -39,7 +41,9 @@ import es.ull.mazesolver.maze.Maze;
 import es.ull.mazesolver.maze.MazeCell;
 import es.ull.mazesolver.util.BlackboardManager;
 import es.ull.mazesolver.util.Direction;
+import es.ull.mazesolver.util.InteractionMode;
 import es.ull.mazesolver.util.MessageManager;
+import es.ull.mazesolver.util.Pair;
 import es.ull.mazesolver.util.SimulationResults;
 
 /**
@@ -62,6 +66,67 @@ public class Environment extends BaseInternalFrame {
   private BlackboardManager m_blackboard_mgr;
   private MessageManager m_message_mgr;
 
+  private MouseListener m_agent_click = new MouseAdapter() {
+    @Override
+    public void mousePressed (MouseEvent e) {
+      m_selected = getAgentIndexUnderMouse(e.getPoint());
+      repaint();
+      super.mousePressed(e);
+    }
+  };
+
+  private MouseMotionListener m_agent_hover_drag = new MouseMotionListener() {
+    @Override
+    public void mouseMoved (MouseEvent e) {
+      m_hovered = getAgentIndexUnderMouse(e.getPoint());
+      repaint();
+    }
+
+    @Override
+    public void mouseDragged (MouseEvent e) {
+      Agent ag = getSelectedAgent();
+      if (ag != null) {
+        Point grid_pos = EnvironmentPanel.screenCoordToGrid(e.getPoint());
+        if (m_maze.containsPoint(grid_pos)) {
+          ag.setPosition(grid_pos);
+          repaint();
+        }
+      }
+    }
+  };
+
+  private MouseListener m_wall_click = new MouseAdapter() {
+    @Override
+    public void mousePressed (MouseEvent e) {
+      EnvironmentEditionPanel panel = (EnvironmentEditionPanel) getContentPane();
+      Pair<Point, Direction> selected = panel.getWallAt(e.getPoint());
+
+      if (selected != null) {
+        Point pos = selected.first;
+        Direction dir = selected.second;
+        Point adj = dir.movePoint(pos);
+
+        // Si las dos celdas están dentro, se crea/eliminan las dos paredes que
+        // las unen
+        if (m_maze.containsPoint(adj)) {
+          m_maze.get(pos.y, pos.x).toggleWall(dir);
+          m_maze.get(adj.y, adj.x).toggleWall(dir.getOpposite());
+        }
+        // Si sólo una de las dos celdas está dentro hay que cambiar la posición
+        // de la salida a ese punto
+        else {
+          if (dir.isVertical())
+            m_maze.setExit(pos.x, dir);
+          else // Horizontal
+            m_maze.setExit(pos.y, dir);
+        }
+      }
+
+      repaint();
+      super.mousePressed(e);
+    }
+  };
+
   /**
    * Constructor para las clases de tipo entorno.
    *
@@ -72,10 +137,7 @@ public class Environment extends BaseInternalFrame {
   public Environment (Maze maze) {
     super("Env " + (++s_instance), false, false, false, false);
     setMaze(maze);
-
     setVisible(true);
-    setContentPane(new EnvironmentPanel(this));
-    updateSize();
 
     setLocation(s_start_pos);
     s_start_pos.x += WINDOWS_OFFSET;
@@ -87,44 +149,32 @@ public class Environment extends BaseInternalFrame {
     m_blackboard_mgr = new BlackboardManager();
     m_message_mgr = new MessageManager();
 
-    // Añadimos la escucha del cursor para permitir al usuario seleccionar un
-    // agente.
-    getContentPane().addMouseListener(new MouseAdapter() {
-      /*
-       * (non-Javadoc)
-       *
-       * @see
-       * java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
-       */
-      @Override
-      public void mousePressed (MouseEvent e) {
-        m_selected = getAgentIndexUnderMouse(e.getPoint());
-        repaint();
-        super.mousePressed(e);
-      }
-    });
-
-    getContentPane().addMouseMotionListener(new MouseMotionListener() {
-      @Override
-      public void mouseMoved (MouseEvent e) {
-        m_hovered = getAgentIndexUnderMouse(e.getPoint());
-        repaint();
-      }
-
-      @Override
-      public void mouseDragged (MouseEvent e) {
-        Agent ag = getSelectedAgent();
-        if (ag != null) {
-          Point grid_pos = EnvironmentPanel.screenCoordToGrid(e.getPoint());
-          if (m_maze.containsPoint(grid_pos)) {
-            ag.setPosition(grid_pos);
-            repaint();
-          }
-        }
-      }
-    });
-
     moveToFront();
+  }
+
+  /**
+   * Cambia el modo de interacción con el entorno.
+   *
+   * @param mode
+   *          Nuevo modo de interacción con el entorno.
+   */
+  public void setInteractionMode (InteractionMode mode) {
+    Container panel = null;
+
+    switch (mode) {
+      case SIMULATION:
+        panel = new EnvironmentSimulationPanel(this);
+        panel.addMouseListener(m_agent_click);
+        panel.addMouseMotionListener(m_agent_hover_drag);
+        break;
+      case EDITION:
+        panel = new EnvironmentEditionPanel(this);
+        panel.addMouseListener(m_wall_click);
+        break;
+    }
+
+    setContentPane(panel);
+    updateSize();
   }
 
   /**

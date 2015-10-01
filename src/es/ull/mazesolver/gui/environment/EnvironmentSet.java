@@ -31,6 +31,7 @@ import com.tomtessier.scrollabledesktop.JScrollableDesktopPane;
 
 import es.ull.mazesolver.agent.Agent;
 import es.ull.mazesolver.gui.MainWindow;
+import es.ull.mazesolver.util.InteractionMode;
 
 /**
  * Panel principal en el que se encuentran todos los laberintos cargados.
@@ -40,6 +41,7 @@ public class EnvironmentSet extends JScrollableDesktopPane {
   private static final long serialVersionUID = 1L;
 
   private ArrayList <Environment> m_envs;
+  private InteractionMode m_mode;
 
   /**
    * Constructor. Inicializa la instancia.
@@ -49,6 +51,7 @@ public class EnvironmentSet extends JScrollableDesktopPane {
     setOpaque(true);
 
     m_envs = new ArrayList <Environment>();
+    m_mode = InteractionMode.SIMULATION;
   }
 
   /**
@@ -87,6 +90,8 @@ public class EnvironmentSet extends JScrollableDesktopPane {
    */
   public void addEnvironment (Environment env) {
     if (env != null) {
+      env.setInteractionMode(m_mode);
+
       m_envs.add(env);
       add(env);
       repaint();
@@ -178,6 +183,27 @@ public class EnvironmentSet extends JScrollableDesktopPane {
       setSelectedFrame(e2);
     }
     repaint();
+  }
+
+  /**
+   * Modifica todos los entornos para que funcionen en el modo indicado.
+   *
+   * @param mode
+   *          Nuevo modo de interacción.
+   */
+  public void setInteractionMode (InteractionMode mode) {
+    if (mode != m_mode) {
+      m_mode = mode;
+      for (Environment env: m_envs)
+        env.setInteractionMode(mode);
+    }
+  }
+
+  /**
+   * @return El modo de interacción actual de los entornos.
+   */
+  public InteractionMode getInteractionMode () {
+    return m_mode;
   }
 
 }
