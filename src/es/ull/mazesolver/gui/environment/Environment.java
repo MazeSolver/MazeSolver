@@ -133,9 +133,13 @@ public class Environment extends BaseInternalFrame {
    * @param maze
    *          Laberinto en el que se basa el entorno. Puede ser compartido entre
    *          varios entornos.
+   * @param name
+   *          Nombre del entorno.
    */
-  public Environment (Maze maze) {
-    super("Env " + (++s_instance), false, false, false, false);
+  public Environment (Maze maze, String name) {
+    super(name, false, false, false, false);
+    ++s_instance;
+
     setMaze(maze);
     setVisible(true);
 
@@ -150,6 +154,34 @@ public class Environment extends BaseInternalFrame {
     m_message_mgr = new MessageManager();
 
     moveToFront();
+  }
+
+  /**
+   * Constructor para las clases de tipo entorno.
+   *
+   * @param maze
+   *          Laberinto en el que se basa el entorno. Puede ser compartido entre
+   *          varios entornos.
+   */
+  public Environment (Maze maze) {
+    this(maze, "Env " + (s_instance + 1));
+  }
+
+  /**
+   * Cambia el nombre del entorno.
+   *
+   * @param name
+   *          Nuevo nombre del entorno.
+   */
+  public void setEnvName (String name) {
+    setTitle(name);
+  }
+
+  /**
+   * @return El nombre del entorno.
+   */
+  public String getEnvName () {
+    return getTitle();
   }
 
   /**
@@ -262,26 +294,6 @@ public class Environment extends BaseInternalFrame {
   public boolean movementAllowed (Point pos, Direction dir) {
     MazeCell.Vision vision = look(pos, dir);
     return vision == MazeCell.Vision.EMPTY || vision == MazeCell.Vision.OFFLIMITS;
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals (Object obj) {
-    return this == obj;
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode () {
-    return new Integer(s_instance).hashCode();
   }
 
   /**
@@ -467,6 +479,33 @@ public class Environment extends BaseInternalFrame {
 
     repaint();
     return ended;
+  }
+
+  /**
+   * @return El número de instancias de la clase que han sido creadas.
+   */
+  public static int getInstancesCreated () {
+    return s_instance;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals (Object obj) {
+    return this == obj;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode () {
+    return new Integer(s_instance).hashCode();
   }
 
   /**

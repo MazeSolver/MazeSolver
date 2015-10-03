@@ -88,7 +88,7 @@ import es.ull.mazesolver.util.SimulationResults;
  */
 public class MainWindow extends JFrame implements Observer, Translatable {
   private static String APP_NAME = "Maze Solver";
-  private static String VERSION_STRING = "v1.2";
+  private static String VERSION_STRING = "1.2";
   private static int DEFAULT_WIDTH = 640;
   private static int DEFAULT_HEIGHT = 480;
 
@@ -168,11 +168,11 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   private JLabel m_zoom_lb;
   private JButton m_run, m_step, m_pause, m_stop;
   private JSlider m_zoom;
-  private JMenu m_menu_file, m_menu_maze, m_menu_agent, m_menu_sim,
+  private JMenu m_menu_file, m_menu_env, m_menu_agent, m_menu_sim,
                 m_menu_config, m_menu_language, m_menu_help;
   private JMenuItem m_itm_exit;
-  private JMenuItem m_itm_maze_new, m_itm_maze_open, m_itm_maze_save,
-                    m_itm_maze_copy, m_itm_maze_change, m_itm_env_close;
+  private JMenuItem m_itm_env_new, m_itm_env_save, m_itm_env_config,
+                    m_itm_env_close;
   private JMenuItem m_itm_agent_new, m_itm_agent_open, m_itm_agent_save,
                     m_itm_agent_copy, m_itm_agent_config, m_itm_agent_remove;
   private JMenuItem m_itm_sim_run, m_itm_sim_step, m_itm_sim_pause,
@@ -271,7 +271,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_menu_bar = new JMenuBar();
 
     m_menu_file = new JMenu();
-    m_menu_maze = new JMenu();
+    m_menu_env = new JMenu();
     m_menu_agent = new JMenu();
     m_menu_sim = new JMenu();
     m_menu_config = new JMenu();
@@ -283,38 +283,33 @@ public class MainWindow extends JFrame implements Observer, Translatable {
 
     m_menu_file.add(m_itm_exit);
 
-    // Menú "Maze"
-    m_itm_maze_new = new JMenuItem();
-    m_itm_maze_open = new JMenuItem();
-    m_itm_maze_save = new JMenuItem();
-    m_itm_maze_copy = new JMenuItem();
-    m_itm_maze_change = new JMenuItem();
+    // Menú "Environment"
+    m_itm_env_new = new JMenuItem();
+    m_itm_env_config = new JMenuItem();
+    m_itm_env_save = new JMenuItem();
     m_itm_env_close = new JMenuItem();
 
-    m_menu_maze.add(m_itm_maze_new);
-    m_menu_maze.addSeparator();
-    m_menu_maze.add(m_itm_maze_open);
-    m_menu_maze.add(m_itm_maze_save);
-    m_menu_maze.addSeparator();
-    m_menu_maze.add(m_itm_maze_copy);
-    m_menu_maze.add(m_itm_maze_change);
-    m_menu_maze.add(m_itm_env_close);
+    m_menu_env.add(m_itm_env_new);
+    m_menu_env.add(m_itm_env_config);
+    m_menu_env.addSeparator();
+    m_menu_env.add(m_itm_env_save);
+    m_menu_env.addSeparator();
+    m_menu_env.add(m_itm_env_close);
 
     // Menú "Agent"
     m_itm_agent_new = new JMenuItem();
+    m_itm_agent_config = new JMenuItem();
+    m_itm_agent_copy = new JMenuItem();
     m_itm_agent_open = new JMenuItem();
     m_itm_agent_save = new JMenuItem();
-    m_itm_agent_copy = new JMenuItem();
-    m_itm_agent_config = new JMenuItem();
     m_itm_agent_remove = new JMenuItem();
 
     m_menu_agent.add(m_itm_agent_new);
+    m_menu_agent.add(m_itm_agent_config);
+    m_menu_agent.add(m_itm_agent_copy);
     m_menu_agent.addSeparator();
     m_menu_agent.add(m_itm_agent_open);
     m_menu_agent.add(m_itm_agent_save);
-    m_menu_agent.addSeparator();
-    m_menu_agent.add(m_itm_agent_copy);
-    m_menu_agent.add(m_itm_agent_config);
     m_menu_agent.addSeparator();
     m_menu_agent.add(m_itm_agent_remove);
 
@@ -373,7 +368,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_menu_help.add(m_itm_about);
 
     m_menu_bar.add(m_menu_file);
-    m_menu_bar.add(m_menu_maze);
+    m_menu_bar.add(m_menu_env);
     m_menu_bar.add(m_menu_agent);
     m_menu_bar.add(m_menu_sim);
     m_menu_bar.add(m_menu_config);
@@ -426,34 +421,45 @@ public class MainWindow extends JFrame implements Observer, Translatable {
 
     // Menú "Maze"
     // /////////////////////////////////////////////////////////////////////////
-    m_itm_maze_new.addActionListener(new ActionListener() {
+    m_itm_env_new.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        MazeSelectorDialog dialog = new MazeSelectorDialog(MainWindow.getInstance());
+        EnvSelectorDialog dialog = new EnvSelectorDialog(MainWindow.getInstance(),m_environments);
         dialog.setLocationRelativeTo(MainWindow.this);
-        Maze generated = dialog.showDialog();
+        Environment generated = dialog.showDialog();
 
         if (generated != null)
-          m_environments.addEnvironment(new Environment(generated));
+          m_environments.addEnvironment(generated);
       }
     });
 
-    m_itm_maze_open.addActionListener(new ActionListener() {
+    m_itm_env_config.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        try {
-          Maze [] mazes = FileDialog.loadMazes();
-          for (Maze maze: mazes)
-            m_environments.addEnvironment(new Environment(maze));
+        Environment actual_env = m_environments.getSelectedEnvironment();
+        if (actual_env == null) {
+          JOptionPane.showMessageDialog(null,
+              s_tr.message().noEnvironmentSelected(),
+              s_tr.message().mazeChangeFailed(), JOptionPane.WARNING_MESSAGE);
+          return;
         }
-        catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), s_tr.message().fileOpenFailed(),
-              JOptionPane.ERROR_MESSAGE);
+
+        EnvSelectorDialog dialog = new EnvSelectorDialog(MainWindow.this,
+                                                         m_environments,
+                                                         actual_env);
+        dialog.setLocationRelativeTo(MainWindow.this);
+        Environment new_env = dialog.showDialog();
+
+        if (new_env != null) {
+          for (int i = 0; i < actual_env.getAgentCount(); i++)
+            new_env.addAgent(actual_env.getAgent(i));
+
+          m_environments.exchangeEnvironments(actual_env, new_env);
         }
       }
     });
 
-    m_itm_maze_save.addActionListener(new ActionListener() {
+    m_itm_env_save.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
         try {
@@ -466,46 +472,6 @@ public class MainWindow extends JFrame implements Observer, Translatable {
         catch (Exception exc) {
           JOptionPane.showMessageDialog(null, s_tr.message().noEnvironmentSelected(), s_tr
               .message().fileSaveFailed(), JOptionPane.WARNING_MESSAGE);
-        }
-      }
-    });
-
-    m_itm_maze_copy.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        Environment env = m_environments.getSelectedEnvironment();
-        if (env != null)
-          m_environments.addEnvironment(new Environment(env.getMaze()));
-        else {
-          JOptionPane.showMessageDialog(null, s_tr.message().noEnvironmentSelected(), s_tr
-              .message().cloningFailed(), JOptionPane.WARNING_MESSAGE);
-        }
-      }
-    });
-
-    m_itm_maze_change.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        try {
-          Maze maze = FileDialog.loadMaze();
-
-          if (maze != null) {
-            Environment actual_env = m_environments.getSelectedEnvironment();
-            Environment new_env = new Environment(maze);
-
-            for (int i = 0; i < actual_env.getAgentCount(); i++)
-              new_env.addAgent(actual_env.getAgent(i));
-
-            m_environments.exchangeEnvironments(actual_env, new_env);
-          }
-        }
-        catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), s_tr.message().mazeChangeFailed(),
-              JOptionPane.ERROR_MESSAGE);
-        }
-        catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, s_tr.message().noEnvironmentSelected(), s_tr
-              .message().mazeChangeFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -624,6 +590,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     });
 
     // Menú "Simulation"
+    // /////////////////////////////////////////////////////////////////////////
     m_itm_sim_run.addActionListener(new RunAction());
     m_itm_sim_step.addActionListener(new StepAction());
     m_itm_sim_pause.addActionListener(new PauseAction());
@@ -633,6 +600,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       @Override
       public void actionPerformed (ActionEvent e) {
         FastSimulationDialog dialog = new FastSimulationDialog(MainWindow.this);
+        dialog.setLocationRelativeTo(MainWindow.this);
         int steps = dialog.showDialog();
 
         if (steps > 0)
@@ -641,6 +609,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     });
 
     // Menú "Configuration"
+    // /////////////////////////////////////////////////////////////////////////
     m_itm_mode_sim.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
@@ -905,7 +874,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     Languages m_lang_tr = s_tr.languages();
 
     m_menu_file.setText(m_tr.file());
-    m_menu_maze.setText(m_tr.maze());
+    m_menu_env.setText(m_tr.environment());
     m_menu_agent.setText(m_tr.agent());
     m_menu_sim.setText(m_tr.simulation());
     m_menu_config.setText(m_tr.configuration());
@@ -913,16 +882,14 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_menu_help.setText(m_tr.help());
 
     m_itm_exit.setText(m_tr.exit());
-    m_itm_maze_new.setText(m_tr.newMaze() + "...");
-    m_itm_maze_open.setText(m_tr.openMaze() + "...");
-    m_itm_maze_save.setText(m_tr.saveMaze() + "...");
-    m_itm_maze_copy.setText(m_tr.copyMaze());
-    m_itm_maze_change.setText(m_tr.changeMaze() + "...");
-    m_itm_env_close.setText(m_tr.closeMaze());
+    m_itm_env_new.setText(m_tr.newEnv() + "...");
+    m_itm_env_config.setText(m_tr.configEnv() + "...");
+    m_itm_env_save.setText(m_tr.saveMaze() + "...");
+    m_itm_env_close.setText(m_tr.closeEnv());
     m_itm_agent_new.setText(m_tr.newAgent() + "...");
-    m_itm_agent_open.setText(m_tr.loadAgent() + "...");
+    m_itm_agent_open.setText(m_tr.openAgent() + "...");
     m_itm_agent_save.setText(m_tr.saveAgent() + "...");
-    m_itm_agent_copy.setText(m_tr.cloneAgent());
+    m_itm_agent_copy.setText(m_tr.copyAgent());
     m_itm_agent_config.setText(m_tr.configureAgent() + "...");
     m_itm_agent_remove.setText(m_tr.removeAgent());
     m_itm_sim_run.setText(b_tr.run());
@@ -1015,10 +982,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
    */
   private void setSimulatingState () {
     // Desactivamos los menús que no se pueden utilizar durante la simulación
-    m_itm_maze_new.setEnabled(false);
-    m_itm_maze_change.setEnabled(false);
-    m_itm_maze_open.setEnabled(false);
-    m_itm_maze_copy.setEnabled(false);
+    m_itm_env_new.setEnabled(false);
+    m_itm_env_config.setEnabled(false);
 
     m_run.setEnabled(false);
     m_step.setEnabled(false);
@@ -1058,10 +1023,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
    * Adapta los menús al estado de "Simulación parada".
    */
   private void setStoppedState () {
-    m_itm_maze_new.setEnabled(true);
-    m_itm_maze_change.setEnabled(true);
-    m_itm_maze_open.setEnabled(true);
-    m_itm_maze_copy.setEnabled(true);
+    m_itm_env_new.setEnabled(true);
+    m_itm_env_config.setEnabled(true);
 
     m_pause.setText(s_tr.button().pause());
     m_run.setEnabled(true);

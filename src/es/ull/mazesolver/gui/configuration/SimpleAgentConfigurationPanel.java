@@ -27,6 +27,7 @@ package es.ull.mazesolver.gui.configuration;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 import com.alee.extended.layout.VerticalFlowLayout;
 
@@ -41,6 +42,7 @@ public class SimpleAgentConfigurationPanel extends AgentConfigurationPanel {
   private static final long serialVersionUID = 1L;
 
   private GeneralConfigurationWidget m_general;
+  private TitledBorder m_title;
 
   /**
    * Crea el panel de configuración genérico para el agente indicado.
@@ -65,8 +67,8 @@ public class SimpleAgentConfigurationPanel extends AgentConfigurationPanel {
     m_general.setAgentName(m_agent.getAgentName());
     m_general.setAgentColor(m_agent.getAgentColor());
 
-    String title = MainWindow.getTranslations().agent().generalConfig();
-    m_general.setBorder(BorderFactory.createTitledBorder(title));
+    m_title = BorderFactory.createTitledBorder("");
+    m_general.setBorder(m_title);
 
     root.setLayout(new VerticalFlowLayout());
     root.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -109,6 +111,7 @@ public class SimpleAgentConfigurationPanel extends AgentConfigurationPanel {
   public void translate () {
     super.translate();
     m_general.translate();
+    m_title.setTitle(MainWindow.getTranslations().agent().generalConfig());
   }
 
 }

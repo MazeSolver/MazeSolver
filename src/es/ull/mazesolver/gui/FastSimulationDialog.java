@@ -27,13 +27,13 @@ package es.ull.mazesolver.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -62,12 +62,12 @@ public class FastSimulationDialog extends JDialog {
    * @param parent
    *          Ventana padre del diálogo.
    */
-  public FastSimulationDialog (JFrame parent) {
-    super(parent, "", true);
+  public FastSimulationDialog (Window parent) {
+    super(parent);
 
     buildInterface();
-    setLocationRelativeTo(parent);
     setResizable(false);
+    setModal(true);
   }
 
   /**
