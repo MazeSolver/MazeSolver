@@ -28,6 +28,7 @@ package es.ull.mazesolver.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
@@ -38,7 +39,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -92,12 +92,13 @@ public class AgentSelectorDialog extends JDialog {
    * @param available_cells
    *          Número de celdas vacías actualmente en el laberinto.
    */
-  public AgentSelectorDialog (JFrame parent, int available_cells) {
-    super(parent, "", true);
+  public AgentSelectorDialog (Window parent, int available_cells) {
+    super(parent);
     max_agents = available_cells - 1;
 
     buildInterface();
     setResizable(false);
+    setModal(true);
   }
 
   /**

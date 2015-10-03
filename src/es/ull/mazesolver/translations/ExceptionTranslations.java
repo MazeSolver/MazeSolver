@@ -45,4 +45,6 @@ public interface ExceptionTranslations {
   String tooManyWalls ();
   String situationActionInvalid ();
   String unnamedAgent ();
+  String unnamedEnv ();
+  String repeatedEnvName ();
 }

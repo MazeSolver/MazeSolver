@@ -20,29 +20,21 @@
  */
 
 /**
- * @file Translations.java
- * @date 13/3/2015
+ * @file EnvSelectorTranslations.java
+ * @date 3/10/2015
  */
 package es.ull.mazesolver.translations;
 
+import com.github.rodionmoiseev.c10n.C10NMessages;
+
 /**
- * Interfaz compuesta de todas las traducciones de todos los elementos de la
- * aplicación.
+ * Clase que agrupa las traducciones de la ventana de creación y configuración
+ * de entornos.
  */
-public interface Translations {
-  MenuTranslations menu ();
-  ButtonTranslations button ();
-  MessageTranslations message ();
-  ExceptionTranslations exception ();
-  EnumTranslations enums ();
-
-  ConsoleTranslations console ();
-  EnvSelectorTranslations env ();
-  MazeSelectorTranslations maze ();
-  AgentSelectorTranslations agent ();
-
-  SimulatorResultTranslations simulation ();
-  Languages languages ();
-
-  OtherTranslations other ();
+@C10NMessages
+public interface EnvSelectorTranslations {
+  String newMaze ();
+  String openMaze ();
+  String loadedMaze ();
+  String maze ();
 }
