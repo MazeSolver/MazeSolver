@@ -111,6 +111,7 @@ public class SARulesAgent extends Agent {
    * Cambia el código fuente cargado. Se debe llamar a {@link #compileCode()}
    * para que el nuevo código pueda ser ejecutado por el agente.
    * @param code
+   *          Nuevo código fuente.
    */
   public void setCode (String code) {
     m_code = code;
@@ -156,7 +157,7 @@ public class SARulesAgent extends Agent {
   }
 
   /**
-   * @return
+   * @return La lista de errores de compilación.
    */
   public ArrayList<String> getCompilationErrors () {
     return m_error_handler.getErrors();

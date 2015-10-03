@@ -102,6 +102,9 @@ public abstract class AgentConfigurationPanel extends JPanel implements Translat
 
   /**
    * Construye la interfaz del panel de configuración de agentes.
+   *
+   * @param agent
+   *          Agente que se quiere configurar.
    */
   public AgentConfigurationPanel (Agent agent) {
     m_root = new JPanel();
