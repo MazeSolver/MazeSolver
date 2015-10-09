@@ -43,7 +43,7 @@ public class SimulationResults {
    * entorno determinado.
    */
   private class EnvironmentSimulationInfo {
-    public Map <Agent, Integer> steps;
+    public Map <Agent, Integer> steps, iterations;
     public long first_elapsed, last_elapsed;
     public Agent winner_agent;
 
@@ -52,6 +52,7 @@ public class SimulationResults {
      */
     public EnvironmentSimulationInfo () {
       steps = new HashMap <Agent, Integer>();
+      iterations = new HashMap <Agent, Integer>();
       first_elapsed = last_elapsed = -1;
     }
   }
@@ -120,12 +121,23 @@ public class SimulationResults {
    */
   public void agentWalked (Agent agent) {
     EnvironmentSimulationInfo info = getInfoFromAgentsEnvironment(agent);
-    Integer steps = info.steps.get(agent);
+    Integer steps = info.steps.getOrDefault(agent, 0);
 
-    if (steps == null)
-      info.steps.put(agent, 1);
-    else
-      info.steps.put(agent, steps + 1);
+    info.steps.put(agent, steps + 1);
+  }
+
+  /**
+   * Indica a las estadísticas que se ha producido una iteración con el agente
+   * dentro del laberinto.
+   *
+   * @param agent
+   *          Agente que ha realizado el paso.
+   */
+  public void agentIterated (Agent agent) {
+    EnvironmentSimulationInfo info = getInfoFromAgentsEnvironment(agent);
+
+    Integer iterations = info.iterations.getOrDefault(agent, 0);
+    info.iterations.put(agent, iterations + 1);
   }
 
   /**
@@ -175,31 +187,33 @@ public class SimulationResults {
   }
 
   /**
-   * Obtiene el número de pasos que ha realizado cada agente en el entorno en la
-   * simulación actual.
+   * Obtiene el número de pasos e iteraciones que ha realizado cada agente en el
+   * entorno en la simulación actual.
    *
    * @param env
    *          Entorno en el que inspeccionar los agentes.
-   * @return Número de pasos que ha realizado cada agente en el entorno.
+   * @return Número de pasos e iteraciones que ha realizado cada agente en el
+   * entorno.
    */
-  public Map <Agent, Integer> getSteps (Environment env) {
+  public Map <Agent, Pair<Integer, Integer>> getSteps (Environment env) {
     // Utilizamos el nº de agentes guardados en lugar del nº actual en el
     // entorno porque se pueden añadir y eliminar agentes en tiempo de ejecución
     EnvironmentSimulationInfo info = m_info.get(env);
 
     if (info != null) {
-      HashMap <Agent, Integer> steps = new HashMap <Agent, Integer>();
-      for (Map.Entry <Agent, Integer> entry: info.steps.entrySet())
-        steps.put(entry.getKey(), entry.getValue());
+      HashMap <Agent, Pair<Integer, Integer>> steps = new HashMap <Agent, Pair<Integer, Integer>>();
+      for (Agent agent: info.steps.keySet())
+        steps.put(agent, new Pair <>(info.steps.get(agent),
+                                     info.iterations.get(agent)));
 
       for (int i = 0; i < env.getAgentCount(); i++)
         if (!steps.containsKey(env.getAgent(i)))
-          steps.put(env.getAgent(i), 0);
+          steps.put(env.getAgent(i), new Pair <>(0, 0));
 
       return steps;
     }
     else
-      return new HashMap <Agent, Integer>();
+      return new HashMap <Agent, Pair<Integer, Integer>>();
   }
 
   /**

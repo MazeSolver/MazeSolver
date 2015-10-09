@@ -458,8 +458,10 @@ public class Environment extends BaseInternalFrame {
       // Si el agente ya salió del laberinto no lo movemos más, pero si no ha
       // salido hacemos que calcule su siguiente movimiento
       Direction dir;
-      if (m_maze.containsPoint(i.getPos()))
+      if (m_maze.containsPoint(i.getPos())) {
         dir = i.getNextMovement();
+        results.agentIterated(i);
+      }
       else
         dir = Direction.NONE;
 
