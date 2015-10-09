@@ -79,6 +79,7 @@ import es.ull.mazesolver.translations.SimulatorResultTranslations;
 import es.ull.mazesolver.translations.Translatable;
 import es.ull.mazesolver.translations.Translations;
 import es.ull.mazesolver.util.InteractionMode;
+import es.ull.mazesolver.util.Pair;
 import es.ull.mazesolver.util.SimulationManager;
 import es.ull.mazesolver.util.SimulationResults;
 
@@ -847,13 +848,15 @@ public class MainWindow extends JFrame implements Observer, Translatable {
             m_console.writeInfo("");
             m_console.writeInfo("  * " + tr_sim.agentsDetail() + ":");
 
-            for (Map.Entry <Agent, Integer> entry: results.getSteps(env).entrySet()) {
+            for (Map.Entry <Agent, Pair<Integer, Integer>> entry: results.getSteps(env).entrySet()) {
               Agent ag = entry.getKey();
               String finished =
                   maze.containsPoint(new Point(ag.getX(), ag.getY()))? tr_sim.notFinished() : tr_sim
                       .finished();
-              m_console.writeInfo("    - " + ag.getAgentName() + ": " + entry.getValue() + " "
-                  + tr_sim.steps() + " [" + finished + "]");
+              m_console.writeInfo("    - " + ag.getAgentName() + ": " +
+                                  entry.getValue().first + " " + tr_sim.steps() + " / " +
+                                  entry.getValue().second + " " + tr_sim.iterations() +
+                                  " [" + finished + "]");
             }
           }
         }

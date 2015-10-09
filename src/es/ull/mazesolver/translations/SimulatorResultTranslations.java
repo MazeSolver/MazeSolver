@@ -43,4 +43,5 @@ public interface SimulatorResultTranslations {
   String notFinished ();
   String finished ();
   String steps ();
+  String iterations ();
 }
