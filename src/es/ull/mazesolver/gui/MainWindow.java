@@ -180,7 +180,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
   private JRadioButtonMenuItem m_itm_mode_sim, m_itm_mode_edit;
   private JMenuItem m_itm_language_spanish, m_itm_language_english,
                     m_itm_language_german, m_itm_language_russian,
-                    m_itm_language_french;
+                    m_itm_language_french, m_itm_language_italian,
+                    m_itm_language_slovenian;
   private JMenuItem m_itm_userdoc, m_itm_apidoc, m_itm_bugs, m_itm_about;
 
   // Representación del modelo
@@ -346,12 +347,16 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_language_german = new JMenuItem();
     m_itm_language_russian = new JMenuItem();
     m_itm_language_french = new JMenuItem();
+    m_itm_language_italian = new JMenuItem();
+    m_itm_language_slovenian = new JMenuItem();
 
     m_menu_language.add(m_itm_language_spanish);
     m_menu_language.add(m_itm_language_english);
     m_menu_language.add(m_itm_language_german);
     m_menu_language.add(m_itm_language_russian);
     m_menu_language.add(m_itm_language_french);
+    m_menu_language.add(m_itm_language_italian);
+    m_menu_language.add(m_itm_language_slovenian);
 
     // Menú "Help"
     ImageIcon world = new ImageIcon(getClass().getResource("/images/world.png"));
@@ -647,6 +652,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_language_german.addActionListener(new LanguageAction("de"));
     m_itm_language_russian.addActionListener(new LanguageAction("ru"));
     m_itm_language_french.addActionListener(new LanguageAction("fr"));
+    m_itm_language_italian.addActionListener(new LanguageAction("it"));
+    m_itm_language_slovenian.addActionListener(new LanguageAction("si"));
 
     // Menú "Help"
     // /////////////////////////////////////////////////////////////////////////
@@ -903,6 +910,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_language_german.setText(m_lang_tr.german());
     m_itm_language_russian.setText(m_lang_tr.russian());
     m_itm_language_french.setText(m_lang_tr.french());
+    m_itm_language_italian.setText(m_lang_tr.italian());
+    m_itm_language_slovenian.setText(m_lang_tr.slovenian());
     m_itm_userdoc.setText(m_tr.userDocs());
     m_itm_apidoc.setText(m_tr.apiDocs());
     m_itm_bugs.setText(m_tr.knownProblems());

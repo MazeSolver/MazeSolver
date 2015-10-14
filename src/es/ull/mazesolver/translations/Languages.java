@@ -47,4 +47,10 @@ public interface Languages {
 
   @C10NDef ("Français")
   String french ();
+
+  @C10NDef("Italiano")
+  String italian ();
+
+  @C10NDef("Slovenščina")
+  String slovenian ();
 }
