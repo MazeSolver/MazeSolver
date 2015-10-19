@@ -518,19 +518,22 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_agent_open.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        try {
-          Environment env = m_environments.getSelectedEnvironment();
-          Agent ag = FileDialog.loadAgent(env);
+        Environment env = m_environments.getSelectedEnvironment();
 
-          m_environments.addAgentToSelectedEnvironment(ag);
+        if (env != null) {
+          try {
+            Agent ag = FileDialog.loadAgent(env);
+            if (ag != null)
+              m_environments.addAgentToSelectedEnvironment(ag);
+          }
+          catch (IOException exc) {
+            JOptionPane.showMessageDialog(null, exc.getMessage(),
+                s_tr.message().fileOpenFailed(), JOptionPane.ERROR_MESSAGE);
+          }
         }
-        catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), s_tr.message().fileOpenFailed(),
-              JOptionPane.ERROR_MESSAGE);
-        }
-        catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, s_tr.message().noEnvironmentSelected(), s_tr
-              .message().fileOpenFailed(), JOptionPane.WARNING_MESSAGE);
+        else {
+          JOptionPane.showMessageDialog(null, s_tr.message().noEnvironmentSelected(),
+              s_tr.message().fileOpenFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -538,17 +541,28 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     m_itm_agent_save.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed (ActionEvent e) {
-        try {
-          Environment env = m_environments.getSelectedEnvironment();
-          FileDialog.saveAgent(env.getSelectedAgent());
+        Environment env = m_environments.getSelectedEnvironment();
+
+        if (env != null) {
+          Agent ag = env.getSelectedAgent();
+
+          if (ag != null) {
+            try {
+              FileDialog.saveAgent(ag);
+            }
+            catch (IOException exc) {
+              JOptionPane.showMessageDialog(null, exc.getMessage(),
+                  s_tr.message().fileSaveFailed(), JOptionPane.ERROR_MESSAGE);
+            }
+          }
+          else {
+            JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(),
+                s_tr.message().fileSaveFailed(), JOptionPane.WARNING_MESSAGE);
+          }
         }
-        catch (IOException exc) {
-          JOptionPane.showMessageDialog(null, exc.getMessage(), s_tr.message().fileSaveFailed(),
-              JOptionPane.ERROR_MESSAGE);
-        }
-        catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, s_tr.message().noEnvironmentSelected(), s_tr
-              .message().fileSaveFailed(), JOptionPane.WARNING_MESSAGE);
+        else {
+          JOptionPane.showMessageDialog(null, s_tr.message().noEnvironmentSelected(),
+              s_tr.message().fileSaveFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
@@ -561,8 +575,8 @@ public class MainWindow extends JFrame implements Observer, Translatable {
           m_environments.addAgentToSelectedEnvironment((Agent) env.getSelectedAgent().clone());
         }
         catch (Exception exc) {
-          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(), s_tr.message()
-              .cloningFailed(), JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(null, s_tr.message().noAgentSelected(),
+              s_tr.message().cloningFailed(), JOptionPane.WARNING_MESSAGE);
         }
       }
     });
