@@ -53,4 +53,7 @@ public interface Languages {
 
   @C10NDef("Slovenščina")
   String slovenian ();
+
+  @C10NDef("Română")
+  String romanian ();
 }
