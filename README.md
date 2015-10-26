@@ -3,7 +3,7 @@ MazeSolver
 
 Programa generador y solucionador de laberintos utilizando técnicas de IA basadas en el paradigma de agentes.
 
-![Screenshot](prototype/gui.png)
+![Screenshot](prototype/gui_1.2.png)
 
 ## Links de interés
 A continuación les listamos algunos links de interés relacionados con este proyecto.
