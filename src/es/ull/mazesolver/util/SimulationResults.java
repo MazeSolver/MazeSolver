@@ -199,21 +199,21 @@ public class SimulationResults {
     // Utilizamos el nº de agentes guardados en lugar del nº actual en el
     // entorno porque se pueden añadir y eliminar agentes en tiempo de ejecución
     EnvironmentSimulationInfo info = m_info.get(env);
+    HashMap <Agent, Pair<Integer, Integer>> steps = new HashMap <Agent, Pair<Integer, Integer>>();
 
     if (info != null) {
-      HashMap <Agent, Pair<Integer, Integer>> steps = new HashMap <Agent, Pair<Integer, Integer>>();
-      for (Agent agent: info.steps.keySet())
-        steps.put(agent, new Pair <>(info.steps.get(agent),
-                                     info.iterations.get(agent)));
+      for (int i = 0; i < env.getAgentCount(); ++i) {
+        Agent agent = env.getAgent(i);
 
-      for (int i = 0; i < env.getAgentCount(); i++)
-        if (!steps.containsKey(env.getAgent(i)))
-          steps.put(env.getAgent(i), new Pair <>(0, 0));
+        Pair <Integer, Integer> agent_info = new Pair <>(
+            info.steps.getOrDefault(agent, 0),
+            info.iterations.getOrDefault(agent, 0));
 
-      return steps;
+        steps.put(agent, agent_info);
+      }
     }
-    else
-      return new HashMap <Agent, Pair<Integer, Integer>>();
+
+    return steps;
   }
 
   /**
