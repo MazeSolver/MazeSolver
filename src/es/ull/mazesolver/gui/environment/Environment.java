@@ -452,31 +452,43 @@ public class Environment extends BaseInternalFrame {
    */
   public boolean runStep (SimulationResults results) {
     m_message_mgr.flushMessageQueues();
-    boolean ended = true;
 
-    for (Agent i: m_agents) {
-      // Si el agente ya salió del laberinto no lo movemos más, pero si no ha
+    Direction[] movements = new Direction[m_agents.size()];
+
+    // Paso 1: Obtener movimientos a partir del estado actual del entorno
+    for (int i = 0; i < m_agents.size(); ++i) {
+      Agent ag = m_agents.get(i);
+
+      // Si el agente ya salió del laberinto no lo movemos, pero si no ha
       // salido hacemos que calcule su siguiente movimiento
-      Direction dir;
-      if (m_maze.containsPoint(i.getPos())) {
-        dir = i.getNextMovement();
-        results.agentIterated(i);
+      if (m_maze.containsPoint(ag.getPos())) {
+        movements[i] = ag.getNextMovement();
+        results.agentIterated(ag);
       }
       else
-        dir = Direction.NONE;
+        movements[i] = Direction.NONE;
+    }
+
+    // Esta variable indica si la simulación ha terminado (todos los agentes
+    // han salido del laberinto)
+    boolean ended = true;
+
+    // Paso 2: Realizar movimientos (modificar el entorno)
+    for (int i = 0; i < m_agents.size(); ++i) {
+      Agent ag = m_agents.get(i);
 
       // Restringimos el movimiento del agente para que no atraviese paredes
       // u otros agentes independientemente de errores que se hayan podido
       // cometer a la hora de programar a los agentes
-      if (movementAllowed(i.getPos(), dir)) {
-        i.doMovement(dir);
-        results.agentWalked(i);
+      if (movementAllowed(ag.getPos(), movements[i])) {
+        ag.doMovement(movements[i]);
+        results.agentWalked(ag);
       }
 
-      if (m_maze.containsPoint(i.getPos()))
+      if (m_maze.containsPoint(ag.getPos()))
         ended = false;
       else
-        results.agentFinished(i);
+        results.agentFinished(ag);
     }
 
     repaint();

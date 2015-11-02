@@ -430,7 +430,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
       }
     });
 
-    // Menú "Maze"
+    // Menú "Environment"
     // /////////////////////////////////////////////////////////////////////////
     m_itm_env_new.addActionListener(new ActionListener() {
       @Override
