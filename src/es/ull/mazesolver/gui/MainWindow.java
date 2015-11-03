@@ -31,6 +31,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -42,9 +44,13 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -55,6 +61,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -192,6 +199,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
 
   // Interacción con el usuario
   private LoggingConsole m_console;
+  private Agent m_agent_clipboard;
 
   /**
    * Constructor de la clase. Crea la interfaz y configura su estado interno
@@ -214,6 +222,7 @@ public class MainWindow extends JFrame implements Observer, Translatable {
         bindAnnotation(En.class);
       }
     });
+
     // Lo llamamos para asegurarnos de que las traducciones están cargadas antes
     // de crear los mensajes de error.
     MainWindow.getTranslations();
@@ -262,6 +271,36 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     global_panel.add(console_split, BorderLayout.CENTER);
     add(m_menu_bar, BorderLayout.NORTH);
     add(global_panel, BorderLayout.CENTER);
+
+    // Creamos las acciones de Ctrl+C y Ctrl+V para copiar agentes
+    InputMap env_input = m_environments.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    ActionMap env_action = m_environments.getActionMap();
+    env_input.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), "AgentCopy");
+    env_input.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), "AgentPaste");
+
+    env_action.put("AgentCopy", new AbstractAction() {
+      private static final long serialVersionUID = 1L;
+
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        m_agent_clipboard = null;
+
+        Environment env = m_environments.getSelectedEnvironment();
+        if (env != null)
+          m_agent_clipboard = env.getSelectedAgent();
+      }
+    });
+
+    env_action.put("AgentPaste", new AbstractAction() {
+      private static final long serialVersionUID = 1L;
+
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        Environment env = m_environments.getSelectedEnvironment();
+        if (env != null && m_agent_clipboard != null)
+          env.addAgent((Agent) m_agent_clipboard.clone());
+      }
+    });
 
     closeConfigurationPanel();
     pack();
