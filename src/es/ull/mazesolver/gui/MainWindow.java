@@ -272,11 +272,13 @@ public class MainWindow extends JFrame implements Observer, Translatable {
     add(m_menu_bar, BorderLayout.NORTH);
     add(global_panel, BorderLayout.CENTER);
 
-    // Creamos las acciones de Ctrl+C y Ctrl+V para copiar agentes
+    // Creamos las acciones de Ctrl+C y Ctrl+V para copiar agentes y enlazamos
+    // la tecla "delete" para eliminar el agente seleccionado
     InputMap env_input = m_environments.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     ActionMap env_action = m_environments.getActionMap();
     env_input.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_DOWN_MASK), "AgentCopy");
     env_input.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), "AgentPaste");
+    env_input.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "AgentDelete");
 
     env_action.put("AgentCopy", new AbstractAction() {
       private static final long serialVersionUID = 1L;
@@ -299,6 +301,20 @@ public class MainWindow extends JFrame implements Observer, Translatable {
         Environment env = m_environments.getSelectedEnvironment();
         if (env != null && m_agent_clipboard != null)
           env.addAgent((Agent) m_agent_clipboard.clone());
+      }
+    });
+
+    env_action.put("AgentDelete", new AbstractAction() {
+      private static final long serialVersionUID = 1L;
+
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        Environment env = m_environments.getSelectedEnvironment();
+        if (env != null) {
+          Agent agent = env.getSelectedAgent();
+          if (agent != null)
+            env.removeAgent(agent);
+        }
       }
     });
 
