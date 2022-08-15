@@ -36,7 +36,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Execute Gradle build
-        run: ./gradlew build --scan
+        run: ./gradlew build
 
   docs:
     runs-on: ubuntu-latest
