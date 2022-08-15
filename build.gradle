@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+group 'es.ull'
+version '1.0-SNAPSHOT'
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+
+application {
+    mainClass = 'es/ull/mazesolver/gui/MainWindow'
+}
+
+dependencies {
+    implementation files('lib/scrollabledesktop.jar')
+    implementation files('lib/c10n-core.jar')
+    implementation files('lib/weblaf-complete-1.28.jar')
+    implementation files('lib/antlr-runtime-4.4.jar')
+}
+
